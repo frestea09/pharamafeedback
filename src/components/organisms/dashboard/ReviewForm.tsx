@@ -26,6 +26,8 @@ import { Loader2, Smile, ThumbsUp, ThumbsDown, Clock, Rocket, Turtle, HelpCircle
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { ReviewContext } from "@/context/ReviewContext";
 import { RawUnitReview } from "@/lib/data";
+import { AISuggestions } from "@/components/molecules/dashboard/AISuggestions";
+
 
 const reviewFormSchema = z.object({
   serviceSpeed: z.enum(["fast", "medium", "slow"], {
@@ -83,6 +85,11 @@ export default function ReviewForm() {
         setIsSubmitting(false);
     }, 1500);
   }
+  
+  const handleSuggestionSelect = (suggestion: string) => {
+    const currentComments = form.getValues("comments") || "";
+    form.setValue("comments", currentComments ? `${currentComments}\n- ${suggestion}` : `- ${suggestion}`);
+  };
 
   return (
     <Form {...form}>
@@ -235,6 +242,7 @@ export default function ReviewForm() {
                         </FormItem>
                     )}
                 />
+                 <AISuggestions onSelect={handleSuggestionSelect} />
             </div>
         </div>
         
