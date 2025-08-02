@@ -1,3 +1,6 @@
+
+"use client";
+
 import Link from "next/link";
 import {
   SidebarProvider,
@@ -77,7 +80,7 @@ export default function DashboardLayout({
       </Sidebar>
       <SidebarInset>
         <header className="flex h-14 items-center gap-4 border-b bg-card px-6">
-            <SidebarTrigger className="md:hidden" />
+            <SidebarTrigger />
             <div className="flex-1">
                 <h1 className="text-lg font-semibold">Dasbor Pengguna</h1>
             </div>

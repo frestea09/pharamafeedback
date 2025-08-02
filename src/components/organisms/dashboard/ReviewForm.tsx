@@ -1,3 +1,4 @@
+
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -20,7 +21,6 @@ import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { StarRating } from "@/components/atoms/StarRating";
 import { GuidanceTooltip } from "@/components/molecules/dashboard/GuidanceTooltip";
-import { AISuggestions } from "@/components/molecules/dashboard/AISuggestions";
 import { Separator } from "@/components/ui/separator";
 import { Loader2, Smile, ThumbsUp, ThumbsDown, Clock, Rocket, Turtle, HelpCircle } from "lucide-react";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
@@ -67,12 +67,6 @@ export default function ReviewForm() {
         setIsSubmitting(false);
     }, 1500);
   }
-
-  const handleSuggestionSelect = (suggestion: string) => {
-    const currentComments = form.getValues("comments") || "";
-    const newComments = currentComments ? `${currentComments}\n- ${suggestion}` : `- ${suggestion}`;
-    form.setValue("comments", newComments, { shouldValidate: true });
-  };
 
   return (
     <Form {...form}>
@@ -215,8 +209,6 @@ export default function ReviewForm() {
                         </FormItem>
                     )}
                 />
-
-                <AISuggestions onSelect={handleSuggestionSelect} />
             </div>
         </div>
         
