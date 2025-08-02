@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { CheckCircle, Smile, Users, Clock } from "lucide-react";
+import { Smile, Users, Clock } from "lucide-react";
 import { LayananReviewLogo } from "@/components/icons";
 
 export default function Home() {
@@ -82,22 +82,6 @@ export default function Home() {
                   Bantu kami mengidentifikasi hambatan dan merampingkan proses kami untuk melayani Anda lebih cepat.
                 </CardContent>
               </Card>
-            </div>
-             <div className="mt-16 text-center">
-              <h3 className="text-3xl font-bold text-foreground">Pengalaman Cerdas dan Terpandu</h3>
-               <p className="mt-2 text-muted-foreground max-w-2xl mx-auto">
-                Platform kami menggunakan AI untuk membuat pemberian umpan balik lebih sederhana dan lebih efektif.
-              </p>
-              <div className="mt-8 flex flex-col items-center gap-4">
-                  <div className="flex items-center gap-3 text-left p-4 rounded-lg max-w-md">
-                      <CheckCircle className="h-6 w-6 text-accent flex-shrink-0" />
-                      <p><span className="font-semibold">Saran Berbasis AI:</span> Dapatkan petunjuk cerdas berdasarkan umpan balik umum untuk membantu Anda mengartikulasikan pemikiran Anda.</p>
-                  </div>
-                   <div className="flex items-center gap-3 text-left p-4 rounded-lg max-w-md">
-                      <CheckCircle className="h-6 w-6 text-accent flex-shrink-0" />
-                      <p><span className="font-semibold">Proses Ulasan Terpandu:</span> Kami akan memandu Anda melalui setiap langkah untuk memastikan umpan balik Anda terperinci dan berdampak.</p>
-                  </div>
-              </div>
             </div>
           </div>
         </section>
