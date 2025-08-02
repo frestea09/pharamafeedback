@@ -7,11 +7,15 @@ import { DataTable } from "@/components/organisms/admin/DataTable";
 import { getColumns } from "./columns";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { ReviewDetailDialog } from "@/components/organisms/ReviewDetailDialog";
+import { useSearchParams } from "next/navigation";
 
 export default function HistoryPage() {
   const { reviews } = useContext(ReviewContext);
   const [selectedReview, setSelectedReview] = useState<UnitReview | null>(null);
   const [isDetailOpen, setIsDetailOpen] = useState(false);
+  const searchParams = useSearchParams();
+  const name = searchParams.get('name') || "Pengguna";
+
 
   const handleViewDetail = (review: UnitReview) => {
     setSelectedReview(review);
@@ -21,7 +25,7 @@ export default function HistoryPage() {
   const columns = useMemo(() => getColumns(handleViewDetail), []);
 
   const userReviews = reviews
-    .filter(review => review.user.startsWith("Pengguna"))
+    .filter(review => review.user === name)
     .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
   return (

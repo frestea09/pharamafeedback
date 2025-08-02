@@ -1,3 +1,4 @@
+
 "use client";
 
 import Link from "next/link";
@@ -31,7 +32,7 @@ export default function LoginPage() {
             </div>
             <CardTitle className="text-2xl">Login Pengguna</CardTitle>
             <CardDescription>
-              Masukkan kredensial Anda untuk memberikan umpan balik.
+              Pilih unit Anda untuk memberikan umpan balik.
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -69,9 +70,14 @@ export default function LoginPage() {
             </div>
           </CardContent>
           <CardFooter className="flex flex-col gap-4">
-            <Button className="w-full" asChild>
-              <Link href="/dashboard">Masuk</Link>
-            </Button>
+             <div className="grid grid-cols-2 gap-4 w-full">
+               <Button className="w-full" asChild>
+                <Link href="/dashboard?unit=Farmasi&name=Pengguna+Farmasi">Login Farmasi</Link>
+              </Button>
+               <Button className="w-full" asChild>
+                <Link href="/dashboard?unit=Rawat+Jalan&name=Pengguna+Rawat+Jalan">Login Rawat Jalan</Link>
+              </Button>
+             </div>
             <p className="text-sm text-muted-foreground">
               Apakah Anda seorang admin?{" "}
               <Link

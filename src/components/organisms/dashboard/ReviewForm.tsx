@@ -4,7 +4,8 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -51,6 +52,10 @@ export default function ReviewForm() {
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { addReview } = useContext(ReviewContext);
+  const searchParams = useSearchParams();
+  const unit = searchParams.get('unit') || "Tidak Diketahui";
+  const name = searchParams.get('name') || "Pengguna Anonim";
+
 
   const form = useForm<ReviewFormValues>({
     resolver: zodResolver(reviewFormSchema),
@@ -64,9 +69,9 @@ export default function ReviewForm() {
     setTimeout(() => {
         const newReview: RawUnitReview = {
             id: `rev-${Date.now()}`,
-            user: "Pengguna 001",
+            user: name,
             date: new Date().toISOString(),
-            unit: "Farmasi",
+            unit: unit,
             rawCompleteness: data.serviceCompleteness,
             comments: data.comments || "",
             serviceSpeed: data.serviceSpeed,
