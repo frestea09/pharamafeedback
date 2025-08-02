@@ -33,9 +33,10 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
-import { users as initialUsers, User } from "@/lib/users";
+import { useUser } from "@/context/UserContext";
 import { Loader2, ArrowLeft } from "lucide-react";
 import Link from "next/link";
+import { User } from "@/lib/users";
 
 const formSchema = z.object({
   name: z.string().min(2, { message: "Nama harus memiliki setidaknya 2 karakter." }),
@@ -50,8 +51,10 @@ export default function UserFormPage() {
   const router = useRouter();
   const params = useParams();
   const { toast } = useToast();
-  const [user, setUser] = useState<User | null>(null);
+  const { getUserById, addUser, updateUser } = useUser();
+
   const [isLoading, setIsLoading] = useState(true);
+  const [user, setUser] = useState<User | null>(null);
 
   const id = params.id as string;
   const isEditing = id !== 'new';
@@ -68,7 +71,7 @@ export default function UserFormPage() {
 
   useEffect(() => {
     if (isEditing) {
-      const existingUser = initialUsers.find((u) => u.id === id);
+      const existingUser = getUserById(id);
       if (existingUser) {
         setUser(existingUser);
         form.reset({
@@ -87,26 +90,27 @@ export default function UserFormPage() {
       }
     }
     setIsLoading(false);
-  }, [id, isEditing, router, form, toast]);
+  }, [id, isEditing, router, form, toast, getUserById]);
 
 
   const onSubmit = (values: UserFormValues) => {
-    const dataToSubmit = {
-      name: values.name,
-      email: values.email,
-      role: values.role,
-      unit: values.role === 'Admin' && values.unit && values.unit !== 'none' ? values.unit : undefined,
-    };
-
-    // Simulate API call
-    console.log("Submitting:", dataToSubmit);
-
-    if (isEditing) {
+    const unitValue = values.role === 'Admin' && values.unit && values.unit !== 'none' ? values.unit : undefined;
+    
+    if (isEditing && user) {
+        updateUser({
+            ...user,
+            ...values,
+            unit: unitValue
+        });
       toast({
         title: "Pengguna Diperbarui",
         description: `Data untuk ${values.name} telah berhasil diperbarui.`,
       });
     } else {
+        addUser({
+            ...values,
+            unit: unitValue,
+        });
       toast({
         title: "Pengguna Ditambahkan",
         description: `${values.name} telah berhasil ditambahkan sebagai pengguna baru.`,

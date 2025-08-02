@@ -2,7 +2,7 @@
 "use client";
 
 import { useState } from "react";
-import { users as initialUsers, User } from "@/lib/users";
+import { User } from "@/lib/users";
 import { DataTable } from "@/components/organisms/admin/DataTable";
 import { getColumns } from "./columns";
 import { Input } from "@/components/ui/input";
@@ -28,6 +28,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { useToast } from "@/hooks/use-toast";
 import { useRouter } from "next/navigation";
+import { useUser } from "@/context/UserContext";
 
 function UserFilters({ table }: { table: Table<User> }) {
   return (
@@ -64,7 +65,7 @@ function UserFilters({ table }: { table: Table<User> }) {
 }
 
 export default function AllUsersPage() {
-  const [users, setUsers] = useState<User[]>(initialUsers);
+  const { users, deleteUser } = useUser();
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const { toast } = useToast();
@@ -81,7 +82,7 @@ export default function AllUsersPage() {
 
   const confirmDelete = () => {
     if (selectedUser) {
-      setUsers(users.filter((user) => user.id !== selectedUser.id));
+      deleteUser(selectedUser.id);
       toast({
         title: "Pengguna Dihapus",
         description: `Pengguna ${selectedUser.name} telah berhasil dihapus.`,
