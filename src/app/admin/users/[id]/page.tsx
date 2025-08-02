@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useEffect } from "react";
@@ -92,7 +93,7 @@ export default function UserFormPage() {
   }, [id, isEditing, router, form, toast, getUserById]);
 
   const onSubmit = (values: UserFormValues) => {
-    const unitValue = values.role === 'Admin' && values.unit && values.unit !== 'none' ? values.unit : undefined;
+    const unitValue = values.role === 'Admin' && values.unit !== 'none' ? values.unit : undefined;
     
     if (isEditing && user) {
       updateUser({
