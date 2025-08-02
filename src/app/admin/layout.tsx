@@ -2,7 +2,7 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import {
   SidebarProvider,
   Sidebar,
@@ -25,11 +25,15 @@ const menuItems = [
     { href: "/admin/users", icon: Users, label: "Kelola Pengguna", tooltip: "Pengguna" },
 ];
 
-const pageTitles: { [key: string]: string } = {
-    "/admin/dashboard": "Dasbor Admin",
-    "/admin/reviews": "Semua Ulasan",
-    "/admin/users": "Kelola Pengguna"
-};
+const getPageTitle = (pathname: string, unit: string | null): string => {
+    const baseTitles: { [key: string]: string } = {
+        "/admin/dashboard": "Dasbor Admin",
+        "/admin/reviews": "Semua Ulasan",
+        "/admin/users": "Kelola Pengguna"
+    };
+    const baseTitle = baseTitles[pathname] || "Admin";
+    return unit ? `${baseTitle} - Unit ${unit}` : baseTitle;
+}
 
 export default function AdminLayout({
   children,
@@ -37,12 +41,16 @@ export default function AdminLayout({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const unit = searchParams.get('unit');
 
   if (pathname === '/admin') {
     return <>{children}</>;
   }
 
-  const currentPageTitle = pageTitles[pathname] || "Admin";
+  const currentPageTitle = getPageTitle(pathname, unit);
+  const adminName = unit ? `Admin ${unit}` : "Ahmad Subarjo";
+  const adminEmail = unit ? `admin.${unit.toLowerCase().replace(" ", "")}@pharmafeedback.com` : "admin@pharmafeedback.com";
 
   return (
     <SidebarProvider>
@@ -57,8 +65,8 @@ export default function AdminLayout({
         <SidebarMenu>
             {menuItems.map((item) => (
                 <SidebarMenuItem key={item.href}>
-                    <SidebarMenuButton href={item.href} tooltip={item.tooltip} isActive={pathname === item.href} asChild>
-                        <Link href={item.href}>
+                    <SidebarMenuButton href={{ pathname: item.href, query: unit ? { unit } : {} }} tooltip={item.tooltip} isActive={pathname === item.href} asChild>
+                        <Link href={{ pathname: item.href, query: unit ? { unit } : {} }}>
                             <item.icon />
                             <span>{item.label}</span>
                         </Link>
@@ -80,12 +88,12 @@ export default function AdminLayout({
         </SidebarMenu>
         <div className="flex items-center gap-3 p-2 rounded-md bg-sidebar-accent">
             <Avatar className="h-10 w-10">
-                <AvatarImage src="https://placehold.co/100x100.png?text=AS" alt="Ahmad Subarjo" data-ai-hint="person glasses" />
-                <AvatarFallback>AS</AvatarFallback>
+                <AvatarImage src="https://placehold.co/100x100.png" alt={adminName} data-ai-hint="person glasses" />
+                <AvatarFallback>{adminName.split(" ").map(n => n[0]).join("")}</AvatarFallback>
             </Avatar>
             <div className="flex flex-col">
-                <span className="font-semibold text-sm">Ahmad Subarjo</span>
-                <span className="text-xs text-muted-foreground">admin@pharmafeedback.com</span>
+                <span className="font-semibold text-sm">{adminName}</span>
+                <span className="text-xs text-muted-foreground">{adminEmail}</span>
             </div>
         </div>
         </SidebarFooter>

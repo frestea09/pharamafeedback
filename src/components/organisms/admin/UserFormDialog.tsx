@@ -44,6 +44,7 @@ const formSchema = z.object({
   name: z.string().min(2, { message: "Nama harus memiliki setidaknya 2 karakter." }),
   email: z.string().email({ message: "Format email tidak valid." }),
   role: z.enum(["Admin", "User"]),
+  unit: z.enum(["Farmasi", "Rawat Jalan", "Rawat Inap"]).optional(),
 });
 
 type UserFormValues = z.infer<typeof formSchema>;
@@ -55,6 +56,7 @@ export function UserFormDialog({ isOpen, onOpenChange, onSubmit, user }: UserFor
       name: "",
       email: "",
       role: "User",
+      unit: undefined,
     },
   });
 
@@ -64,12 +66,14 @@ export function UserFormDialog({ isOpen, onOpenChange, onSubmit, user }: UserFor
         name: user.name,
         email: user.email,
         role: user.role,
+        unit: user.unit,
       });
     } else {
       form.reset({
         name: "",
         email: "",
         role: "User",
+        unit: undefined,
       });
     }
   }, [user, form, isOpen]);
@@ -77,7 +81,12 @@ export function UserFormDialog({ isOpen, onOpenChange, onSubmit, user }: UserFor
   const isEditing = !!user;
 
   const handleFormSubmit = (values: UserFormValues) => {
-    onSubmit(values);
+    const dataToSubmit: any = { ...values };
+    // Ensure unit is not sent if the role is not Admin
+    if (values.role !== "Admin") {
+      delete dataToSubmit.unit;
+    }
+    onSubmit(dataToSubmit);
     form.reset();
   };
 
@@ -148,6 +157,33 @@ export function UserFormDialog({ isOpen, onOpenChange, onSubmit, user }: UserFor
                 </FormItem>
               )}
             />
+            {form.watch('role') === 'Admin' && (
+              <FormField
+                control={form.control}
+                name="unit"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Unit (Khusus Admin)</FormLabel>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Pilih unit (opsional)" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectItem value="Farmasi">Farmasi</SelectItem>
+                        <SelectItem value="Rawat Jalan">Rawat Jalan</SelectItem>
+                        <SelectItem value="Rawat Inap">Rawat Inap</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            )}
             <DialogFooter className="pt-4">
               <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
                 Batal

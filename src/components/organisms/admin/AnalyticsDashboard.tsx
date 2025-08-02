@@ -37,11 +37,20 @@ const chartConfig = {
 
 const COLORS = ["#FF8042", "#FFBB28", "#00C49F", "#0088FE", "#8884d8" ];
 
-export default function AnalyticsDashboard() {
+interface AnalyticsDashboardProps {
+  unit: string | null;
+}
+
+export default function AnalyticsDashboard({ unit }: AnalyticsDashboardProps) {
   const { reviews } = useContext(ReviewContext);
+  
+  const filteredReviews = useMemo(() => {
+    if (!unit) return reviews;
+    return reviews.filter(review => review.unit === unit);
+  }, [reviews, unit]);
 
   const averageRatings = useMemo(() => {
-    if (!reviews.length) {
+    if (!filteredReviews.length) {
       return [
         { name: "Kecepatan", average: 0, fill: "var(--color-speed)" },
         { name: "Kualitas", average: 0, fill: "var(--color-quality)" },
@@ -55,9 +64,9 @@ export default function AnalyticsDashboard() {
       serviceCompleteness: 0,
       staffFriendliness: 0,
     };
-    const count = reviews.length;
+    const count = filteredReviews.length;
 
-    for (const review of reviews) {
+    for (const review of filteredReviews) {
       totals.serviceSpeed += speedMapping[review.ratings.serviceSpeed];
       totals.serviceQuality += review.ratings.serviceQuality;
       totals.serviceCompleteness += review.ratings.serviceCompleteness;
@@ -73,7 +82,7 @@ export default function AnalyticsDashboard() {
         const order = ["Kualitas", "Keramahan", "Kecepatan", "Kelengkapan"];
         return order.indexOf(a.name) - order.indexOf(b.name);
     });
-  }, [reviews]);
+  }, [filteredReviews]);
 
   const serviceQualityDistribution = useMemo(() => {
     const distribution = [
@@ -83,14 +92,14 @@ export default function AnalyticsDashboard() {
         { name: '4 Bintang', count: 0 },
         { name: '5 Bintang', count: 0 },
     ];
-    reviews.forEach(review => {
+    filteredReviews.forEach(review => {
         const rating = review.ratings.serviceQuality;
         if (rating >= 1 && rating <= 5) {
             distribution[rating-1].count++;
         }
     });
     return distribution;
-  }, [reviews]);
+  }, [filteredReviews]);
 
 
   const getRatingColor = (rating: number) => {
@@ -193,6 +202,7 @@ export default function AnalyticsDashboard() {
             <TableHeader>
               <TableRow>
                 <TableHead>Pengguna</TableHead>
+                <TableHead>Unit</TableHead>
                 <TableHead>Dikirim</TableHead>
                 <TableHead className="text-center">Kualitas</TableHead>
                 <TableHead className="text-center">Keramahan</TableHead>
@@ -202,9 +212,10 @@ export default function AnalyticsDashboard() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {reviews.slice(0, 5).map((review) => (
+              {filteredReviews.slice(0, 5).map((review) => (
                 <TableRow key={review.id}>
                   <TableCell className="font-medium">{review.user}</TableCell>
+                  <TableCell>{review.unit}</TableCell>
                   <TableCell className="text-muted-foreground">{formatDistanceToNow(new Date(review.date), { addSuffix: true, locale: id })}</TableCell>
                   <TableCell className="text-center">
                      <Badge variant={getRatingColor(review.ratings.serviceQuality)}>{review.ratings.serviceQuality}/5</Badge>

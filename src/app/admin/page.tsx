@@ -33,8 +33,21 @@ export default function AdminLoginPage() {
 
     // Simulate API call
     setTimeout(() => {
-      if (email === "admin@pharmafeedback.com" && password === "admin123") {
-        router.push("/admin/dashboard");
+      if (password === "admin123") {
+         const lowerCaseEmail = email.toLowerCase();
+         if (lowerCaseEmail.includes("admin.farmasi")) {
+            router.push("/admin/dashboard?unit=Farmasi");
+         } else if (lowerCaseEmail.includes("admin.rawatjalan")) {
+            router.push("/admin/dashboard?unit=Rawat+Jalan");
+         } else if (lowerCaseEmail === "admin@pharmafeedback.com") {
+            router.push("/admin/dashboard");
+         } else {
+            toast({
+              variant: "destructive",
+              title: "Login Gagal",
+              description: "Email atau kata sandi yang Anda masukkan salah.",
+            });
+         }
       } else {
         toast({
           variant: "destructive",
@@ -73,6 +86,9 @@ export default function AdminLoginPage() {
                   onChange={(e) => setEmail(e.target.value)}
                   required
                 />
+                 <p className="text-xs text-muted-foreground">
+                  Coba: `admin@pharmafeedback.com` (umum) atau `admin.farmasi@pharmafeedback.com`
+                </p>
               </div>
               <div className="space-y-2">
                 <Label htmlFor="password">Kata Sandi</Label>
@@ -98,6 +114,9 @@ export default function AdminLoginPage() {
                     )}
                   </button>
                 </div>
+                 <p className="text-xs text-muted-foreground">
+                  Kata sandi: `admin123`
+                </p>
               </div>
             </CardContent>
             <CardFooter className="flex flex-col gap-4">

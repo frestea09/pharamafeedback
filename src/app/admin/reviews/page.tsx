@@ -26,9 +26,10 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { useToast } from "@/hooks/use-toast";
+import { useSearchParams } from "next/navigation";
 
 function ReviewFilters({ table }: { table: Table<UnitReview> }) {
-  const units = ["Semua Unit", "Farmasi", "Rawat Jalan", "Laboratorium", "Radiologi"];
+  const units = ["Semua Unit", "Farmasi", "Rawat Jalan", "Rawat Inap", "Laboratorium", "Radiologi"];
   
   return (
     <div className="flex items-center gap-2">
@@ -66,10 +67,18 @@ function ReviewFilters({ table }: { table: Table<UnitReview> }) {
 export default function AllReviewsPage() {
   const { reviews, deleteReview } = useContext(ReviewContext);
   const { toast } = useToast();
+  const searchParams = useSearchParams();
+  const unit = searchParams.get('unit');
+
   const [selectedReview, setSelectedReview] = useState<UnitReview | null>(null);
   const [isDetailOpen, setIsDetailOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
+  const filteredReviews = useMemo(() => {
+    if (!unit) return reviews;
+    return reviews.filter(review => review.unit === unit);
+  }, [reviews, unit]);
+  
   const handleViewDetail = (review: UnitReview) => {
     setSelectedReview(review);
     setIsDetailOpen(true);
@@ -96,7 +105,7 @@ export default function AllReviewsPage() {
 
   return (
     <div className="container mx-auto py-2">
-      <DataTable columns={columns} data={reviews} filterComponent={<ReviewFilters />} />
+      <DataTable columns={columns} data={filteredReviews} filterComponent={<ReviewFilters />} />
       <ReviewDetailDialog review={selectedReview} isOpen={isDetailOpen} onOpenChange={setIsDetailOpen} />
       <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
         <AlertDialogContent>

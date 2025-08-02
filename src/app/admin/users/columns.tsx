@@ -69,6 +69,14 @@ export const getColumns = ({ onEdit, onDelete }: UserActionsProps): ColumnDef<Us
     },
   },
   {
+    accessorKey: "unit",
+    header: "Unit",
+    cell: ({ row }) => {
+        const unit = row.getValue("unit") as string;
+        return unit ? <Badge variant="outline">{unit}</Badge> : "-";
+    },
+  },
+  {
     accessorKey: "lastLogin",
     header: "Login Terakhir",
     cell: ({ row }) => formatDistanceToNow(new Date(row.getValue("lastLogin")), { addSuffix: true, locale: id }),
@@ -106,4 +114,3 @@ export const getColumns = ({ onEdit, onDelete }: UserActionsProps): ColumnDef<Us
     },
   },
 ]
-
