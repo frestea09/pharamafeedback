@@ -94,6 +94,12 @@ export default function UserFormPage() {
     setIsLoading(false);
   }, [id, isEditing, router, form, toast, getUserById]);
 
+  useEffect(() => {
+    if (watchedRole === 'User') {
+      form.setValue('unit', 'none');
+    }
+  }, [watchedRole, form]);
+
   const onSubmit = (values: UserFormValues) => {
     const unitValue = values.role === 'Admin' && values.unit !== 'none' ? values.unit : undefined;
     
