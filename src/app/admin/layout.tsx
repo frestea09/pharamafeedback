@@ -20,7 +20,6 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { LayoutDashboard, Users, MessageSquare, LogOut, FileText, UserPlus, TestTube } from "lucide-react";
-import type { Period } from "./dashboard/page";
 
 const menuItems = [
     { href: "/admin/dashboard", icon: LayoutDashboard, label: "Dasbor Utama", tooltip: "Dasbor" },
@@ -28,18 +27,8 @@ const menuItems = [
     { href: "/admin/users", icon: Users, label: "Kelola Pengguna", tooltip: "Pengguna" },
 ];
 
-const periodLabels: { [key in Period]: string } = {
-  today: "Hari Ini",
-  yesterday: "Kemarin",
-  week: "7 Hari Terakhir",
-  month: "30 Hari Terakhir",
-  last_month: "Bulan Kemarin",
-  year: "Tahun Ini",
-  last_year: "Tahun Kemarin",
-  all: "Semua Waktu",
-};
 
-const getPageTitle = (pathname: string, unit: string | null, period: Period | null): string => {
+const getPageTitle = (pathname: string, unit: string | null): string => {
     const baseTitles: { [key: string]: string } = {
         "/admin/dashboard": "Dasbor Admin",
         "/admin/reviews": "Semua Ulasan",
@@ -49,12 +38,6 @@ const getPageTitle = (pathname: string, unit: string | null, period: Period | nu
 
     if (unit) {
       baseTitle = `${baseTitle} - Unit ${unit}`;
-    }
-    
-    if (pathname === '/admin/dashboard' && period && periodLabels[period]) {
-        if (period !== 'all') {
-          baseTitle = `${baseTitle}: ${periodLabels[period]}`;
-        }
     }
     
     return baseTitle;
@@ -68,13 +51,12 @@ export default function AdminLayout({
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const unit = searchParams.get('unit');
-  const period = searchParams.get('period') as Period | null;
 
   if (pathname === '/admin' || pathname.startsWith('/admin/users/')) {
     return <>{children}</>;
   }
 
-  const currentPageTitle = getPageTitle(pathname, unit, period);
+  const currentPageTitle = getPageTitle(pathname, unit);
   const adminName = unit ? `Admin ${unit}` : "Ahmad Subarjo";
   const adminEmail = unit ? `admin.${unit.toLowerCase().replace(" ", "")}@pharmafeedback.com` : "admin@pharmafeedback.com";
 

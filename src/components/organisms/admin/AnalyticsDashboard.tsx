@@ -20,10 +20,10 @@ import {
 import { ReviewContext, UnitReview } from "@/context/ReviewContext";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { formatDistanceToNow, startOfDay, endOfDay, subDays, startOfWeek, endOfWeek, startOfMonth, endOfMonth, subMonths, startOfYear, endOfYear, subYears } from "date-fns";
+import { formatDistanceToNow, startOfDay, endOfDay } from "date-fns";
 import { id } from "date-fns/locale";
 import { ThumbsUp, ThumbsDown, HelpCircle, FileX } from "lucide-react";
-import type { Period } from "@/app/admin/dashboard/page";
+import { DateRange } from "react-day-picker";
 
 
 const speedMapping: { [key: string]: number } = { slow: 1, medium: 3, fast: 5 };
@@ -40,62 +40,23 @@ const COLORS = ["#FF8042", "#FFBB28", "#00C49F", "#0088FE", "#8884d8" ];
 
 interface AnalyticsDashboardProps {
   unit: string | null;
-  period: Period;
+  period: DateRange | undefined;
 }
 
 export default function AnalyticsDashboard({ unit, period }: AnalyticsDashboardProps) {
   const { reviews } = useContext(ReviewContext);
   
   const filteredReviews = useMemo(() => {
-    const now = new Date();
-    let startDate: Date;
-    let endDate: Date = now;
-
-    switch (period) {
-        case 'today':
-            startDate = startOfDay(now);
-            endDate = endOfDay(now);
-            break;
-        case 'yesterday':
-            startDate = startOfDay(subDays(now, 1));
-            endDate = endOfDay(subDays(now, 1));
-            break;
-        case 'week':
-            startDate = subDays(now, 7);
-            break;
-        case 'month':
-            startDate = subDays(now, 30);
-            break;
-        case 'last_month':
-            const lastMonth = subMonths(now, 1);
-            startDate = startOfMonth(lastMonth);
-            endDate = endOfMonth(lastMonth);
-            break;
-        case 'year':
-            startDate = startOfYear(now);
-            break;
-        case 'last_year':
-            const lastYear = subYears(now, 1);
-            startDate = startOfYear(lastYear);
-            endDate = endOfYear(lastYear);
-            break;
-        case 'all':
-        default:
-            startDate = new Date(0); // far in the past
-            break;
-    }
-
     return reviews.filter(review => {
         const reviewDate = new Date(review.date);
         const unitMatch = unit ? review.unit === unit : true;
         
-        let dateMatch;
-        if (period === 'all') {
-            dateMatch = true;
-        } else if (period === 'today' || period === 'yesterday' || period === 'last_month' || period === 'last_year') {
-            dateMatch = reviewDate >= startDate && reviewDate <= endDate;
-        } else {
-             dateMatch = reviewDate >= startDate;
+        let dateMatch = true;
+        if (period?.from) {
+            dateMatch = reviewDate >= startOfDay(period.from);
+        }
+        if (period?.to) {
+            dateMatch = dateMatch && reviewDate <= endOfDay(period.to);
         }
         
         return unitMatch && dateMatch;
@@ -193,7 +154,7 @@ export default function AnalyticsDashboard({ unit, period }: AnalyticsDashboardP
                 <FileX className="mx-auto h-12 w-12 text-muted-foreground" />
                 <CardTitle className="mt-4">Tidak Ada Data</CardTitle>
                 <CardDescription>
-                    Tidak ada ulasan yang ditemukan untuk periode atau unit yang dipilih.
+                    Tidak ada ulasan yang ditemukan untuk rentang tanggal atau unit yang dipilih.
                 </CardDescription>
             </CardHeader>
         </Card>
