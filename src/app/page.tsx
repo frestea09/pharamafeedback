@@ -14,10 +14,10 @@ export default function Home() {
         </div>
         <nav className="flex items-center gap-4">
           <Button variant="ghost" asChild>
-            <Link href="/login">Patient Login</Link>
+            <Link href="/login">Login Pasien</Link>
           </Button>
           <Button asChild>
-            <Link href="/admin">Admin Login</Link>
+            <Link href="/admin">Login Admin</Link>
           </Button>
         </nav>
       </header>
@@ -25,17 +25,17 @@ export default function Home() {
       <main className="flex-grow">
         <section className="container mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-32 text-center">
           <h2 className="text-4xl md:text-5xl font-extrabold tracking-tight text-foreground">
-            Improve Pharmacy Services, Together.
+            Tingkatkan Layanan Farmasi, Bersama.
           </h2>
           <p className="mt-4 max-w-2xl mx-auto text-lg text-muted-foreground">
-            Your feedback is vital. Help RSUD Oto Iskandar Dinata enhance its pharmacy services by sharing your experience. Quick, easy, and impactful.
+            Umpan balik Anda sangat penting. Bantu RSUD Oto Iskandar Dinata meningkatkan layanan farmasinya dengan membagikan pengalaman Anda. Cepat, mudah, dan berdampak.
           </p>
           <div className="mt-8 flex justify-center gap-4">
             <Button size="lg" asChild>
-              <Link href="/login">Leave a Review</Link>
+              <Link href="/login">Berikan Ulasan</Link>
             </Button>
             <Button size="lg" variant="outline" asChild>
-              <Link href="#features">Learn More</Link>
+              <Link href="#features">Pelajari Lebih Lanjut</Link>
             </Button>
           </div>
         </section>
@@ -43,9 +43,9 @@ export default function Home() {
         <section id="features" className="bg-card py-20 md:py-24">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center">
-              <h3 className="text-3xl font-bold text-foreground">Why Your Feedback Matters</h3>
+              <h3 className="text-3xl font-bold text-foreground">Mengapa Umpan Balik Anda Penting</h3>
               <p className="mt-2 text-muted-foreground">
-                Your reviews provide direct insights that lead to better care for everyone.
+                Ulasan Anda memberikan wawasan langsung yang mengarah pada perawatan yang lebih baik untuk semua orang.
               </p>
             </div>
             <div className="mt-12 grid gap-8 md:grid-cols-2 lg:grid-cols-3">
@@ -54,10 +54,10 @@ export default function Home() {
                   <div className="bg-primary/10 p-3 rounded-full">
                     <Smile className="h-6 w-6 text-primary" />
                   </div>
-                  <CardTitle>Enhance Service Quality</CardTitle>
+                  <CardTitle>Tingkatkan Kualitas Pelayanan</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  Rate staff friendliness and professionalism to ensure everyone receives courteous and effective care.
+                  Nilai keramahan dan profesionalisme staf untuk memastikan semua orang menerima perawatan yang sopan dan efektif.
                 </CardContent>
               </Card>
               <Card>
@@ -65,10 +65,10 @@ export default function Home() {
                   <div className="bg-primary/10 p-3 rounded-full">
                     <Pill className="h-6 w-6 text-primary" />
                   </div>
-                  <CardTitle>Improve Medication Availability</CardTitle>
+                  <CardTitle>Tingkatkan Ketersediaan Obat</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  Your feedback helps us manage our inventory better, ensuring essential medications are always in stock.
+                  Umpan balik Anda membantu kami mengelola inventaris dengan lebih baik, memastikan obat-obatan penting selalu tersedia.
                 </CardContent>
               </Card>
               <Card>
@@ -76,26 +76,26 @@ export default function Home() {
                   <div className="bg-primary/10 p-3 rounded-full">
                     <Clock className="h-6 w-6 text-primary" />
                   </div>
-                  <CardTitle>Reduce Wait Times</CardTitle>
+                  <CardTitle>Kurangi Waktu Tunggu</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  Help us identify bottlenecks and streamline our processes to get you your medications faster.
+                  Bantu kami mengidentifikasi hambatan dan merampingkan proses kami untuk memberikan obat Anda lebih cepat.
                 </CardContent>
               </Card>
             </div>
              <div className="mt-16 text-center">
-              <h3 className="text-3xl font-bold text-foreground">A Smart, Guided Experience</h3>
+              <h3 className="text-3xl font-bold text-foreground">Pengalaman Cerdas dan Terpandu</h3>
                <p className="mt-2 text-muted-foreground max-w-2xl mx-auto">
-                Our platform uses AI to make giving feedback simpler and more effective.
+                Platform kami menggunakan AI untuk membuat pemberian umpan balik lebih sederhana dan lebih efektif.
               </p>
               <div className="mt-8 flex flex-col items-center gap-4">
                   <div className="flex items-center gap-3 text-left p-4 rounded-lg max-w-md">
                       <CheckCircle className="h-6 w-6 text-accent flex-shrink-0" />
-                      <p><span className="font-semibold">AI-Powered Suggestions:</span> Get smart prompts based on common feedback to help you articulate your thoughts.</p>
+                      <p><span className="font-semibold">Saran Berbasis AI:</span> Dapatkan petunjuk cerdas berdasarkan umpan balik umum untuk membantu Anda mengartikulasikan pemikiran Anda.</p>
                   </div>
                    <div className="flex items-center gap-3 text-left p-4 rounded-lg max-w-md">
                       <CheckCircle className="h-6 w-6 text-accent flex-shrink-0" />
-                      <p><span className="font-semibold">Guided Review Process:</span> We'll walk you through each step to ensure your feedback is detailed and impactful.</p>
+                      <p><span className="font-semibold">Proses Ulasan Terpandu:</span> Kami akan memandu Anda melalui setiap langkah untuk memastikan umpan balik Anda terperinci dan berdampak.</p>
                   </div>
               </div>
             </div>
@@ -104,7 +104,7 @@ export default function Home() {
       </main>
 
       <footer className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 text-center text-muted-foreground">
-        <p>&copy; {new Date().getFullYear()} PharmaFeedback. All rights reserved.</p>
+        <p>&copy; {new Date().getFullYear()} PharmaFeedback. Semua hak dilindungi undang-undang.</p>
       </footer>
     </div>
   );

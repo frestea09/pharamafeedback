@@ -1,24 +1,24 @@
 'use server';
 
 /**
- * @fileOverview Provides guidance to patients during the review process to ensure meaningful feedback.
+ * @fileOverview Memberikan panduan kepada pasien selama proses peninjauan untuk memastikan umpan balik yang bermakna.
  *
- * - guideReviewProcess - A function that guides the review process.
- * - GuideReviewProcessInput - The input type for the guideReviewProcess function.
- * - GuideReviewProcessOutput - The return type for the guideReviewProcess function.
+ * - guideReviewProcess - Sebuah fungsi yang memandu proses peninjauan.
+ * - GuideReviewProcessInput - Tipe input untuk fungsi guideReviewProcess.
+ * - GuideReviewProcessOutput - Tipe kembalian untuk fungsi guideReviewProcess.
  */
 
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
 
 const GuideReviewProcessInputSchema = z.object({
-  aspect: z.string().describe('The specific aspect of the pharmacy service being reviewed (e.g., wait time, staff friendliness, medication availability).'),
-  pastFeedback: z.string().optional().describe('Optional: Any past feedback the patient has provided.'),
+  aspect: z.string().describe('Aspek spesifik dari layanan farmasi yang sedang ditinjau (misalnya, waktu tunggu, keramahan staf, ketersediaan obat).'),
+  pastFeedback: z.string().optional().describe('Opsional: Umpan balik lampau yang pernah diberikan pasien.'),
 });
 export type GuideReviewProcessInput = z.infer<typeof GuideReviewProcessInputSchema>;
 
 const GuideReviewProcessOutputSchema = z.object({
-  guidance: z.string().describe('Guiding instructions and suggestions for the patient to provide meaningful feedback on the specified aspect.'),
+  guidance: z.string().describe('Instruksi dan saran panduan bagi pasien untuk memberikan umpan balik yang bermakna pada aspek yang ditentukan.'),
 });
 export type GuideReviewProcessOutput = z.infer<typeof GuideReviewProcessOutputSchema>;
 
@@ -30,17 +30,17 @@ const prompt = ai.definePrompt({
   name: 'guideReviewProcessPrompt',
   input: {schema: GuideReviewProcessInputSchema},
   output: {schema: GuideReviewProcessOutputSchema},
-  prompt: `You are a helpful assistant guiding patients to provide effective feedback about their pharmacy experience.
+  prompt: `Anda adalah asisten yang membantu memandu pasien untuk memberikan umpan balik yang efektif tentang pengalaman farmasi mereka.
 
-  The patient is currently reviewing the following aspect of the pharmacy service: {{{aspect}}}.
+  Pasien saat ini sedang meninjau aspek layanan farmasi berikut: {{{aspect}}}.
 
   {% if pastFeedback %}
-  Here is some of their past feedback: {{{pastFeedback}}}
+  Berikut adalah beberapa umpan balik mereka di masa lalu: {{{pastFeedback}}}
   {% endif %}
 
-  Provide clear and concise instructions and suggestions to help the patient give meaningful and detailed feedback. Focus on specific questions they might consider to elaborate on their experience. Encourage them to provide examples and be as specific as possible.
+  Berikan instruksi dan saran yang jelas dan ringkas untuk membantu pasien memberikan umpan balik yang bermakna dan terperinci. Fokus pada pertanyaan spesifik yang mungkin mereka pertimbangkan untuk menguraikan pengalaman mereka. Dorong mereka untuk memberikan contoh dan menjadi sespesifik mungkin.
 
-  The response should be in a friendly and conversational tone.
+  Respons harus dalam nada yang ramah dan percakapan, dan dalam Bahasa Indonesia.
   `,
 });
 

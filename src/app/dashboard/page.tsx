@@ -1,4 +1,4 @@
-import ReviewForm from "@/components/dashboard/ReviewForm";
+import ReviewForm from "@/components/organisms/dashboard/ReviewForm";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
 export default function DashboardPage() {
@@ -6,9 +6,9 @@ export default function DashboardPage() {
     <div className="max-w-4xl mx-auto">
       <Card>
         <CardHeader>
-          <CardTitle className="text-2xl">Share Your Experience</CardTitle>
+          <CardTitle className="text-2xl">Bagikan Pengalaman Anda</CardTitle>
           <CardDescription>
-            Your detailed feedback helps us improve our pharmacy services. Please rate the following aspects of your recent visit.
+            Umpan balik Anda yang terperinci membantu kami meningkatkan layanan farmasi kami. Silakan beri peringkat pada aspek-aspek berikut dari kunjungan terakhir Anda.
           </CardDescription>
         </CardHeader>
         <CardContent>

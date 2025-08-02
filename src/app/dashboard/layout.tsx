@@ -33,21 +33,21 @@ export default function DashboardLayout({
         <SidebarContent>
           <SidebarMenu>
             <SidebarMenuItem>
-              <SidebarMenuButton href="/dashboard" tooltip="New Review" isActive>
+              <SidebarMenuButton href="/dashboard" tooltip="Ulasan Baru" isActive>
                 <NotebookPen />
-                <span>New Review</span>
+                <span>Ulasan Baru</span>
               </SidebarMenuButton>
             </SidebarMenuItem>
             <SidebarMenuItem>
-              <SidebarMenuButton href="#" tooltip="History" className="opacity-50 cursor-not-allowed">
+              <SidebarMenuButton href="#" tooltip="Riwayat" className="opacity-50 cursor-not-allowed">
                 <History />
-                <span>My History</span>
+                <span>Riwayat Saya</span>
               </SidebarMenuButton>
             </SidebarMenuItem>
             <SidebarMenuItem>
-              <SidebarMenuButton href="#" tooltip="Profile" className="opacity-50 cursor-not-allowed">
+              <SidebarMenuButton href="#" tooltip="Profil" className="opacity-50 cursor-not-allowed">
                 <User />
-                <span>Profile</span>
+                <span>Profil</span>
               </SidebarMenuButton>
             </SidebarMenuItem>
           </SidebarMenu>
@@ -57,7 +57,7 @@ export default function DashboardLayout({
             <SidebarMenuItem>
                 <SidebarMenuButton href="/login">
                   <LogOut />
-                  <span>Logout</span>
+                  <span>Keluar</span>
                 </SidebarMenuButton>
               </SidebarMenuItem>
            </SidebarMenu>
@@ -67,7 +67,7 @@ export default function DashboardLayout({
                 <AvatarFallback>P</AvatarFallback>
               </Avatar>
               <div className="flex flex-col">
-                <span className="font-semibold text-sm">Patient 001</span>
+                <span className="font-semibold text-sm">Pasien 001</span>
                 <span className="text-xs text-muted-foreground">patient@mail.com</span>
               </div>
           </div>
@@ -77,9 +77,9 @@ export default function DashboardLayout({
         <header className="flex h-14 items-center gap-4 border-b bg-card px-6">
             <SidebarTrigger className="md:hidden" />
             <div className="flex-1">
-                <h1 className="text-lg font-semibold">Patient Dashboard</h1>
+                <h1 className="text-lg font-semibold">Dasbor Pasien</h1>
             </div>
-            <Button variant="outline" size="sm">Today</Button>
+            <Button variant="outline" size="sm">Hari Ini</Button>
         </header>
         <main className="flex-1 overflow-y-auto p-4 md:p-6">{children}</main>
       </SidebarInset>

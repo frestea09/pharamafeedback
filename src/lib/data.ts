@@ -1,14 +1,14 @@
 export const commonIssues = [
-  "Long wait times during peak hours",
-  "Medication was out of stock",
-  "Staff seemed rushed and busy",
-  "Instructions for medication were not clear",
-  "Difficulty reaching the pharmacy by phone",
+  "Waktu tunggu yang lama pada jam sibuk",
+  "Obat habis",
+  "Staf tampak terburu-buru dan sibuk",
+  "Petunjuk penggunaan obat tidak jelas",
+  "Sulit menghubungi apotek melalui telepon",
 ];
 
 export const pastRatings = [
-  { aspect: "Wait Time", rating: 2 },
-  { aspect: "Medication Availability", rating: 4 },
+  { aspect: "Waktu Tunggu", rating: 2 },
+  { aspect: "Ketersediaan Obat", rating: 4 },
 ];
 
 export interface PharmacyReview {
@@ -27,7 +27,7 @@ export interface PharmacyReview {
 export const pharmacyReviews: PharmacyReview[] = [
   {
     id: "rev-1",
-    patient: "Patient Zero",
+    patient: "Pasien Zero",
     date: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
     ratings: {
       waitTime: 2,
@@ -35,7 +35,7 @@ export const pharmacyReviews: PharmacyReview[] = [
       medicationAvailability: 5,
       staffFriendliness: 5,
     },
-    comments: "The pharmacist was very helpful and friendly, but I had to wait for almost 45 minutes to get my prescription.",
+    comments: "Apoteker sangat membantu dan ramah, tapi saya harus menunggu hampir 45 menit untuk mendapatkan resep saya.",
   },
   {
     id: "rev-2",
@@ -47,7 +47,7 @@ export const pharmacyReviews: PharmacyReview[] = [
       medicationAvailability: 3,
       staffFriendliness: 5,
     },
-    comments: "Excellent and quick service! However, one of my prescribed medications was out of stock and I was told to come back tomorrow.",
+    comments: "Pelayanan yang sangat baik dan cepat! Namun, salah satu obat resep saya habis dan saya diminta kembali besok.",
   },
   {
     id: "rev-3",
@@ -59,7 +59,7 @@ export const pharmacyReviews: PharmacyReview[] = [
       medicationAvailability: 5,
       staffFriendliness: 2,
     },
-    comments: "The wait time was okay, but the staff seemed a bit dismissive and didn't explain the medication dosage clearly.",
+    comments: "Waktu tunggunya oke, tapi stafnya terkesan agak acuh dan tidak menjelaskan dosis obat dengan jelas.",
   },
     {
     id: "rev-4",
@@ -71,7 +71,7 @@ export const pharmacyReviews: PharmacyReview[] = [
       medicationAvailability: 5,
       staffFriendliness: 5,
     },
-    comments: "A perfect experience. Fast, friendly, and everything was in stock. The pharmacist gave me great advice.",
+    comments: "Pengalaman yang sempurna. Cepat, ramah, dan semuanya tersedia. Apoteker memberi saya nasihat yang bagus.",
   },
    {
     id: "rev-5",
@@ -83,6 +83,6 @@ export const pharmacyReviews: PharmacyReview[] = [
       medicationAvailability: 2,
       staffFriendliness: 1,
     },
-    comments: "Very long wait, the medication I needed wasn't available, and the staff was unhelpful. A very frustrating experience overall.",
+    comments: "Menunggu sangat lama, obat yang saya butuhkan tidak tersedia, dan staf tidak membantu. Pengalaman yang sangat membuat frustrasi secara keseluruhan.",
   },
 ];

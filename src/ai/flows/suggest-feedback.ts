@@ -1,11 +1,11 @@
 'use server';
 
 /**
- * @fileOverview This file contains the Genkit flow for providing review suggestions to patients.
+ * @fileOverview File ini berisi alur Genkit untuk memberikan saran ulasan kepada pasien.
  *
- * - suggestFeedback - A function that suggests feedback based on past experiences.
- * - SuggestFeedbackInput - The input type for the suggestFeedback function.
- * - SuggestFeedbackOutput - The output type for the suggestFeedback function.
+ * - suggestFeedback - Sebuah fungsi yang menyarankan umpan balik berdasarkan pengalaman masa lalu.
+ * - SuggestFeedbackInput - Tipe input untuk fungsi suggestFeedback.
+ * - SuggestFeedbackOutput - Tipe output untuk fungsi suggestFeedback.
  */
 
 import {ai} from '@/ai/genkit';
@@ -15,18 +15,18 @@ const SuggestFeedbackInputSchema = z.object({
   pastRatings: z
     .array(z.object({aspect: z.string(), rating: z.number()}))
     .optional()
-    .describe('An optional array of past ratings for different aspects of the pharmacy.'),
+    .describe('Array opsional dari peringkat masa lalu untuk berbagai aspek farmasi.'),
   commonIssues: z
     .array(z.string())
     .optional()
-    .describe('An optional array of common issues reported by other patients.'),
+    .describe('Array opsional dari masalah umum yang dilaporkan oleh pasien lain.'),
 });
 export type SuggestFeedbackInput = z.infer<typeof SuggestFeedbackInputSchema>;
 
 const SuggestFeedbackOutputSchema = z.object({
   suggestions: z
     .array(z.string())
-    .describe('An array of suggested feedback prompts for the patient.'),
+    .describe('Array dari prompt umpan balik yang disarankan untuk pasien.'),
 });
 export type SuggestFeedbackOutput = z.infer<typeof SuggestFeedbackOutputSchema>;
 
@@ -38,30 +38,30 @@ const prompt = ai.definePrompt({
   name: 'suggestFeedbackPrompt',
   input: {schema: SuggestFeedbackInputSchema},
   output: {schema: SuggestFeedbackOutputSchema},
-  prompt: `You are an AI assistant designed to help patients quickly provide feedback about their pharmacy experience.
+  prompt: `Anda adalah asisten AI yang dirancang untuk membantu pasien dengan cepat memberikan umpan balik tentang pengalaman farmasi mereka.
 
-  Based on the following information, suggest feedback prompts that the patient can use to complete their review.
+  Berdasarkan informasi berikut, sarankan prompt umpan balik yang dapat digunakan pasien untuk melengkapi ulasan mereka.
 
-  Past Ratings:
+  Peringkat Sebelumnya:
   {{#if pastRatings}}
     {{#each pastRatings}}
-      - Aspect: {{this.aspect}}, Rating: {{this.rating}}
+      - Aspek: {{this.aspect}}, Peringkat: {{this.rating}}
     {{/each}}
   {{else}}
-    No past ratings available.
+    Tidak ada peringkat sebelumnya yang tersedia.
   {{/if}}
 
-  Common Issues:
+  Masalah Umum:
   {{#if commonIssues}}
     {{#each commonIssues}}
       - {{this}}
     {{/each}}
   {{else}}
-    No common issues reported.
+    Tidak ada masalah umum yang dilaporkan.
   {{/if}}
 
-  Suggestions should be concise and actionable. Focus on prompting the user to elaborate on specific aspects of their experience.
-  Return suggestions in array format.
+  Saran harus ringkas dan dapat ditindaklanjuti. Fokus pada mendorong pengguna untuk menguraikan aspek-aspek spesifik dari pengalaman mereka.
+  Kembalikan saran dalam format array dan dalam Bahasa Indonesia.
   `, 
 });
 

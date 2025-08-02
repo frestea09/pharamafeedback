@@ -19,6 +19,7 @@ import { pharmacyReviews } from "@/lib/data";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { formatDistanceToNow } from "date-fns";
+import { id } from "date-fns/locale";
 
 const calculateAverageRatings = () => {
   const totals = {
@@ -37,20 +38,20 @@ const calculateAverageRatings = () => {
   }
 
   return [
-    { name: "Wait Time", average: totals.waitTime / count, fill: "var(--color-waitTime)" },
-    { name: "Service", average: totals.serviceQuality / count, fill: "var(--color-service)" },
-    { name: "Availability", average: totals.medicationAvailability / count, fill: "var(--color-availability)" },
-    { name: "Friendliness", average: totals.staffFriendliness / count, fill: "var(--color-friendliness)" },
+    { name: "Waktu Tunggu", average: totals.waitTime / count, fill: "var(--color-waitTime)" },
+    { name: "Pelayanan", average: totals.serviceQuality / count, fill: "var(--color-service)" },
+    { name: "Ketersediaan", average: totals.medicationAvailability / count, fill: "var(--color-availability)" },
+    { name: "Keramahan", average: totals.staffFriendliness / count, fill: "var(--color-friendliness)" },
   ];
 };
 
 const getRatingDistribution = (aspect: keyof (typeof pharmacyReviews)[0]['ratings']) => {
     const distribution = [
-        { name: '1 Star', count: 0 },
-        { name: '2 Stars', count: 0 },
-        { name: '3 Stars', count: 0 },
-        { name: '4 Stars', count: 0 },
-        { name: '5 Stars', count: 0 },
+        { name: '1 Bintang', count: 0 },
+        { name: '2 Bintang', count: 0 },
+        { name: '3 Bintang', count: 0 },
+        { name: '4 Bintang', count: 0 },
+        { name: '5 Bintang', count: 0 },
     ];
     pharmacyReviews.forEach(review => {
         const rating = review.ratings[aspect];
@@ -62,11 +63,11 @@ const getRatingDistribution = (aspect: keyof (typeof pharmacyReviews)[0]['rating
 }
 
 const chartConfig = {
-  average: { label: "Average Rating" },
-  waitTime: { label: "Wait Time", color: "hsl(var(--chart-1))" },
-  service: { label: "Service Quality", color: "hsl(var(--chart-2))" },
-  availability: { label: "Availability", color: "hsl(var(--chart-3))" },
-  friendliness: { label: "Friendliness", color: "hsl(var(--chart-4))" },
+  average: { label: "Peringkat Rata-rata" },
+  waitTime: { label: "Waktu Tunggu", color: "hsl(var(--chart-1))" },
+  service: { label: "Kualitas Pelayanan", color: "hsl(var(--chart-2))" },
+  availability: { label: "Ketersediaan", color: "hsl(var(--chart-3))" },
+  friendliness: { label: "Keramahan", color: "hsl(var(--chart-4))" },
 };
 
 const COLORS = ["#FF8042", "#FFBB28", "#00C49F", "#0088FE", "#8884d8" ];
@@ -100,8 +101,8 @@ export default function AnalyticsDashboard() {
       <div className="grid lg:grid-cols-2 gap-6">
         <Card>
           <CardHeader>
-            <CardTitle>Average Ratings Overview</CardTitle>
-            <CardDescription>Average score for each category across all reviews.</CardDescription>
+            <CardTitle>Tinjauan Peringkat Rata-rata</CardTitle>
+            <CardDescription>Skor rata-rata untuk setiap kategori di semua ulasan.</CardDescription>
           </CardHeader>
           <CardContent>
             <ChartContainer config={chartConfig} className="h-64 w-full">
@@ -120,8 +121,8 @@ export default function AnalyticsDashboard() {
         </Card>
         <Card>
           <CardHeader>
-            <CardTitle>Service Quality Distribution</CardTitle>
-             <CardDescription>Breakdown of star ratings for service quality.</CardDescription>
+            <CardTitle>Distribusi Kualitas Layanan</CardTitle>
+             <CardDescription>Rincian peringkat bintang untuk kualitas layanan.</CardDescription>
           </CardHeader>
           <CardContent>
             <ChartContainer config={chartConfig} className="h-64 w-full">
@@ -143,27 +144,27 @@ export default function AnalyticsDashboard() {
 
       <Card>
         <CardHeader>
-          <CardTitle>Recent Reviews</CardTitle>
-          <CardDescription>A list of the latest feedback submitted by patients.</CardDescription>
+          <CardTitle>Ulasan Terbaru</CardTitle>
+          <CardDescription>Daftar umpan balik terbaru yang dikirimkan oleh pasien.</CardDescription>
         </CardHeader>
         <CardContent>
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Patient</TableHead>
-                <TableHead>Submitted</TableHead>
-                <TableHead className="text-center">Wait</TableHead>
-                <TableHead className="text-center">Service</TableHead>
-                <TableHead className="text-center">Stock</TableHead>
-                <TableHead className="text-center">Staff</TableHead>
-                <TableHead>Comments</TableHead>
+                <TableHead>Pasien</TableHead>
+                <TableHead>Dikirim</TableHead>
+                <TableHead className="text-center">Tunggu</TableHead>
+                <TableHead className="text-center">Layanan</TableHead>
+                <TableHead className="text-center">Stok</TableHead>
+                <TableHead className="text-center">Staf</TableHead>
+                <TableHead>Komentar</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {pharmacyReviews.slice(0, 5).map((review) => (
                 <TableRow key={review.id}>
                   <TableCell className="font-medium">{review.patient}</TableCell>
-                  <TableCell className="text-muted-foreground">{formatDistanceToNow(new Date(review.date), { addSuffix: true })}</TableCell>
+                  <TableCell className="text-muted-foreground">{formatDistanceToNow(new Date(review.date), { addSuffix: true, locale: id })}</TableCell>
                   <TableCell className="text-center">
                     <Badge variant={getRatingColor(review.ratings.waitTime)}>{review.ratings.waitTime}/5</Badge>
                   </TableCell>

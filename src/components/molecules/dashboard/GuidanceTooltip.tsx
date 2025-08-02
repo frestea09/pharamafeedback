@@ -37,7 +37,7 @@ export function GuidanceTooltip({ aspect, className }: GuidanceTooltipProps) {
           {isLoading ? (
             <div className="flex items-center gap-2">
               <Loader2 className="h-4 w-4 animate-spin" />
-              <p>Loading guidance...</p>
+              <p>Memuat panduan...</p>
             </div>
           ) : (
             <p>{guidance}</p>

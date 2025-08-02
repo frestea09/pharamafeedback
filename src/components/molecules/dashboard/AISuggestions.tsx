@@ -27,13 +27,13 @@ export function AISuggestions({ onSelect }: AISuggestionsProps) {
     <div className="p-4 rounded-lg bg-accent/20 border border-accent/30">
         <div className="flex items-center gap-2 mb-3">
             <Lightbulb className="h-5 w-5 text-accent" />
-            <h4 className="font-semibold text-foreground">Need some inspiration?</h4>
+            <h4 className="font-semibold text-foreground">Butuh inspirasi?</h4>
         </div>
-        <p className="text-sm text-muted-foreground mb-4">Click a suggestion to add it to your comments.</p>
+        <p className="text-sm text-muted-foreground mb-4">Klik saran untuk menambahkannya ke komentar Anda.</p>
         {loading ? (
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
                 <Loader2 className="h-4 w-4 animate-spin" />
-                <span>Generating AI suggestions...</span>
+                <span>Menghasilkan saran AI...</span>
             </div>
         ) : (
             <div className="flex flex-wrap gap-2">

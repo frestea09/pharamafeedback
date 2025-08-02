@@ -17,21 +17,21 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Slider } from "@/components/ui/slider";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
-import { StarRating } from "@/components/shared/StarRating";
-import { GuidanceTooltip } from "./GuidanceTooltip";
-import { AISuggestions } from "./AISuggestions";
+import { StarRating } from "@/components/atoms/StarRating";
+import { GuidanceTooltip } from "@/components/molecules/dashboard/GuidanceTooltip";
+import { AISuggestions } from "@/components/molecules/dashboard/AISuggestions";
 import { Separator } from "@/components/ui/separator";
 import { useState } from "react";
 import { Loader2 } from "lucide-react";
 
 const reviewFormSchema = z.object({
   waitTime: z.number().min(0).max(60),
-  serviceQuality: z.number().min(1).max(5, { message: "Please select a rating." }),
+  serviceQuality: z.number().min(1).max(5, { message: "Silakan pilih peringkat." }),
   medicationAvailability: z.enum(["in_stock", "out_of_stock", "not_applicable"], {
-    required_error: "You need to select a medication availability status.",
+    required_error: "Anda harus memilih status ketersediaan obat.",
   }),
-  staffFriendliness: z.number().min(1).max(5, { message: "Please select a rating." }),
-  comments: z.string().max(500, "Comments must be 500 characters or less.").optional(),
+  staffFriendliness: z.number().min(1).max(5, { message: "Silakan pilih peringkat." }),
+  comments: z.string().max(500, "Komentar maksimal 500 karakter.").optional(),
 });
 
 type ReviewFormValues = z.infer<typeof reviewFormSchema>;
@@ -56,8 +56,8 @@ export default function ReviewForm() {
     // Simulate API call
     setTimeout(() => {
         toast({
-            title: "Review Submitted!",
-            description: "Thank you for your valuable feedback.",
+            title: "Ulasan Terkirim!",
+            description: "Terima kasih atas umpan balik Anda yang berharga.",
         });
         form.reset();
         setIsSubmitting(false);
@@ -81,8 +81,8 @@ export default function ReviewForm() {
                     render={({ field }) => (
                         <FormItem>
                         <div className="flex items-center gap-2 mb-2">
-                            <FormLabel>Service Quality</FormLabel>
-                            <GuidanceTooltip aspect="service quality" />
+                            <FormLabel>Kualitas Pelayanan</FormLabel>
+                            <GuidanceTooltip aspect="kualitas pelayanan" />
                         </div>
                         <FormControl>
                            <StarRating value={field.value} onChange={field.onChange} />
@@ -98,8 +98,8 @@ export default function ReviewForm() {
                     render={({ field }) => (
                         <FormItem>
                          <div className="flex items-center gap-2 mb-2">
-                            <FormLabel>Staff Friendliness</FormLabel>
-                            <GuidanceTooltip aspect="staff friendliness" />
+                            <FormLabel>Keramahan Staf</FormLabel>
+                            <GuidanceTooltip aspect="keramahan staf" />
                          </div>
                         <FormControl>
                             <StarRating value={field.value} onChange={field.onChange} />
@@ -115,8 +115,8 @@ export default function ReviewForm() {
                     render={({ field }) => (
                         <FormItem>
                             <div className="flex items-center gap-2 mb-2">
-                                <FormLabel>Wait Time</FormLabel>
-                                <GuidanceTooltip aspect="wait time" />
+                                <FormLabel>Waktu Tunggu</FormLabel>
+                                <GuidanceTooltip aspect="waktu tunggu" />
                             </div>
                             <FormControl>
                                 <div className="flex items-center gap-4">
@@ -128,7 +128,7 @@ export default function ReviewForm() {
                                     onValueChange={(vals) => field.onChange(vals[0])}
                                 />
                                 <span className="font-semibold text-primary w-24 text-right">
-                                    {field.value}+ min
+                                    {field.value}+ menit
                                 </span>
                                 </div>
                             </FormControl>
@@ -143,8 +143,8 @@ export default function ReviewForm() {
                     render={({ field }) => (
                         <FormItem className="space-y-3">
                             <div className="flex items-center gap-2">
-                                <FormLabel>Medication Availability</FormLabel>
-                                <GuidanceTooltip aspect="medication availability" />
+                                <FormLabel>Ketersediaan Obat</FormLabel>
+                                <GuidanceTooltip aspect="ketersediaan obat" />
                             </div>
                         <FormControl>
                             <RadioGroup
@@ -157,7 +157,7 @@ export default function ReviewForm() {
                                 <RadioGroupItem value="in_stock" />
                                 </FormControl>
                                 <FormLabel className="font-normal">
-                                Everything was in stock
+                                Semuanya tersedia
                                 </FormLabel>
                             </FormItem>
                             <FormItem className="flex items-center space-x-3 space-y-0">
@@ -165,14 +165,14 @@ export default function ReviewForm() {
                                 <RadioGroupItem value="out_of_stock" />
                                 </FormControl>
                                 <FormLabel className="font-normal">
-                                Some items were out of stock
+                                Beberapa item habis
                                 </FormLabel>
                             </FormItem>
                             <FormItem className="flex items-center space-x-3 space-y-0">
                                 <FormControl>
                                 <RadioGroupItem value="not_applicable" />
                                 </FormControl>
-                                <FormLabel className="font-normal">Not Applicable</FormLabel>
+                                <FormLabel className="font-normal">Tidak Berlaku</FormLabel>
                             </FormItem>
                             </RadioGroup>
                         </FormControl>
@@ -189,12 +189,12 @@ export default function ReviewForm() {
                     render={({ field }) => (
                         <FormItem>
                          <div className="flex items-center gap-2 mb-2">
-                             <FormLabel>Additional Comments</FormLabel>
-                             <GuidanceTooltip aspect="general feedback" />
+                             <FormLabel>Komentar Tambahan</FormLabel>
+                             <GuidanceTooltip aspect="umpan balik umum" />
                          </div>
                         <FormControl>
                             <Textarea
-                            placeholder="Tell us more about your experience..."
+                            placeholder="Ceritakan lebih banyak tentang pengalaman Anda..."
                             className="resize-none min-h-[150px]"
                             {...field}
                             />
@@ -213,7 +213,7 @@ export default function ReviewForm() {
         <div className="flex justify-end">
             <Button type="submit" disabled={isSubmitting}>
                 {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                Submit Review
+                Kirim Ulasan
             </Button>
         </div>
       </form>

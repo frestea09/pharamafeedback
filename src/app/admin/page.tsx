@@ -1,4 +1,4 @@
-import AnalyticsDashboard from "@/components/admin/AnalyticsDashboard";
+import AnalyticsDashboard from "@/components/organisms/admin/AnalyticsDashboard";
 
 export default function AdminPage() {
   return (

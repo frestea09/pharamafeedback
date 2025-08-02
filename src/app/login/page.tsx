@@ -12,31 +12,31 @@ export default function LoginPage() {
         <Card>
           <CardHeader className="text-center">
             <div className="flex justify-center mb-4">
-               <Link href="/" aria-label="Home">
+               <Link href="/" aria-label="Beranda">
                   <PharmaFeedbackLogo className="h-12 w-12 text-primary" />
                 </Link>
             </div>
-            <CardTitle className="text-2xl">Patient Login</CardTitle>
-            <CardDescription>Enter your credentials to submit your feedback.</CardDescription>
+            <CardTitle className="text-2xl">Login Pasien</CardTitle>
+            <CardDescription>Masukkan kredensial Anda untuk memberikan umpan balik.</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
-              <Input id="email" type="email" placeholder="patient@example.com" defaultValue="patient@mail.com" />
+              <Input id="email" type="email" placeholder="pasien@contoh.com" defaultValue="pasien@mail.com" />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="password">Password</Label>
+              <Label htmlFor="password">Kata Sandi</Label>
               <Input id="password" type="password" defaultValue="password123"/>
             </div>
           </CardContent>
           <CardFooter className="flex flex-col gap-4">
             <Button className="w-full" asChild>
-              <Link href="/dashboard">Login</Link>
+              <Link href="/dashboard">Masuk</Link>
             </Button>
             <p className="text-sm text-muted-foreground">
-              Are you an admin?{" "}
+              Apakah Anda seorang admin?{" "}
               <Link href="/admin" className="font-medium text-primary hover:underline">
-                Login here
+                Masuk di sini
               </Link>
             </p>
           </CardFooter>

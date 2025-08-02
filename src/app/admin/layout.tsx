@@ -33,21 +33,21 @@ export default function AdminLayout({
         <SidebarContent>
           <SidebarMenu>
             <SidebarMenuItem>
-              <SidebarMenuButton href="/admin" tooltip="Dashboard" isActive>
+              <SidebarMenuButton href="/admin" tooltip="Dasbor" isActive>
                 <LayoutDashboard />
-                <span>Dashboard</span>
+                <span>Dasbor</span>
               </SidebarMenuButton>
             </SidebarMenuItem>
             <SidebarMenuItem>
-              <SidebarMenuButton href="#" tooltip="Reviews" className="opacity-50 cursor-not-allowed">
+              <SidebarMenuButton href="#" tooltip="Ulasan" className="opacity-50 cursor-not-allowed">
                 <MessageSquare />
-                <span>All Reviews</span>
+                <span>Semua Ulasan</span>
               </SidebarMenuButton>
             </SidebarMenuItem>
             <SidebarMenuItem>
-              <SidebarMenuButton href="#" tooltip="Users" className="opacity-50 cursor-not-allowed">
+              <SidebarMenuButton href="#" tooltip="Pengguna" className="opacity-50 cursor-not-allowed">
                 <Users />
-                <span>Manage Users</span>
+                <span>Kelola Pengguna</span>
               </SidebarMenuButton>
             </SidebarMenuItem>
           </SidebarMenu>
@@ -57,7 +57,7 @@ export default function AdminLayout({
             <SidebarMenuItem>
                 <SidebarMenuButton href="/login">
                   <LogOut />
-                  <span>Logout</span>
+                  <span>Keluar</span>
                 </SidebarMenuButton>
               </SidebarMenuItem>
            </SidebarMenu>
@@ -67,7 +67,7 @@ export default function AdminLayout({
                 <AvatarFallback>A</AvatarFallback>
               </Avatar>
               <div className="flex flex-col">
-                <span className="font-semibold text-sm">Admin User</span>
+                <span className="font-semibold text-sm">Pengguna Admin</span>
                 <span className="text-xs text-muted-foreground">admin@rsud.com</span>
               </div>
           </div>
@@ -77,9 +77,9 @@ export default function AdminLayout({
         <header className="flex h-14 items-center gap-4 border-b bg-card px-6">
             <SidebarTrigger className="md:hidden" />
             <div className="flex-1">
-                <h1 className="text-lg font-semibold">Admin Dashboard</h1>
+                <h1 className="text-lg font-semibold">Dasbor Admin</h1>
             </div>
-            <Button variant="outline" size="sm">Export Data</Button>
+            <Button variant="outline" size="sm">Ekspor Data</Button>
         </header>
         <main className="flex-1 overflow-y-auto p-4 md:p-6 bg-background/50">
           {children}
