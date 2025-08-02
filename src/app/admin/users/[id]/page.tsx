@@ -82,9 +82,9 @@ export default function UserFormPage() {
         });
       } else {
         toast({
-            variant: "destructive",
-            title: "Pengguna Tidak Ditemukan",
-            description: "Pengguna yang Anda coba edit tidak ada.",
+          variant: "destructive",
+          title: "Pengguna Tidak Ditemukan",
+          description: "Pengguna yang Anda coba edit tidak ada.",
         });
         router.push('/admin/users');
       }
@@ -92,25 +92,24 @@ export default function UserFormPage() {
     setIsLoading(false);
   }, [id, isEditing, router, form, toast, getUserById]);
 
-
   const onSubmit = (values: UserFormValues) => {
     const unitValue = values.role === 'Admin' && values.unit && values.unit !== 'none' ? values.unit : undefined;
     
     if (isEditing && user) {
-        updateUser({
-            ...user,
-            ...values,
-            unit: unitValue
-        });
+      updateUser({
+        ...user,
+        ...values,
+        unit: unitValue,
+      });
       toast({
         title: "Pengguna Diperbarui",
         description: `Data untuk ${values.name} telah berhasil diperbarui.`,
       });
     } else {
-        addUser({
-            ...values,
-            unit: unitValue,
-        });
+      addUser({
+        ...values,
+        unit: unitValue,
+      });
       toast({
         title: "Pengguna Ditambahkan",
         description: `${values.name} telah berhasil ditambahkan sebagai pengguna baru.`,
@@ -121,20 +120,20 @@ export default function UserFormPage() {
 
   if (isLoading) {
     return (
-        <div className="flex items-center justify-center h-full">
-            <Loader2 className="h-8 w-8 animate-spin" />
-        </div>
+      <div className="flex items-center justify-center h-full">
+        <Loader2 className="h-8 w-8 animate-spin" />
+      </div>
     );
   }
 
   return (
     <div className="max-w-2xl mx-auto">
-        <Button variant="ghost" asChild className="mb-4">
-            <Link href="/admin/users">
-                <ArrowLeft className="mr-2 h-4 w-4" />
-                Kembali ke Daftar Pengguna
-            </Link>
-        </Button>
+      <Button variant="ghost" asChild className="mb-4">
+        <Link href="/admin/users">
+          <ArrowLeft className="mr-2 h-4 w-4" />
+          Kembali ke Daftar Pengguna
+        </Link>
+      </Button>
       <Card>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)}>
@@ -215,7 +214,7 @@ export default function UserFormPage() {
                         <FormControl>
                           <SelectTrigger>
                             <SelectValue placeholder="Pilih unit (opsional untuk admin umum)" />
-                          </Trigger>
+                          </SelectTrigger>
                         </FormControl>
                         <SelectContent>
                           <SelectItem value="none">Admin Umum (Semua Unit)</SelectItem>
@@ -233,10 +232,10 @@ export default function UserFormPage() {
               )}
             </CardContent>
             <CardFooter className="border-t pt-6">
-                <Button type="submit" disabled={form.formState.isSubmitting}>
-                    {form.formState.isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                    {isEditing ? "Simpan Perubahan" : "Tambah Pengguna"}
-                </Button>
+              <Button type="submit" disabled={form.formState.isSubmitting}>
+                {form.formState.isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                {isEditing ? "Simpan Perubahan" : "Tambah Pengguna"}
+              </Button>
             </CardFooter>
           </form>
         </Form>
