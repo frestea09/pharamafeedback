@@ -34,7 +34,6 @@ import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { ReviewContext } from "@/context/ReviewContext";
 
 const reviewFormSchema = z.object({
-  unit: z.string({ required_error: "Silakan pilih unit layanan." }),
   serviceSpeed: z.enum(["fast", "medium", "slow"], {
     required_error: "Silakan pilih kecepatan layanan.",
   }),
@@ -74,7 +73,7 @@ export default function ReviewForm() {
             id: `rev-${Date.now()}`,
             user: "Pengguna 001", // In a real app, this would be the logged-in user
             date: new Date().toISOString(),
-            unit: data.unit,
+            unit: "Farmasi", // Unit is now hardcoded based on the logged-in user
             rawCompleteness: data.serviceCompleteness,
             comments: data.comments || "",
             serviceSpeed: data.serviceSpeed,
@@ -96,35 +95,6 @@ export default function ReviewForm() {
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
         
-        <FormField
-            control={form.control}
-            name="unit"
-            render={({ field }) => (
-                <FormItem>
-                    <div className="flex items-center gap-2 mb-2">
-                        <Building className="h-5 w-5 text-primary"/>
-                        <FormLabel className="text-base">Pilih Unit Layanan</FormLabel>
-                    </div>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
-                        <FormControl>
-                        <SelectTrigger>
-                            <SelectValue placeholder="Pilih unit yang ingin Anda ulas" />
-                        </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                            <SelectItem value="Farmasi">Farmasi</SelectItem>
-                            <SelectItem value="Rawat Jalan">Rawat Jalan</SelectItem>
-                            <SelectItem value="Laboratorium">Laboratorium</SelectItem>
-                            <SelectItem value="Radiologi">Radiologi</SelectItem>
-                        </SelectContent>
-                    </Select>
-                    <FormMessage />
-                </FormItem>
-            )}
-        />
-        
-        <Separator />
-
         <div className="grid md:grid-cols-2 gap-x-8 gap-y-10">
             <div className="space-y-8">
                  <FormField
@@ -210,24 +180,18 @@ export default function ReviewForm() {
                                 value={field.value}
                                 className="flex items-center gap-4"
                             >
-                                <FormItem>
-                                    <Label htmlFor="complete" className="flex items-center gap-2 text-base font-normal p-3 rounded-md border border-input cursor-pointer has-[:checked]:bg-primary has-[:checked]:text-primary-foreground has-[:checked]:border-primary">
-                                        <RadioGroupItem value="complete" id="complete"/>
-                                        <ThumbsUp className="h-5 w-5"/> Ya, Lengkap
-                                    </Label>
-                                </FormItem>
-                                <FormItem>
-                                     <Label htmlFor="incomplete" className="flex items-center gap-2 text-base font-normal p-3 rounded-md border border-input cursor-pointer has-[:checked]:bg-primary has-[:checked]:text-primary-foreground has-[:checked]:border-primary">
-                                        <RadioGroupItem value="incomplete" id="incomplete" />
-                                        <ThumbsDown className="h-5 w-5"/> Tidak Lengkap
-                                     </Label>
-                                </FormItem>
-                                 <FormItem>
-                                     <Label htmlFor="not_applicable" className="flex items-center gap-2 text-base font-normal p-3 rounded-md border border-input cursor-pointer has-[:checked]:bg-primary has-[:checked]:text-primary-foreground has-[:checked]:border-primary">
-                                        <RadioGroupItem value="not_applicable" id="not_applicable" />
-                                        Tidak Tahu
-                                     </Label>
-                                </FormItem>
+                                <Label htmlFor="complete" className="flex items-center gap-2 text-base font-normal p-3 rounded-md border border-input cursor-pointer has-[:checked]:bg-primary has-[:checked]:text-primary-foreground has-[:checked]:border-primary">
+                                    <RadioGroupItem value="complete" id="complete"/>
+                                    <ThumbsUp className="h-5 w-5"/> Ya, Lengkap
+                                </Label>
+                                <Label htmlFor="incomplete" className="flex items-center gap-2 text-base font-normal p-3 rounded-md border border-input cursor-pointer has-[:checked]:bg-primary has-[:checked]:text-primary-foreground has-[:checked]:border-primary">
+                                    <RadioGroupItem value="incomplete" id="incomplete" />
+                                    <ThumbsDown className="h-5 w-5"/> Tidak Lengkap
+                                </Label>
+                                <Label htmlFor="not_applicable" className="flex items-center gap-2 text-base font-normal p-3 rounded-md border border-input cursor-pointer has-[:checked]:bg-primary has-[:checked]:text-primary-foreground has-[:checked]:border-primary">
+                                    <RadioGroupItem value="not_applicable" id="not_applicable" />
+                                    Tidak Tahu
+                                </Label>
                             </RadioGroup>
                         </FormControl>
                         <FormMessage />
