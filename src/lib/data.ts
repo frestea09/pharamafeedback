@@ -1,88 +1,88 @@
 export const commonIssues = [
   "Waktu tunggu yang lama pada jam sibuk",
-  "Obat habis",
+  "Layanan atau produk tidak lengkap",
   "Staf tampak terburu-buru dan sibuk",
-  "Petunjuk penggunaan obat tidak jelas",
-  "Sulit menghubungi apotek melalui telepon",
+  "Petunjuk atau informasi tidak jelas",
+  "Sulit menghubungi unit layanan melalui telepon",
 ];
 
 export const pastRatings = [
-  { aspect: "Waktu Tunggu", rating: 2 },
-  { aspect: "Ketersediaan Obat", rating: 4 },
+  { aspect: "Kecepatan Layanan", rating: 2 },
+  { aspect: "Kelengkapan Layanan", rating: 4 },
 ];
 
-export interface PharmacyReview {
+export interface UnitReview {
   id: string;
-  patient: string;
+  user: string;
   date: string;
   ratings: {
-    waitTime: number;
+    serviceSpeed: number; // 1-3 (slow, medium, fast) but we'll use 1-5 scale for avg
     serviceQuality: number;
-    medicationAvailability: number;
+    serviceCompleteness: number; // 1-5 scale
     staffFriendliness: number;
   };
   comments: string;
 }
 
-export const pharmacyReviews: PharmacyReview[] = [
+export const unitReviews: UnitReview[] = [
   {
     id: "rev-1",
-    patient: "Pasien Zero",
+    user: "Pengguna Zero",
     date: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
     ratings: {
-      waitTime: 2,
+      serviceSpeed: 2, // slow
       serviceQuality: 4,
-      medicationAvailability: 5,
+      serviceCompleteness: 5,
       staffFriendliness: 5,
     },
-    comments: "Apoteker sangat membantu dan ramah, tapi saya harus menunggu hampir 45 menit untuk mendapatkan resep saya.",
+    comments: "Staf sangat membantu dan ramah, tapi saya harus menunggu hampir 45 menit untuk dilayani.",
   },
   {
     id: "rev-2",
-    patient: "Jane Doe",
+    user: "Jane Doe",
     date: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString(),
     ratings: {
-      waitTime: 5,
+      serviceSpeed: 5, // fast
       serviceQuality: 5,
-      medicationAvailability: 3,
+      serviceCompleteness: 3,
       staffFriendliness: 5,
     },
-    comments: "Pelayanan yang sangat baik dan cepat! Namun, salah satu obat resep saya habis dan saya diminta kembali besok.",
+    comments: "Pelayanan yang sangat baik dan cepat! Namun, salah satu item yang saya butuhkan tidak tersedia.",
   },
   {
     id: "rev-3",
-    patient: "John Smith",
+    user: "John Smith",
     date: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000).toISOString(),
     ratings: {
-      waitTime: 3,
+      serviceSpeed: 3, // medium
       serviceQuality: 3,
-      medicationAvailability: 5,
+      serviceCompleteness: 5,
       staffFriendliness: 2,
     },
-    comments: "Waktu tunggunya oke, tapi stafnya terkesan agak acuh dan tidak menjelaskan dosis obat dengan jelas.",
+    comments: "Waktu tunggunya oke, tapi stafnya terkesan agak acuh dan tidak menjelaskan informasi dengan jelas.",
   },
     {
     id: "rev-4",
-    patient: "Emily White",
+    user: "Emily White",
     date: new Date(Date.now() - 15 * 24 * 60 * 60 * 1000).toISOString(),
     ratings: {
-      waitTime: 5,
+      serviceSpeed: 5,
       serviceQuality: 5,
-      medicationAvailability: 5,
+      serviceCompleteness: 5,
       staffFriendliness: 5,
     },
-    comments: "Pengalaman yang sempurna. Cepat, ramah, dan semuanya tersedia. Apoteker memberi saya nasihat yang bagus.",
+    comments: "Pengalaman yang sempurna. Cepat, ramah, dan semuanya tersedia. Staf memberi saya informasi yang bagus.",
   },
    {
     id: "rev-5",
-    patient: "Michael Brown",
+    user: "Michael Brown",
     date: new Date(Date.now() - 20 * 24 * 60 * 60 * 1000).toISOString(),
     ratings: {
-      waitTime: 1,
+      serviceSpeed: 1,
       serviceQuality: 2,
-      medicationAvailability: 2,
+      serviceCompleteness: 2,
       staffFriendliness: 1,
     },
-    comments: "Menunggu sangat lama, obat yang saya butuhkan tidak tersedia, dan staf tidak membantu. Pengalaman yang sangat membuat frustrasi secara keseluruhan.",
+    comments: "Menunggu sangat lama, layanan yang saya butuhkan tidak lengkap, dan staf tidak membantu. Pengalaman yang sangat membuat frustrasi secara keseluruhan.",
   },
 ];

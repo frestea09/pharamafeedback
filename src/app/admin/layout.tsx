@@ -14,7 +14,7 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { LayoutDashboard, Users, MessageSquare, LogOut } from "lucide-react";
-import { PharmaFeedbackLogo } from "@/components/icons";
+import { LayananReviewLogo } from "@/components/icons";
 
 export default function AdminLayout({
   children,
@@ -26,8 +26,8 @@ export default function AdminLayout({
       <Sidebar>
         <SidebarHeader>
            <div className="flex items-center gap-2">
-             <PharmaFeedbackLogo className="size-7 text-primary" />
-             <span className="text-lg font-semibold">PharmaFeedback</span>
+             <LayananReviewLogo className="size-7 text-primary" />
+             <span className="text-lg font-semibold">LayananReview</span>
            </div>
         </SidebarHeader>
         <SidebarContent>
@@ -68,7 +68,7 @@ export default function AdminLayout({
               </Avatar>
               <div className="flex flex-col">
                 <span className="font-semibold text-sm">Pengguna Admin</span>
-                <span className="text-xs text-muted-foreground">admin@rsud.com</span>
+                <span className="text-xs text-muted-foreground">admin@layanan.com</span>
               </div>
           </div>
         </SidebarFooter>

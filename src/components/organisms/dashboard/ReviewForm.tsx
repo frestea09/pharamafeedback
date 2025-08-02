@@ -3,6 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -14,21 +15,24 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Slider } from "@/components/ui/slider";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { StarRating } from "@/components/atoms/StarRating";
 import { GuidanceTooltip } from "@/components/molecules/dashboard/GuidanceTooltip";
 import { AISuggestions } from "@/components/molecules/dashboard/AISuggestions";
 import { Separator } from "@/components/ui/separator";
-import { useState } from "react";
-import { Loader2 } from "lucide-react";
+import { Loader2, Smile, ThumbsUp, ThumbsDown, Clock, Rocket, Turtle, HelpCircle } from "lucide-react";
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+import { cn } from "@/lib/utils";
+
 
 const reviewFormSchema = z.object({
-  waitTime: z.number().min(0).max(60),
+  serviceSpeed: z.enum(["fast", "medium", "slow"], {
+    required_error: "Silakan pilih kecepatan layanan.",
+  }),
   serviceQuality: z.number().min(1).max(5, { message: "Silakan pilih peringkat." }),
-  medicationAvailability: z.enum(["in_stock", "out_of_stock", "not_applicable"], {
-    required_error: "Anda harus memilih status ketersediaan obat.",
+  serviceCompleteness: z.enum(["complete", "incomplete", "not_applicable"], {
+    required_error: "Anda harus memilih status kelengkapan layanan.",
   }),
   staffFriendliness: z.number().min(1).max(5, { message: "Silakan pilih peringkat." }),
   comments: z.string().max(500, "Komentar maksimal 500 karakter.").optional(),
@@ -37,7 +41,6 @@ const reviewFormSchema = z.object({
 type ReviewFormValues = z.infer<typeof reviewFormSchema>;
 
 const defaultValues: Partial<ReviewFormValues> = {
-  waitTime: 15,
   comments: "",
 };
 
@@ -73,15 +76,16 @@ export default function ReviewForm() {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-        <div className="grid md:grid-cols-2 gap-8">
-            <div className="space-y-6">
+        <div className="grid md:grid-cols-2 gap-x-8 gap-y-10">
+            <div className="space-y-8">
                  <FormField
                     control={form.control}
                     name="serviceQuality"
                     render={({ field }) => (
                         <FormItem>
                         <div className="flex items-center gap-2 mb-2">
-                            <FormLabel>Kualitas Pelayanan</FormLabel>
+                            <Smile className="h-5 w-5 text-primary"/>
+                            <FormLabel className="text-base">Kualitas Pelayanan</FormLabel>
                             <GuidanceTooltip aspect="kualitas pelayanan" />
                         </div>
                         <FormControl>
@@ -98,7 +102,8 @@ export default function ReviewForm() {
                     render={({ field }) => (
                         <FormItem>
                          <div className="flex items-center gap-2 mb-2">
-                            <FormLabel>Keramahan Staf</FormLabel>
+                            <Smile className="h-5 w-5 text-primary"/>
+                            <FormLabel className="text-base">Keramahan Staf</FormLabel>
                             <GuidanceTooltip aspect="keramahan staf" />
                          </div>
                         <FormControl>
@@ -111,26 +116,29 @@ export default function ReviewForm() {
 
                 <FormField
                     control={form.control}
-                    name="waitTime"
+                    name="serviceSpeed"
                     render={({ field }) => (
                         <FormItem>
-                            <div className="flex items-center gap-2 mb-2">
-                                <FormLabel>Waktu Tunggu</FormLabel>
-                                <GuidanceTooltip aspect="waktu tunggu" />
+                             <div className="flex items-center gap-2 mb-2">
+                                <Clock className="h-5 w-5 text-primary"/>
+                                <FormLabel className="text-base">Kecepatan Pelayanan</FormLabel>
+                                <GuidanceTooltip aspect="kecepatan pelayanan" />
                             </div>
                             <FormControl>
-                                <div className="flex items-center gap-4">
-                                <Slider
-                                    min={0}
-                                    max={60}
-                                    step={5}
-                                    value={[field.value]}
-                                    onValueChange={(vals) => field.onChange(vals[0])}
-                                />
-                                <span className="font-semibold text-primary w-24 text-right">
-                                    {field.value}+ menit
-                                </span>
-                                </div>
+                                <ToggleGroup type="single" value={field.value} onValueChange={field.onChange} className="grid grid-cols-3 gap-2">
+                                    <ToggleGroupItem value="fast" aria-label="Cepat" className="flex flex-col h-20 gap-1">
+                                        <Rocket className="h-6 w-6"/>
+                                        <span>Cepat</span>
+                                    </ToggleGroupItem>
+                                    <ToggleGroupItem value="medium" aria-label="Sedang" className="flex flex-col h-20 gap-1">
+                                         <Turtle className="h-6 w-6"/>
+                                        <span>Sedang</span>
+                                    </ToggleGroupItem>
+                                    <ToggleGroupItem value="slow" aria-label="Lambat" className="flex flex-col h-20 gap-1">
+                                        <Turtle className="h-6 w-6 opacity-50"/>
+                                        <span>Lambat</span>
+                                    </ToggleGroupItem>
+                                </ToggleGroup>
                             </FormControl>
                             <FormMessage />
                         </FormItem>
@@ -139,41 +147,44 @@ export default function ReviewForm() {
 
                 <FormField
                     control={form.control}
-                    name="medicationAvailability"
+                    name="serviceCompleteness"
                     render={({ field }) => (
                         <FormItem className="space-y-3">
                             <div className="flex items-center gap-2">
-                                <FormLabel>Ketersediaan Obat</FormLabel>
-                                <GuidanceTooltip aspect="ketersediaan obat" />
+                                <HelpCircle className="h-5 w-5 text-primary"/>
+                                <FormLabel className="text-base">Kelengkapan Layanan/Produk</FormLabel>
+                                <GuidanceTooltip aspect="kelengkapan layanan" />
                             </div>
                         <FormControl>
                             <RadioGroup
-                            onValueChange={field.onChange}
-                            defaultValue={field.value}
-                            className="flex flex-col space-y-1"
+                                onValueChange={field.onChange}
+                                value={field.value}
+                                className="flex items-center gap-4"
                             >
-                            <FormItem className="flex items-center space-x-3 space-y-0">
-                                <FormControl>
-                                <RadioGroupItem value="in_stock" />
-                                </FormControl>
-                                <FormLabel className="font-normal">
-                                Semuanya tersedia
-                                </FormLabel>
-                            </FormItem>
-                            <FormItem className="flex items-center space-x-3 space-y-0">
-                                <FormControl>
-                                <RadioGroupItem value="out_of_stock" />
-                                </FormControl>
-                                <FormLabel className="font-normal">
-                                Beberapa item habis
-                                </FormLabel>
-                            </FormItem>
-                            <FormItem className="flex items-center space-x-3 space-y-0">
-                                <FormControl>
-                                <RadioGroupItem value="not_applicable" />
-                                </FormControl>
-                                <FormLabel className="font-normal">Tidak Berlaku</FormLabel>
-                            </FormItem>
+                                <FormItem className="flex items-center space-x-2 space-y-0">
+                                    <FormControl>
+                                        <RadioGroupItem value="complete" id="complete"/>
+                                    </FormControl>
+                                    <Label htmlFor="complete" className="flex items-center gap-2 text-base font-normal p-3 rounded-md border border-input cursor-pointer has-[:checked]:bg-primary has-[:checked]:text-primary-foreground has-[:checked]:border-primary">
+                                        <ThumbsUp className="h-5 w-5"/> Ya, Lengkap
+                                    </Label>
+                                </FormItem>
+                                <FormItem className="flex items-center space-x-2 space-y-0">
+                                    <FormControl>
+                                        <RadioGroupItem value="incomplete" id="incomplete" />
+                                    </FormControl>
+                                     <Label htmlFor="incomplete" className="flex items-center gap-2 text-base font-normal p-3 rounded-md border border-input cursor-pointer has-[:checked]:bg-primary has-[:checked]:text-primary-foreground has-[:checked]:border-primary">
+                                        <ThumbsDown className="h-5 w-5"/> Tidak Lengkap
+                                    </Label>
+                                </FormItem>
+                                 <FormItem className="flex items-center space-x-2 space-y-0">
+                                    <FormControl>
+                                        <RadioGroupItem value="not_applicable" id="not_applicable" />
+                                    </FormControl>
+                                     <Label htmlFor="not_applicable" className="flex items-center gap-2 text-base font-normal p-3 rounded-md border border-input cursor-pointer has-[:checked]:bg-primary has-[:checked]:text-primary-foreground has-[:checked]:border-primary">
+                                        Tidak Tahu
+                                    </Label>
+                                </FormItem>
                             </RadioGroup>
                         </FormControl>
                         <FormMessage />
@@ -211,7 +222,7 @@ export default function ReviewForm() {
         <Separator />
 
         <div className="flex justify-end">
-            <Button type="submit" disabled={isSubmitting}>
+            <Button type="submit" disabled={isSubmitting} size="lg">
                 {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                 Kirim Ulasan
             </Button>

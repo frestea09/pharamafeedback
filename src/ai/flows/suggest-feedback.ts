@@ -1,7 +1,7 @@
 'use server';
 
 /**
- * @fileOverview File ini berisi alur Genkit untuk memberikan saran ulasan kepada pasien.
+ * @fileOverview File ini berisi alur Genkit untuk memberikan saran ulasan kepada pengguna.
  *
  * - suggestFeedback - Sebuah fungsi yang menyarankan umpan balik berdasarkan pengalaman masa lalu.
  * - SuggestFeedbackInput - Tipe input untuk fungsi suggestFeedback.
@@ -15,18 +15,18 @@ const SuggestFeedbackInputSchema = z.object({
   pastRatings: z
     .array(z.object({aspect: z.string(), rating: z.number()}))
     .optional()
-    .describe('Array opsional dari peringkat masa lalu untuk berbagai aspek farmasi.'),
+    .describe('Array opsional dari peringkat masa lalu untuk berbagai aspek layanan.'),
   commonIssues: z
     .array(z.string())
     .optional()
-    .describe('Array opsional dari masalah umum yang dilaporkan oleh pasien lain.'),
+    .describe('Array opsional dari masalah umum yang dilaporkan oleh pengguna lain.'),
 });
 export type SuggestFeedbackInput = z.infer<typeof SuggestFeedbackInputSchema>;
 
 const SuggestFeedbackOutputSchema = z.object({
   suggestions: z
     .array(z.string())
-    .describe('Array dari prompt umpan balik yang disarankan untuk pasien.'),
+    .describe('Array dari prompt umpan balik yang disarankan untuk pengguna.'),
 });
 export type SuggestFeedbackOutput = z.infer<typeof SuggestFeedbackOutputSchema>;
 
@@ -38,9 +38,9 @@ const prompt = ai.definePrompt({
   name: 'suggestFeedbackPrompt',
   input: {schema: SuggestFeedbackInputSchema},
   output: {schema: SuggestFeedbackOutputSchema},
-  prompt: `Anda adalah asisten AI yang dirancang untuk membantu pasien dengan cepat memberikan umpan balik tentang pengalaman farmasi mereka.
+  prompt: `Anda adalah asisten AI yang dirancang untuk membantu pengguna dengan cepat memberikan umpan balik tentang pengalaman mereka di unit layanan.
 
-  Berdasarkan informasi berikut, sarankan prompt umpan balik yang dapat digunakan pasien untuk melengkapi ulasan mereka.
+  Berdasarkan informasi berikut, sarankan prompt umpan balik yang dapat digunakan pengguna untuk melengkapi ulasan mereka.
 
   Peringkat Sebelumnya:
   {{#if pastRatings}}

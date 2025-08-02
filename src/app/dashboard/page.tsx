@@ -8,7 +8,7 @@ export default function DashboardPage() {
         <CardHeader>
           <CardTitle className="text-2xl">Bagikan Pengalaman Anda</CardTitle>
           <CardDescription>
-            Umpan balik Anda yang terperinci membantu kami meningkatkan layanan farmasi kami. Silakan beri peringkat pada aspek-aspek berikut dari kunjungan terakhir Anda.
+            Umpan balik Anda yang terperinci membantu kami meningkatkan unit layanan kami. Silakan beri peringkat pada aspek-aspek berikut dari kunjungan terakhir Anda.
           </CardDescription>
         </CardHeader>
         <CardContent>

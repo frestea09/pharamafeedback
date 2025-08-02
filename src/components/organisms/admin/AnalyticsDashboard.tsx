@@ -15,7 +15,7 @@ import {
   ChartLegend,
   ChartLegendContent,
 } from "@/components/ui/chart";
-import { pharmacyReviews } from "@/lib/data";
+import { unitReviews } from "@/lib/data";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { formatDistanceToNow } from "date-fns";
@@ -23,29 +23,29 @@ import { id } from "date-fns/locale";
 
 const calculateAverageRatings = () => {
   const totals = {
-    waitTime: 0,
+    serviceSpeed: 0,
     serviceQuality: 0,
-    medicationAvailability: 0,
+    serviceCompleteness: 0,
     staffFriendliness: 0,
   };
-  const count = pharmacyReviews.length;
+  const count = unitReviews.length;
 
-  for (const review of pharmacyReviews) {
-    totals.waitTime += review.ratings.waitTime;
+  for (const review of unitReviews) {
+    totals.serviceSpeed += review.ratings.serviceSpeed;
     totals.serviceQuality += review.ratings.serviceQuality;
-    totals.medicationAvailability += review.ratings.medicationAvailability;
+    totals.serviceCompleteness += review.ratings.serviceCompleteness;
     totals.staffFriendliness += review.ratings.staffFriendliness;
   }
 
   return [
-    { name: "Waktu Tunggu", average: totals.waitTime / count, fill: "var(--color-waitTime)" },
-    { name: "Pelayanan", average: totals.serviceQuality / count, fill: "var(--color-service)" },
-    { name: "Ketersediaan", average: totals.medicationAvailability / count, fill: "var(--color-availability)" },
+    { name: "Kecepatan", average: totals.serviceSpeed / count, fill: "var(--color-speed)" },
+    { name: "Kualitas", average: totals.serviceQuality / count, fill: "var(--color-quality)" },
+    { name: "Kelengkapan", average: totals.serviceCompleteness / count, fill: "var(--color-completeness)" },
     { name: "Keramahan", average: totals.staffFriendliness / count, fill: "var(--color-friendliness)" },
   ];
 };
 
-const getRatingDistribution = (aspect: keyof (typeof pharmacyReviews)[0]['ratings']) => {
+const getRatingDistribution = (aspect: keyof (typeof unitReviews)[0]['ratings']) => {
     const distribution = [
         { name: '1 Bintang', count: 0 },
         { name: '2 Bintang', count: 0 },
@@ -53,7 +53,7 @@ const getRatingDistribution = (aspect: keyof (typeof pharmacyReviews)[0]['rating
         { name: '4 Bintang', count: 0 },
         { name: '5 Bintang', count: 0 },
     ];
-    pharmacyReviews.forEach(review => {
+    unitReviews.forEach(review => {
         const rating = review.ratings[aspect];
         if (rating >= 1 && rating <= 5) {
             distribution[rating-1].count++;
@@ -64,9 +64,9 @@ const getRatingDistribution = (aspect: keyof (typeof pharmacyReviews)[0]['rating
 
 const chartConfig = {
   average: { label: "Peringkat Rata-rata" },
-  waitTime: { label: "Waktu Tunggu", color: "hsl(var(--chart-1))" },
-  service: { label: "Kualitas Pelayanan", color: "hsl(var(--chart-2))" },
-  availability: { label: "Ketersediaan", color: "hsl(var(--chart-3))" },
+  speed: { label: "Kecepatan", color: "hsl(var(--chart-1))" },
+  quality: { label: "Kualitas Pelayanan", color: "hsl(var(--chart-2))" },
+  completeness: { label: "Kelengkapan", color: "hsl(var(--chart-3))" },
   friendliness: { label: "Keramahan", color: "hsl(var(--chart-4))" },
 };
 
@@ -145,34 +145,34 @@ export default function AnalyticsDashboard() {
       <Card>
         <CardHeader>
           <CardTitle>Ulasan Terbaru</CardTitle>
-          <CardDescription>Daftar umpan balik terbaru yang dikirimkan oleh pasien.</CardDescription>
+          <CardDescription>Daftar umpan balik terbaru yang dikirimkan oleh pengguna.</CardDescription>
         </CardHeader>
         <CardContent>
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Pasien</TableHead>
+                <TableHead>Pengguna</TableHead>
                 <TableHead>Dikirim</TableHead>
-                <TableHead className="text-center">Tunggu</TableHead>
-                <TableHead className="text-center">Layanan</TableHead>
-                <TableHead className="text-center">Stok</TableHead>
-                <TableHead className="text-center">Staf</TableHead>
+                <TableHead className="text-center">Kecepatan</TableHead>
+                <TableHead className="text-center">Kualitas</TableHead>
+                <TableHead className="text-center">Lengkap</TableHead>
+                <TableHead className="text-center">Keramahan</TableHead>
                 <TableHead>Komentar</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {pharmacyReviews.slice(0, 5).map((review) => (
+              {unitReviews.slice(0, 5).map((review) => (
                 <TableRow key={review.id}>
-                  <TableCell className="font-medium">{review.patient}</TableCell>
+                  <TableCell className="font-medium">{review.user}</TableCell>
                   <TableCell className="text-muted-foreground">{formatDistanceToNow(new Date(review.date), { addSuffix: true, locale: id })}</TableCell>
                   <TableCell className="text-center">
-                    <Badge variant={getRatingColor(review.ratings.waitTime)}>{review.ratings.waitTime}/5</Badge>
+                    <Badge variant={getRatingColor(review.ratings.serviceSpeed)}>{review.ratings.serviceSpeed}/5</Badge>
                   </TableCell>
                   <TableCell className="text-center">
                      <Badge variant={getRatingColor(review.ratings.serviceQuality)}>{review.ratings.serviceQuality}/5</Badge>
                   </TableCell>
                   <TableCell className="text-center">
-                     <Badge variant={getRatingColor(review.ratings.medicationAvailability)}>{review.ratings.medicationAvailability}/5</Badge>
+                     <Badge variant={getRatingColor(review.ratings.serviceCompleteness)}>{review.ratings.serviceCompleteness}/5</Badge>
                   </TableCell>
                   <TableCell className="text-center">
                      <Badge variant={getRatingColor(review.ratings.staffFriendliness)}>{review.ratings.staffFriendliness}/5</Badge>

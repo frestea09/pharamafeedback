@@ -10,8 +10,8 @@ const fontSans = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "PharmaFeedback",
-  description: "Aplikasi web untuk mengumpulkan ulasan dan umpan balik farmasi.",
+  title: "LayananReview",
+  description: "Aplikasi web untuk mengumpulkan ulasan dan umpan balik unit layanan.",
 };
 
 export default function RootLayout({

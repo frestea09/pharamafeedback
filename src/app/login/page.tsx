@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { PharmaFeedbackLogo } from "@/components/icons";
+import { LayananReviewLogo } from "@/components/icons";
 
 export default function LoginPage() {
   return (
@@ -13,16 +13,16 @@ export default function LoginPage() {
           <CardHeader className="text-center">
             <div className="flex justify-center mb-4">
                <Link href="/" aria-label="Beranda">
-                  <PharmaFeedbackLogo className="h-12 w-12 text-primary" />
+                  <LayananReviewLogo className="h-12 w-12 text-primary" />
                 </Link>
             </div>
-            <CardTitle className="text-2xl">Login Pasien</CardTitle>
+            <CardTitle className="text-2xl">Login Pengguna</CardTitle>
             <CardDescription>Masukkan kredensial Anda untuk memberikan umpan balik.</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
-              <Input id="email" type="email" placeholder="pasien@contoh.com" defaultValue="pasien@mail.com" />
+              <Input id="email" type="email" placeholder="pengguna@mail.com" defaultValue="pengguna@mail.com" />
             </div>
             <div className="space-y-2">
               <Label htmlFor="password">Kata Sandi</Label>
