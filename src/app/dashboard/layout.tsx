@@ -1,0 +1,88 @@
+import Link from "next/link";
+import {
+  SidebarProvider,
+  Sidebar,
+  SidebarHeader,
+  SidebarContent,
+  SidebarMenu,
+  SidebarMenuItem,
+  SidebarMenuButton,
+  SidebarFooter,
+  SidebarTrigger,
+  SidebarInset,
+} from "@/components/ui/sidebar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
+import { Home, NotebookPen, History, User, Settings, LogOut } from "lucide-react";
+import { PharmaFeedbackLogo } from "@/components/icons";
+
+export default function DashboardLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <SidebarProvider>
+      <Sidebar>
+        <SidebarHeader>
+           <div className="flex items-center gap-2">
+             <PharmaFeedbackLogo className="size-7 text-primary" />
+             <span className="text-lg font-semibold">PharmaFeedback</span>
+           </div>
+        </SidebarHeader>
+        <SidebarContent>
+          <SidebarMenu>
+            <SidebarMenuItem>
+              <SidebarMenuButton href="/dashboard" tooltip="New Review" isActive>
+                <NotebookPen />
+                <span>New Review</span>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+            <SidebarMenuItem>
+              <SidebarMenuButton href="#" tooltip="History" className="opacity-50 cursor-not-allowed">
+                <History />
+                <span>My History</span>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+            <SidebarMenuItem>
+              <SidebarMenuButton href="#" tooltip="Profile" className="opacity-50 cursor-not-allowed">
+                <User />
+                <span>Profile</span>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+          </SidebarMenu>
+        </SidebarContent>
+        <SidebarFooter>
+           <SidebarMenu>
+            <SidebarMenuItem>
+                <SidebarMenuButton href="/login">
+                  <LogOut />
+                  <span>Logout</span>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+           </SidebarMenu>
+          <div className="flex items-center gap-3 p-2 rounded-md bg-sidebar-accent">
+              <Avatar className="h-10 w-10">
+                <AvatarImage src="https://placehold.co/100x100.png" alt="Patient" data-ai-hint="person portrait" />
+                <AvatarFallback>P</AvatarFallback>
+              </Avatar>
+              <div className="flex flex-col">
+                <span className="font-semibold text-sm">Patient 001</span>
+                <span className="text-xs text-muted-foreground">patient@mail.com</span>
+              </div>
+          </div>
+        </SidebarFooter>
+      </Sidebar>
+      <SidebarInset>
+        <header className="flex h-14 items-center gap-4 border-b bg-card px-6">
+            <SidebarTrigger className="md:hidden" />
+            <div className="flex-1">
+                <h1 className="text-lg font-semibold">Patient Dashboard</h1>
+            </div>
+            <Button variant="outline" size="sm">Today</Button>
+        </header>
+        <main className="flex-1 overflow-y-auto p-4 md:p-6">{children}</main>
+      </SidebarInset>
+    </SidebarProvider>
+  );
+}
