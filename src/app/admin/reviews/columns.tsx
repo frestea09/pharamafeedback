@@ -7,7 +7,7 @@ import { Badge } from "@/components/ui/badge"
 import { format } from "date-fns"
 import { id } from "date-fns/locale"
 import { Button } from "@/components/ui/button"
-import { ArrowUpDown, MoreHorizontal } from "lucide-react"
+import { ArrowUpDown, MoreHorizontal, Trash2 } from "lucide-react"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { StarRating } from "@/components/atoms/StarRating"
 
@@ -31,7 +31,8 @@ const getSpeedBadge = (speed: 'slow' | 'medium' | 'fast') => {
 };
 
 export const getColumns = (
-  onViewDetail: (review: UnitReview) => void
+  onViewDetail: (review: UnitReview) => void,
+  onDelete: (review: UnitReview) => void
 ): ColumnDef<UnitReview>[] => [
     {
     accessorKey: "user",
@@ -110,7 +111,13 @@ export const getColumns = (
             <DropdownMenuItem onClick={() => onViewDetail(review)}>
                 Lihat Detail Ulasan
             </DropdownMenuItem>
-            <DropdownMenuItem className="text-destructive focus:text-destructive">Hapus Ulasan</DropdownMenuItem>
+            <DropdownMenuItem 
+              className="text-destructive focus:text-destructive"
+              onClick={() => onDelete(review)}
+            >
+              <Trash2 className="mr-2 h-4 w-4" />
+              Hapus Ulasan
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       )

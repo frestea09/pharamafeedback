@@ -41,11 +41,13 @@ const processReviews = (reviews: RawUnitReview[]): UnitReview[] => {
 interface ReviewContextType {
   reviews: UnitReview[];
   addReview: (review: RawUnitReview) => void;
+  deleteReview: (reviewId: string) => void;
 }
 
 export const ReviewContext = createContext<ReviewContextType>({
   reviews: [],
   addReview: () => {},
+  deleteReview: () => {},
 });
 
 interface ReviewProviderProps {
@@ -59,10 +61,14 @@ export const ReviewProvider = ({ children }: ReviewProviderProps) => {
     setRawReviews(prevReviews => [review, ...prevReviews]);
   };
 
+  const deleteReview = (reviewId: string) => {
+    setRawReviews(prevReviews => prevReviews.filter(review => review.id !== reviewId));
+  };
+
   const processedReviews = processReviews(rawReviews);
 
   return (
-    <ReviewContext.Provider value={{ reviews: processedReviews, addReview }}>
+    <ReviewContext.Provider value={{ reviews: processedReviews, addReview, deleteReview }}>
       {children}
     </ReviewContext.Provider>
   );

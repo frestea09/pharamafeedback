@@ -15,6 +15,17 @@ import {
 } from "@/components/ui/select";
 import type { Table } from "@tanstack/react-table";
 import { ReviewDetailDialog } from "@/components/organisms/ReviewDetailDialog";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import { useToast } from "@/hooks/use-toast";
 
 function ReviewFilters({ table }: { table: Table<UnitReview> }) {
   const units = ["Semua Unit", "Farmasi", "Rawat Jalan", "Laboratorium", "Radiologi"];
@@ -53,21 +64,55 @@ function ReviewFilters({ table }: { table: Table<UnitReview> }) {
 }
 
 export default function AllReviewsPage() {
-  const { reviews } = useContext(ReviewContext);
+  const { reviews, deleteReview } = useContext(ReviewContext);
+  const { toast } = useToast();
   const [selectedReview, setSelectedReview] = useState<UnitReview | null>(null);
   const [isDetailOpen, setIsDetailOpen] = useState(false);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
   const handleViewDetail = (review: UnitReview) => {
     setSelectedReview(review);
     setIsDetailOpen(true);
   };
+
+  const handleDelete = (review: UnitReview) => {
+    setSelectedReview(review);
+    setIsDeleteDialogOpen(true);
+  };
   
-  const columns = useMemo(() => getColumns(handleViewDetail), []);
+  const confirmDelete = () => {
+    if (selectedReview) {
+      deleteReview(selectedReview.id);
+      toast({
+        title: "Ulasan Dihapus",
+        description: `Ulasan dari ${selectedReview.user} telah berhasil dihapus.`,
+      });
+    }
+    setIsDeleteDialogOpen(false);
+    setSelectedReview(null);
+  };
+
+  const columns = useMemo(() => getColumns(handleViewDetail, handleDelete), []);
 
   return (
     <div className="container mx-auto py-2">
       <DataTable columns={columns} data={reviews} filterComponent={<ReviewFilters />} />
       <ReviewDetailDialog review={selectedReview} isOpen={isDetailOpen} onOpenChange={setIsDetailOpen} />
+      <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Apakah Anda yakin?</AlertDialogTitle>
+            <AlertDialogDescription>
+              Tindakan ini tidak dapat dibatalkan. Ini akan menghapus ulasan pengguna
+              secara permanen.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Batal</AlertDialogCancel>
+            <AlertDialogAction onClick={confirmDelete} className="bg-destructive hover:bg-destructive/90">Hapus</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   )
 }
