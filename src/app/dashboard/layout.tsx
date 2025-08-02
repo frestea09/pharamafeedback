@@ -16,8 +16,7 @@ import {
   SidebarInset,
 } from "@/components/ui/sidebar";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { NotebookPen, History, User, LogOut } from "lucide-react";
-import { LayananReviewLogo } from "@/components/icons";
+import { NotebookPen, History, User, LogOut, TestTube } from "lucide-react";
 import { ReviewProvider } from "@/context/ReviewContext";
 
 
@@ -48,8 +47,8 @@ export default function DashboardLayout({
         <Sidebar>
             <SidebarHeader>
             <div className="flex items-center gap-2">
-                <LayananReviewLogo className="size-7 text-primary" />
-                <span className="text-lg font-semibold">LayananReview</span>
+                <TestTube className="size-7 text-primary" />
+                <span className="text-lg font-semibold">PharmaFeedback</span>
             </div>
             </SidebarHeader>
             <SidebarContent>
@@ -102,5 +101,3 @@ export default function DashboardLayout({
     </ReviewProvider>
   );
 }
-
-    

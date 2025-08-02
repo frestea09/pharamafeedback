@@ -2,15 +2,14 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Smile, Users, Clock } from "lucide-react";
-import { LayananReviewLogo } from "@/components/icons";
+import { Smile, Users, Clock, TestTube } from "lucide-react";
 
 export default function Home() {
   return (
     <div className="flex flex-col min-h-screen bg-background">
       <header className="container mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <LayananReviewLogo className="h-8 w-8 text-primary" />
+          <TestTube className="h-8 w-8 text-primary" />
           <h1 className="text-2xl font-bold text-foreground">PharmaFeedback</h1>
         </div>
         <nav className="flex items-center gap-4">

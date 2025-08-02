@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { LayananReviewLogo } from "@/components/icons";
+import { TestTube } from "lucide-react";
 import { Eye, EyeOff } from "lucide-react";
 
 export default function LoginPage() {
@@ -26,7 +26,7 @@ export default function LoginPage() {
           <CardHeader className="text-center">
             <div className="flex justify-center mb-4">
               <Link href="/" aria-label="Beranda">
-                <LayananReviewLogo className="h-12 w-12 text-primary" />
+                <TestTube className="h-12 w-12 text-primary" />
               </Link>
             </div>
             <CardTitle className="text-2xl">Login Pengguna</CardTitle>
