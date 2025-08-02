@@ -55,9 +55,11 @@ export default function DashboardLayout({
         <SidebarFooter>
            <SidebarMenu>
             <SidebarMenuItem>
-                <SidebarMenuButton href="/login">
-                  <LogOut />
-                  <span>Keluar</span>
+                <SidebarMenuButton href="/login" asChild>
+                  <Link href="/login">
+                    <LogOut />
+                    <span>Keluar</span>
+                  </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
            </SidebarMenu>
