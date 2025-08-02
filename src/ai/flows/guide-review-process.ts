@@ -1,3 +1,4 @@
+
 'use server';
 
 /**
@@ -34,9 +35,9 @@ const prompt = ai.definePrompt({
 
   Pengguna saat ini sedang meninjau aspek layanan berikut: {{{aspect}}}.
 
-  {% if pastFeedback %}
+  {{#if pastFeedback}}
   Berikut adalah beberapa umpan balik mereka di masa lalu: {{{pastFeedback}}}
-  {% endif %}
+  {{/if}}
 
   Berikan instruksi dan saran yang jelas dan ringkas untuk membantu pengguna memberikan umpan balik yang bermakna dan terperinci. Fokus pada pertanyaan spesifik yang mungkin mereka pertimbangkan untuk menguraikan pengalaman mereka. Dorong mereka untuk memberikan contoh dan menjadi sespesifik mungkin.
 
