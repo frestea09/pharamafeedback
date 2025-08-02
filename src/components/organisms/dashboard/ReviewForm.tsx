@@ -24,6 +24,7 @@ import { GuidanceTooltip } from "@/components/molecules/dashboard/GuidanceToolti
 import { Separator } from "@/components/ui/separator";
 import { Loader2, Smile, ThumbsUp, ThumbsDown, Clock, Rocket, Turtle, HelpCircle } from "lucide-react";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+import { AISuggestions } from "@/components/molecules/dashboard/AISuggestions";
 
 const reviewFormSchema = z.object({
   serviceSpeed: z.enum(["fast", "medium", "slow"], {
@@ -156,30 +157,24 @@ export default function ReviewForm() {
                                 value={field.value}
                                 className="flex items-center gap-4"
                             >
-                                <FormItem className="flex items-center space-x-2 space-y-0">
-                                    <FormControl>
-                                        <RadioGroupItem value="complete" id="complete"/>
-                                    </FormControl>
+                                <div className="flex items-center space-x-2">
+                                    <RadioGroupItem value="complete" id="complete"/>
                                     <Label htmlFor="complete" className="flex items-center gap-2 text-base font-normal p-3 rounded-md border border-input cursor-pointer has-[:checked]:bg-primary has-[:checked]:text-primary-foreground has-[:checked]:border-primary">
                                         <ThumbsUp className="h-5 w-5"/> Ya, Lengkap
                                     </Label>
-                                </FormItem>
-                                <FormItem className="flex items-center space-x-2 space-y-0">
-                                    <FormControl>
-                                        <RadioGroupItem value="incomplete" id="incomplete" />
-                                    </FormControl>
+                                </div>
+                                <div className="flex items-center space-x-2">
+                                    <RadioGroupItem value="incomplete" id="incomplete" />
                                      <Label htmlFor="incomplete" className="flex items-center gap-2 text-base font-normal p-3 rounded-md border border-input cursor-pointer has-[:checked]:bg-primary has-[:checked]:text-primary-foreground has-[:checked]:border-primary">
                                         <ThumbsDown className="h-5 w-5"/> Tidak Lengkap
                                      </Label>
-                                </FormItem>
-                                 <FormItem className="flex items-center space-x-2 space-y-0">
-                                    <FormControl>
-                                        <RadioGroupItem value="not_applicable" id="not_applicable" />
-                                    </FormControl>
+                                </div>
+                                 <div className="flex items-center space-x-2">
+                                    <RadioGroupItem value="not_applicable" id="not_applicable" />
                                      <Label htmlFor="not_applicable" className="flex items-center gap-2 text-base font-normal p-3 rounded-md border border-input cursor-pointer has-[:checked]:bg-primary has-[:checked]:text-primary-foreground has-[:checked]:border-primary">
                                         Tidak Tahu
                                      </Label>
-                                </FormItem>
+                                </div>
                             </RadioGroup>
                         </FormControl>
                         <FormMessage />
