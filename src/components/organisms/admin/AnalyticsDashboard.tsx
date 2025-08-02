@@ -20,12 +20,13 @@ import {
 import { ReviewContext, UnitReview } from "@/context/ReviewContext";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { formatDistanceToNow } from "date-fns";
+import { formatDistanceToNow, startOfDay, subDays, startOfYear } from "date-fns";
 import { id } from "date-fns/locale";
-import { ThumbsUp, ThumbsDown, HelpCircle } from "lucide-react";
+import { ThumbsUp, ThumbsDown, HelpCircle, FileX } from "lucide-react";
 
 
 const speedMapping: { [key: string]: number } = { slow: 1, medium: 3, fast: 5 };
+type Period = "today" | "week" | "month" | "year" | "all";
 
 const chartConfig = {
   average: { label: "Peringkat Rata-rata" },
@@ -39,22 +40,50 @@ const COLORS = ["#FF8042", "#FFBB28", "#00C49F", "#0088FE", "#8884d8" ];
 
 interface AnalyticsDashboardProps {
   unit: string | null;
+  period: Period;
 }
 
-export default function AnalyticsDashboard({ unit }: AnalyticsDashboardProps) {
+export default function AnalyticsDashboard({ unit, period }: AnalyticsDashboardProps) {
   const { reviews } = useContext(ReviewContext);
   
   const filteredReviews = useMemo(() => {
-    if (!unit) return reviews;
-    return reviews.filter(review => review.unit === unit);
-  }, [reviews, unit]);
+    const now = new Date();
+    let startDate: Date;
+
+    switch (period) {
+        case 'today':
+            startDate = startOfDay(now);
+            break;
+        case 'week':
+            startDate = subDays(now, 7);
+            break;
+        case 'month':
+            startDate = subDays(now, 30);
+            break;
+        case 'year':
+            startDate = startOfYear(now);
+            break;
+        case 'all':
+        default:
+            startDate = new Date(0); // far in the past
+            break;
+    }
+
+    return reviews.filter(review => {
+        const reviewDate = new Date(review.date);
+        const unitMatch = unit ? review.unit === unit : true;
+        const dateMatch = period === 'all' ? true : reviewDate >= startDate;
+        return unitMatch && dateMatch;
+    });
+
+  }, [reviews, unit, period]);
 
   const averageRatings = useMemo(() => {
     if (!filteredReviews.length) {
       return [
-        { name: "Kecepatan", average: 0, fill: "var(--color-speed)" },
         { name: "Kualitas", average: 0, fill: "var(--color-quality)" },
         { name: "Keramahan", average: 0, fill: "var(--color-friendliness)" },
+        { name: "Kecepatan", average: 0, fill: "var(--color-speed)" },
         { name: "Kelengkapan", average: 0, fill: "var(--color-completeness)" },
       ];
     }
@@ -74,9 +103,9 @@ export default function AnalyticsDashboard({ unit }: AnalyticsDashboardProps) {
     }
 
     return [
-      { name: "Kecepatan", average: totals.serviceSpeed / count, fill: "var(--color-speed)" },
       { name: "Kualitas", average: totals.serviceQuality / count, fill: "var(--color-quality)" },
       { name: "Keramahan", average: totals.staffFriendliness / count, fill: "var(--color-friendliness)" },
+      { name: "Kecepatan", average: totals.serviceSpeed / count, fill: "var(--color-speed)" },
       { name: "Kelengkapan", average: totals.serviceCompleteness / count, fill: "var(--color-completeness)" },
     ].sort((a, b) => {
         const order = ["Kualitas", "Keramahan", "Kecepatan", "Kelengkapan"];
@@ -98,7 +127,7 @@ export default function AnalyticsDashboard({ unit }: AnalyticsDashboardProps) {
             distribution[rating-1].count++;
         }
     });
-    return distribution;
+    return distribution.filter(item => item.count > 0);
   }, [filteredReviews]);
 
 
@@ -131,6 +160,20 @@ export default function AnalyticsDashboard({ unit }: AnalyticsDashboardProps) {
             return <Badge variant="secondary" className="gap-1.5"><HelpCircle className="h-3 w-3" /> Tdk Tahu</Badge>;
     }
   };
+
+  if (filteredReviews.length === 0) {
+    return (
+        <Card className="col-span-full flex flex-col items-center justify-center h-96">
+            <CardHeader className="text-center">
+                <FileX className="mx-auto h-12 w-12 text-muted-foreground" />
+                <CardTitle className="mt-4">Tidak Ada Data</CardTitle>
+                <CardDescription>
+                    Tidak ada ulasan yang ditemukan untuk periode atau unit yang dipilih.
+                </CardDescription>
+            </CardHeader>
+        </Card>
+    )
+  }
   
   return (
     <div className="grid gap-6">

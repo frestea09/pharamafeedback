@@ -27,14 +27,33 @@ const menuItems = [
     { href: "/admin/users", icon: Users, label: "Kelola Pengguna", tooltip: "Pengguna" },
 ];
 
-const getPageTitle = (pathname: string, unit: string | null): string => {
+const periodLabels: { [key: string]: string } = {
+  today: "Hari Ini",
+  week: "7 Hari Terakhir",
+  month: "30 Hari Terakhir",
+  year: "Tahun Ini",
+  all: "Semua Waktu",
+};
+
+const getPageTitle = (pathname: string, unit: string | null, period: string | null): string => {
     const baseTitles: { [key: string]: string } = {
         "/admin/dashboard": "Dasbor Admin",
         "/admin/reviews": "Semua Ulasan",
         "/admin/users": "Kelola Pengguna"
     };
-    const baseTitle = baseTitles[pathname] || "Admin";
-    return unit ? `${baseTitle} - Unit ${unit}` : baseTitle;
+    let baseTitle = baseTitles[pathname] || "Admin";
+
+    if (unit) {
+      baseTitle = `${baseTitle} - Unit ${unit}`;
+    }
+    
+    if (pathname === '/admin/dashboard' && period && periodLabels[period]) {
+        if (period !== 'all') {
+          baseTitle = `${baseTitle}: ${periodLabels[period]}`;
+        }
+    }
+    
+    return baseTitle;
 }
 
 export default function AdminLayout({
@@ -45,12 +64,13 @@ export default function AdminLayout({
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const unit = searchParams.get('unit');
+  const period = searchParams.get('period');
 
   if (pathname === '/admin' || pathname.startsWith('/admin/users/')) {
     return <>{children}</>;
   }
 
-  const currentPageTitle = getPageTitle(pathname, unit);
+  const currentPageTitle = getPageTitle(pathname, unit, period);
   const adminName = unit ? `Admin ${unit}` : "Ahmad Subarjo";
   const adminEmail = unit ? `admin.${unit.toLowerCase().replace(" ", "")}@pharmafeedback.com` : "admin@pharmafeedback.com";
 
