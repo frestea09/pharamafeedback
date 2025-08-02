@@ -16,7 +16,7 @@ export function LayananReviewLogo(props: SVGProps<SVGSVGElement>) {
         <path d="M12 15l-3-3 3-3 3 3-3 3z" />
         <path d="M12 8V5" />
         <path d="M12 19v-3" />
-        <path d'="M16 12h3" />
+        <path d="M16 12h3" />
         <path d="M5 12h3" />
     </svg>
   );
