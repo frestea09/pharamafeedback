@@ -16,7 +16,6 @@ import {
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { UserPlus } from "lucide-react";
-import { UserFormDialog } from "@/components/organisms/admin/UserFormDialog";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -28,6 +27,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { useToast } from "@/hooks/use-toast";
+import { useRouter } from "next/navigation";
 
 function UserFilters({ table }: { table: Table<User> }) {
   return (
@@ -65,19 +65,13 @@ function UserFilters({ table }: { table: Table<User> }) {
 
 export default function AllUsersPage() {
   const [users, setUsers] = useState<User[]>(initialUsers);
-  const [isFormOpen, setIsFormOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const { toast } = useToast();
-
-  const handleAddUser = () => {
-    setSelectedUser(null);
-    setIsFormOpen(true);
-  };
+  const router = useRouter();
 
   const handleEditUser = (user: User) => {
-    setSelectedUser(user);
-    setIsFormOpen(true);
+    router.push(`/admin/users/${user.id}`);
   };
 
   const handleDeleteUser = (user: User) => {
@@ -97,39 +91,6 @@ export default function AllUsersPage() {
     setSelectedUser(null);
   };
 
-  const handleFormSubmit = (values: Omit<User, 'id' | 'lastLogin' | 'avatar'>) => {
-    if (selectedUser) {
-      // Edit
-      setUsers(
-        users.map((user) =>
-          user.id === selectedUser.id ? { ...selectedUser, ...values } : user
-        )
-      );
-      toast({
-        title: "Pengguna Diperbarui",
-        description: `Data untuk ${values.name} telah berhasil diperbarui.`,
-      });
-    } else {
-      // Add
-      const newUser: User = {
-        id: `user-${Date.now()}`,
-        ...values,
-        lastLogin: new Date().toISOString(),
-        avatar: `https://placehold.co/100x100.png?text=${values.name
-          .split(" ")
-          .map((n) => n[0])
-          .join("")}`,
-      };
-      setUsers([newUser, ...users]);
-      toast({
-        title: "Pengguna Ditambahkan",
-        description: `${values.name} telah berhasil ditambahkan sebagai pengguna baru.`,
-      });
-    }
-    setIsFormOpen(false);
-    setSelectedUser(null);
-  };
-
   const columns = getColumns({ onEdit: handleEditUser, onDelete: handleDeleteUser });
 
   return (
@@ -139,18 +100,11 @@ export default function AllUsersPage() {
         data={users}
         filterComponent={<UserFilters />}
       >
-        <Button onClick={handleAddUser}>
+        <Button onClick={() => router.push('/admin/users/new')}>
           <UserPlus className="mr-2 h-4 w-4" />
           Tambah Pengguna
         </Button>
       </DataTable>
-
-      <UserFormDialog
-        isOpen={isFormOpen}
-        onOpenChange={setIsFormOpen}
-        onSubmit={handleFormSubmit}
-        user={selectedUser}
-      />
 
       <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
         <AlertDialogContent>
