@@ -29,12 +29,14 @@ interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[]
   children?: React.ReactNode
+  filterComponent?: React.ReactElement<{ table: ReturnType<typeof useReactTable<TData>> }>;
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
-  children
+  children,
+  filterComponent
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>([])
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
@@ -58,8 +60,9 @@ export function DataTable<TData, TValue>({
 
   return (
     <div>
-        <div className="flex items-center py-4">
-            {children && React.cloneElement(children as React.ReactElement, { table })}
+        <div className="flex items-center justify-between py-4">
+            {filterComponent && React.cloneElement(filterComponent, { table })}
+            {children}
         </div>
         <div className="rounded-md border">
         <Table>

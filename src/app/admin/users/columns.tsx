@@ -7,11 +7,16 @@ import { Badge } from "@/components/ui/badge"
 import { formatDistanceToNow } from "date-fns"
 import { id } from "date-fns/locale"
 import { Button } from "@/components/ui/button"
-import { ArrowUpDown, MoreHorizontal } from "lucide-react"
+import { ArrowUpDown, MoreHorizontal, Pencil, Trash2 } from "lucide-react"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 
-export const columns: ColumnDef<User>[] = [
+type UserActionsProps = {
+  onEdit: (user: User) => void;
+  onDelete: (user: User) => void;
+};
+
+export const getColumns = ({ onEdit, onDelete }: UserActionsProps): ColumnDef<User>[] => [
   {
     accessorKey: "name",
     header: ({ column }) => {
@@ -31,7 +36,7 @@ export const columns: ColumnDef<User>[] = [
             <div className="flex items-center gap-2">
                 <Avatar className="h-8 w-8">
                     <AvatarImage src={user.avatar} alt={user.name} data-ai-hint="person" />
-                    <AvatarFallback>{user.name.charAt(0)}</AvatarFallback>
+                    <AvatarFallback>{user.name.split(" ").map(n => n[0]).join("")}</AvatarFallback>
                 </Avatar>
                 <span className="font-medium">{user.name}</span>
             </div>
@@ -83,17 +88,22 @@ export const columns: ColumnDef<User>[] = [
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Aksi</DropdownMenuLabel>
-            <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(user.id)}
-            >
-              Salin ID Pengguna
+            <DropdownMenuItem onClick={() => onEdit(user)}>
+              <Pencil className="mr-2 h-4 w-4" />
+              Ubah Pengguna
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>Ubah Pengguna</DropdownMenuItem>
-            <DropdownMenuItem className="text-destructive focus:text-destructive">Hapus Pengguna</DropdownMenuItem>
+            <DropdownMenuItem
+              className="text-destructive focus:text-destructive"
+              onClick={() => onDelete(user)}
+            >
+              <Trash2 className="mr-2 h-4 w-4" />
+              Hapus Pengguna
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       )
     },
   },
 ]
+

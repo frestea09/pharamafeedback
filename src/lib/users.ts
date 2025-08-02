@@ -12,7 +12,7 @@ export const users: User[] = [
   {
     id: "user-1",
     name: "Ahmad Subarjo",
-    email: "ahmad.subarjo@example.com",
+    email: "admin@pharmafeedback.com",
     role: "Admin",
     lastLogin: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(),
     avatar: "https://placehold.co/100x100.png?text=AS"

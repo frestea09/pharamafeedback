@@ -1,3 +1,4 @@
+
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -10,7 +11,7 @@ export default function Home() {
       <header className="container mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
         <div className="flex items-center gap-2">
           <LayananReviewLogo className="h-8 w-8 text-primary" />
-          <h1 className="text-2xl font-bold text-foreground">LayananReview</h1>
+          <h1 className="text-2xl font-bold text-foreground">PharmaFeedback</h1>
         </div>
         <nav className="flex items-center gap-4">
           <Button variant="ghost" asChild>
@@ -25,10 +26,10 @@ export default function Home() {
       <main className="flex-grow">
         <section className="container mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-32 text-center">
           <h2 className="text-4xl md:text-5xl font-extrabold tracking-tight text-foreground">
-            Tingkatkan Kualitas Layanan, Bersama.
+            Tingkatkan Kualitas Layanan Farmasi, Bersama.
           </h2>
           <p className="mt-4 max-w-2xl mx-auto text-lg text-muted-foreground">
-            Umpan balik Anda sangat penting. Bantu kami meningkatkan semua unit layanan dengan membagikan pengalaman Anda. Cepat, mudah, dan berdampak.
+            Umpan balik Anda sangat penting. Bantu kami meningkatkan layanan farmasi dengan membagikan pengalaman Anda. Cepat, mudah, dan berdampak.
           </p>
           <div className="mt-8 flex justify-center gap-4">
             <Button size="lg" asChild>
@@ -48,7 +49,7 @@ export default function Home() {
                 Ulasan Anda memberikan wawasan langsung yang mengarah pada pelayanan yang lebih baik untuk semua orang.
               </p>
             </div>
-            <div className="mt-12 grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+            <div className="mt-12 grid gap-8 md:grid-cols-3">
               <Card>
                 <CardHeader className="flex flex-row items-center gap-4">
                   <div className="bg-primary/10 p-3 rounded-full">
@@ -65,10 +66,10 @@ export default function Home() {
                   <div className="bg-primary/10 p-3 rounded-full">
                     <Users className="h-6 w-6 text-primary" />
                   </div>
-                  <CardTitle>Optimalkan Proses Layanan</CardTitle>
+                  <CardTitle>Pastikan Ketersediaan Obat</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  Umpan balik Anda membantu kami mengelola alur layanan menjadi lebih baik dan efisien.
+                  Umpan balik Anda membantu kami mengelola stok obat agar selalu tersedia saat dibutuhkan.
                 </CardContent>
               </Card>
               <Card>
@@ -88,7 +89,7 @@ export default function Home() {
       </main>
 
       <footer className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 text-center text-muted-foreground">
-        <p>&copy; {new Date().getFullYear()} LayananReview. Semua hak dilindungi undang-undang.</p>
+        <p>&copy; {new Date().getFullYear()} PharmaFeedback. Semua hak dilindungi undang-undang.</p>
       </footer>
     </div>
   );

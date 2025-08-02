@@ -17,7 +17,7 @@ import {
 } from "@/components/ui/sidebar";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { LayoutDashboard, Users, MessageSquare, LogOut, FileText } from "lucide-react";
+import { LayoutDashboard, Users, MessageSquare, LogOut, FileText, UserPlus } from "lucide-react";
 import { LayananReviewLogo } from "@/components/icons";
 import { ReviewProvider } from "@/context/ReviewContext";
 
@@ -40,7 +40,6 @@ export default function AdminLayout({
 }) {
   const pathname = usePathname();
 
-  // Hide sidebar and header on the admin login page
   if (pathname === '/admin') {
     return <ReviewProvider>{children}</ReviewProvider>;
   }
@@ -54,7 +53,7 @@ export default function AdminLayout({
             <SidebarHeader>
             <div className="flex items-center gap-2">
                 <LayananReviewLogo className="size-7 text-primary" />
-                <span className="text-lg font-semibold">LayananReview</span>
+                <span className="text-lg font-semibold">PharmaFeedback</span>
             </div>
             </SidebarHeader>
             <SidebarContent>
@@ -89,7 +88,7 @@ export default function AdminLayout({
                 </Avatar>
                 <div className="flex flex-col">
                     <span className="font-semibold text-sm">Ahmad Subarjo</span>
-                    <span className="text-xs text-muted-foreground">admin@layanan.com</span>
+                    <span className="text-xs text-muted-foreground">admin@pharmafeedback.com</span>
                 </div>
             </div>
             </SidebarFooter>
@@ -104,12 +103,6 @@ export default function AdminLayout({
                     <Button variant="outline" size="sm" className="gap-1">
                         <FileText className="h-3.5 w-3.5" />
                         <span>Ekspor</span>
-                    </Button>
-                )}
-                {pathname === '/admin/users' && (
-                    <Button size="sm" className="gap-1">
-                        <Users className="h-3.5 w-3.5" />
-                        <span>Tambah Pengguna</span>
                     </Button>
                 )}
             </header>

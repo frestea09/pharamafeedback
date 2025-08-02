@@ -1,3 +1,4 @@
+
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
@@ -10,8 +11,8 @@ const fontSans = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "LayananReview",
-  description: "Aplikasi web untuk mengumpulkan ulasan dan umpan balik unit layanan.",
+  title: "PharmaFeedback",
+  description: "Aplikasi web untuk mengumpulkan ulasan dan umpan balik layanan farmasi.",
 };
 
 export default function RootLayout({

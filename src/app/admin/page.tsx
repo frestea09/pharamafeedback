@@ -21,7 +21,7 @@ import { useToast } from "@/hooks/use-toast";
 
 export default function AdminLoginPage() {
   const [showPassword, setShowPassword] = useState(false);
-  const [email, setEmail] = useState("admin@layanan.com");
+  const [email, setEmail] = useState("admin@pharmafeedback.com");
   const [password, setPassword] = useState("admin123");
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
@@ -33,7 +33,7 @@ export default function AdminLoginPage() {
 
     // Simulate API call
     setTimeout(() => {
-      if (email === "admin@layanan.com" && password === "admin123") {
+      if (email === "admin@pharmafeedback.com" && password === "admin123") {
         router.push("/admin/dashboard");
       } else {
         toast({
@@ -68,7 +68,7 @@ export default function AdminLoginPage() {
                 <Input
                   id="email"
                   type="email"
-                  placeholder="admin@layanan.com"
+                  placeholder="admin@pharmafeedback.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
