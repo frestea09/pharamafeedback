@@ -30,7 +30,9 @@ const getSpeedBadge = (speed: 'slow' | 'medium' | 'fast') => {
     }
 };
 
-export const columns: ColumnDef<UnitReview>[] = [
+export const getColumns = (
+  onViewDetail: (review: UnitReview) => void
+): ColumnDef<UnitReview>[] => [
     {
     accessorKey: "user",
     header: ({ column }) => {
@@ -105,7 +107,9 @@ export const columns: ColumnDef<UnitReview>[] = [
               Salin ID Ulasan
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>Lihat Detail Ulasan</DropdownMenuItem>
+            <DropdownMenuItem onClick={() => onViewDetail(review)}>
+                Lihat Detail Ulasan
+            </DropdownMenuItem>
             <DropdownMenuItem className="text-destructive focus:text-destructive">Hapus Ulasan</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

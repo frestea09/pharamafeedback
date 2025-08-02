@@ -24,7 +24,9 @@ const getSpeedBadge = (speed: 'slow' | 'medium' | 'fast') => {
     }
 };
 
-export const columns: ColumnDef<UnitReview>[] = [
+export const getColumns = (
+  onViewDetail: (review: UnitReview) => void
+): ColumnDef<UnitReview>[] => [
   {
     accessorKey: "date",
     header: ({ column }) => {
@@ -39,6 +41,10 @@ export const columns: ColumnDef<UnitReview>[] = [
       )
     },
     cell: ({ row }) => format(new Date(row.getValue("date")), "d MMMM yyyy", { locale: id }),
+  },
+  {
+    accessorKey: "unit",
+    header: "Unit",
   },
   {
     accessorKey: "ratings.serviceSpeed",
@@ -85,12 +91,10 @@ export const columns: ColumnDef<UnitReview>[] = [
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Aksi</DropdownMenuLabel>
-            <DropdownMenuItem>Lihat Detail</DropdownMenuItem>
+            <DropdownMenuItem onClick={() => onViewDetail(review)}>Lihat Detail</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       )
     },
   },
 ]
-
-    
