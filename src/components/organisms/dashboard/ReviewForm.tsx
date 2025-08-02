@@ -210,24 +210,24 @@ export default function ReviewForm() {
                                 value={field.value}
                                 className="flex items-center gap-4"
                             >
-                                <div className="flex items-center space-x-2">
-                                    <RadioGroupItem value="complete" id="complete"/>
+                                <FormItem>
                                     <Label htmlFor="complete" className="flex items-center gap-2 text-base font-normal p-3 rounded-md border border-input cursor-pointer has-[:checked]:bg-primary has-[:checked]:text-primary-foreground has-[:checked]:border-primary">
+                                        <RadioGroupItem value="complete" id="complete"/>
                                         <ThumbsUp className="h-5 w-5"/> Ya, Lengkap
                                     </Label>
-                                </div>
-                                <div className="flex items-center space-x-2">
-                                    <RadioGroupItem value="incomplete" id="incomplete" />
+                                </FormItem>
+                                <FormItem>
                                      <Label htmlFor="incomplete" className="flex items-center gap-2 text-base font-normal p-3 rounded-md border border-input cursor-pointer has-[:checked]:bg-primary has-[:checked]:text-primary-foreground has-[:checked]:border-primary">
+                                        <RadioGroupItem value="incomplete" id="incomplete" />
                                         <ThumbsDown className="h-5 w-5"/> Tidak Lengkap
                                      </Label>
-                                </div>
-                                 <div className="flex items-center space-x-2">
-                                    <RadioGroupItem value="not_applicable" id="not_applicable" />
+                                </FormItem>
+                                 <FormItem>
                                      <Label htmlFor="not_applicable" className="flex items-center gap-2 text-base font-normal p-3 rounded-md border border-input cursor-pointer has-[:checked]:bg-primary has-[:checked]:text-primary-foreground has-[:checked]:border-primary">
+                                        <RadioGroupItem value="not_applicable" id="not_applicable" />
                                         Tidak Tahu
                                      </Label>
-                                </div>
+                                </FormItem>
                             </RadioGroup>
                         </FormControl>
                         <FormMessage />
