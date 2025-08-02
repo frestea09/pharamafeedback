@@ -15,6 +15,7 @@ export interface UnitReview {
   id: string;
   user: string;
   date: string;
+  unit: string;
   ratings: {
     serviceSpeed: 'slow' | 'medium' | 'fast';
     serviceQuality: number;
@@ -66,5 +67,3 @@ export const ReviewProvider = ({ children }: ReviewProviderProps) => {
     </ReviewContext.Provider>
   );
 };
-
-    

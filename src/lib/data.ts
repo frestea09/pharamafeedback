@@ -17,6 +17,7 @@ export interface RawUnitReview {
   id: string;
   user: string;
   date: string;
+  unit: string;
   serviceSpeed: 'slow' | 'medium' | 'fast';
   serviceQuality: number;
   staffFriendliness: number;
@@ -29,6 +30,7 @@ export const initialReviews: RawUnitReview[] = [
    {
     id: "rev-1",
     user: "Pengguna Zero",
+    unit: "Farmasi",
     date: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
     rawCompleteness: 'complete',
     comments: "Staf sangat membantu dan ramah, tapi saya harus menunggu hampir 45 menit untuk dilayani.",
@@ -39,6 +41,7 @@ export const initialReviews: RawUnitReview[] = [
   {
     id: "rev-2",
     user: "Jane Doe",
+    unit: "Rawat Jalan",
     date: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString(),
     rawCompleteness: 'incomplete',
     comments: "Pelayanan yang sangat baik dan cepat! Namun, salah satu item yang saya butuhkan tidak tersedia.",
@@ -49,6 +52,7 @@ export const initialReviews: RawUnitReview[] = [
   {
     id: "rev-3",
     user: "John Smith",
+    unit: "Laboratorium",
     date: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000).toISOString(),
     rawCompleteness: 'complete',
     comments: "Waktu tunggunya oke, tapi stafnya terkesan agak acuh dan tidak menjelaskan informasi dengan jelas.",
@@ -59,6 +63,7 @@ export const initialReviews: RawUnitReview[] = [
     {
     id: "rev-4",
     user: "Emily White",
+    unit: "Farmasi",
     date: new Date(Date.now() - 15 * 24 * 60 * 60 * 1000).toISOString(),
     rawCompleteness: 'complete',
     comments: "Pengalaman yang sempurna. Cepat, ramah, dan semuanya tersedia. Staf memberi saya informasi yang bagus.",
@@ -69,6 +74,7 @@ export const initialReviews: RawUnitReview[] = [
    {
     id: "rev-5",
     user: "Michael Brown",
+    unit: "Rawat Jalan",
     date: new Date(Date.now() - 20 * 24 * 60 * 60 * 1000).toISOString(),
     rawCompleteness: 'incomplete',
     comments: "Menunggu sangat lama, layanan yang saya butuhkan tidak lengkap, dan staf tidak membantu. Pengalaman yang sangat membuat frustrasi secara keseluruhan.",
@@ -77,5 +83,3 @@ export const initialReviews: RawUnitReview[] = [
     staffFriendliness: 1,
   },
 ];
-
-    

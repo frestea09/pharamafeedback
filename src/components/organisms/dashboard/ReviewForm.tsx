@@ -17,16 +17,24 @@ import {
 } from "@/components/ui/form";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { StarRating } from "@/components/atoms/StarRating";
 import { GuidanceTooltip } from "@/components/molecules/dashboard/GuidanceTooltip";
 import { Separator } from "@/components/ui/separator";
-import { Loader2, Smile, ThumbsUp, ThumbsDown, Clock, Rocket, Turtle, HelpCircle } from "lucide-react";
+import { Loader2, Smile, ThumbsUp, ThumbsDown, Clock, Rocket, Turtle, HelpCircle, Building } from "lucide-react";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { ReviewContext } from "@/context/ReviewContext";
 
 const reviewFormSchema = z.object({
+  unit: z.string({ required_error: "Silakan pilih unit layanan." }),
   serviceSpeed: z.enum(["fast", "medium", "slow"], {
     required_error: "Silakan pilih kecepatan layanan.",
   }),
@@ -66,6 +74,7 @@ export default function ReviewForm() {
             id: `rev-${Date.now()}`,
             user: "Pengguna 001", // In a real app, this would be the logged-in user
             date: new Date().toISOString(),
+            unit: data.unit,
             rawCompleteness: data.serviceCompleteness,
             comments: data.comments || "",
             serviceSpeed: data.serviceSpeed,
@@ -86,6 +95,36 @@ export default function ReviewForm() {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+        
+        <FormField
+            control={form.control}
+            name="unit"
+            render={({ field }) => (
+                <FormItem>
+                    <div className="flex items-center gap-2 mb-2">
+                        <Building className="h-5 w-5 text-primary"/>
+                        <FormLabel className="text-base">Pilih Unit Layanan</FormLabel>
+                    </div>
+                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                        <FormControl>
+                        <SelectTrigger>
+                            <SelectValue placeholder="Pilih unit yang ingin Anda ulas" />
+                        </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                            <SelectItem value="Farmasi">Farmasi</SelectItem>
+                            <SelectItem value="Rawat Jalan">Rawat Jalan</SelectItem>
+                            <SelectItem value="Laboratorium">Laboratorium</SelectItem>
+                            <SelectItem value="Radiologi">Radiologi</SelectItem>
+                        </SelectContent>
+                    </Select>
+                    <FormMessage />
+                </FormItem>
+            )}
+        />
+        
+        <Separator />
+
         <div className="grid md:grid-cols-2 gap-x-8 gap-y-10">
             <div className="space-y-8">
                  <FormField
@@ -224,7 +263,7 @@ export default function ReviewForm() {
         <Separator />
 
         <div className="flex justify-end">
-            <Button type="submit" disabled={isSubmitting} size="lg">
+            <Button type="submit" disabled={isSubmitting || !form.formState.isValid} size="lg">
                 {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                 Kirim Ulasan
             </Button>
@@ -233,5 +272,3 @@ export default function ReviewForm() {
     </Form>
   );
 }
-
-    

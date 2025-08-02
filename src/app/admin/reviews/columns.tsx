@@ -51,6 +51,10 @@ export const columns: ColumnDef<UnitReview>[] = [
     cell: ({ row }) => format(new Date(row.getValue("date")), "d MMMM yyyy", { locale: id }),
   },
   {
+    accessorKey: "unit",
+    header: "Unit Layanan",
+  },
+  {
     accessorKey: "ratings.serviceSpeed",
     header: "Kecepatan",
      cell: ({ row }) => getSpeedBadge(row.original.ratings.serviceSpeed),
@@ -109,5 +113,3 @@ export const columns: ColumnDef<UnitReview>[] = [
     },
   },
 ]
-
-    

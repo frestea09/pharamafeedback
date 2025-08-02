@@ -16,6 +16,8 @@ import {
 import type { Table } from "@tanstack/react-table";
 
 function ReviewFilters({ table }: { table: Table<UnitReview> }) {
+  const units = ["Semua Unit", "Farmasi", "Rawat Jalan", "Laboratorium", "Radiologi"];
+  
   return (
     <>
        <Input
@@ -27,25 +29,22 @@ function ReviewFilters({ table }: { table: Table<UnitReview> }) {
         className="max-w-sm"
       />
        <Select
-        value={(table.getColumn("serviceQuality")?.getFilterValue() as string) ?? "all"}
+        value={(table.getColumn("unit")?.getFilterValue() as string) ?? "Semua Unit"}
         onValueChange={(value) => {
-          if (value === "all") {
-            table.getColumn("serviceQuality")?.setFilterValue(undefined)
-          } else {
-            table.getColumn("serviceQuality")?.setFilterValue(Number(value))
-          }
+            if (value === "Semua Unit") {
+                table.getColumn("unit")?.setFilterValue(undefined)
+            } else {
+                table.getColumn("unit")?.setFilterValue(value)
+            }
         }}
        >
         <SelectTrigger className="w-[180px]">
-          <SelectValue placeholder="Filter Kualitas" />
+          <SelectValue placeholder="Filter Unit" />
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value="all">Semua Kualitas</SelectItem>
-          <SelectItem value="5">5 Bintang</SelectItem>
-          <SelectItem value="4">4 Bintang</SelectItem>
-          <SelectItem value="3">3 Bintang</SelectItem>
-          <SelectItem value="2">2 Bintang</SelectItem>
-          <SelectItem value="1">1 Bintang</SelectItem>
+            {units.map(unit => (
+                <SelectItem key={unit} value={unit}>{unit}</SelectItem>
+            ))}
         </SelectContent>
       </Select>
     </>
@@ -62,5 +61,3 @@ export default function AllReviewsPage() {
     </div>
   )
 }
-
-    
