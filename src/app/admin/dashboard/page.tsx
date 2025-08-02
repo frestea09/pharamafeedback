@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
 
-type Period = "today" | "week" | "month" | "year" | "all";
+export type Period = "today" | "yesterday" | "week" | "month" | "last_month" | "year" | "last_year" | "all";
 
 export default function AdminDashboardPage() {
   const searchParams = useSearchParams();
@@ -29,11 +29,14 @@ export default function AdminDashboardPage() {
               <SelectValue placeholder="Pilih periode" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">Semua Waktu</SelectItem>
               <SelectItem value="today">Hari Ini</SelectItem>
+              <SelectItem value="yesterday">Kemarin</SelectItem>
               <SelectItem value="week">7 Hari Terakhir</SelectItem>
               <SelectItem value="month">30 Hari Terakhir</SelectItem>
+              <SelectItem value="last_month">Bulan Kemarin</SelectItem>
               <SelectItem value="year">Tahun Ini</SelectItem>
+              <SelectItem value="last_year">Tahun Kemarin</SelectItem>
+              <SelectItem value="all">Semua Waktu</SelectItem>
             </SelectContent>
           </Select>
        </div>

@@ -20,13 +20,13 @@ import {
 import { ReviewContext, UnitReview } from "@/context/ReviewContext";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { formatDistanceToNow, startOfDay, subDays, startOfYear } from "date-fns";
+import { formatDistanceToNow, startOfDay, endOfDay, subDays, startOfWeek, endOfWeek, startOfMonth, endOfMonth, subMonths, startOfYear, endOfYear, subYears } from "date-fns";
 import { id } from "date-fns/locale";
 import { ThumbsUp, ThumbsDown, HelpCircle, FileX } from "lucide-react";
+import type { Period } from "@/app/admin/dashboard/page";
 
 
 const speedMapping: { [key: string]: number } = { slow: 1, medium: 3, fast: 5 };
-type Period = "today" | "week" | "month" | "year" | "all";
 
 const chartConfig = {
   average: { label: "Peringkat Rata-rata" },
@@ -49,10 +49,16 @@ export default function AnalyticsDashboard({ unit, period }: AnalyticsDashboardP
   const filteredReviews = useMemo(() => {
     const now = new Date();
     let startDate: Date;
+    let endDate: Date = now;
 
     switch (period) {
         case 'today':
             startDate = startOfDay(now);
+            endDate = endOfDay(now);
+            break;
+        case 'yesterday':
+            startDate = startOfDay(subDays(now, 1));
+            endDate = endOfDay(subDays(now, 1));
             break;
         case 'week':
             startDate = subDays(now, 7);
@@ -60,8 +66,18 @@ export default function AnalyticsDashboard({ unit, period }: AnalyticsDashboardP
         case 'month':
             startDate = subDays(now, 30);
             break;
+        case 'last_month':
+            const lastMonth = subMonths(now, 1);
+            startDate = startOfMonth(lastMonth);
+            endDate = endOfMonth(lastMonth);
+            break;
         case 'year':
             startDate = startOfYear(now);
+            break;
+        case 'last_year':
+            const lastYear = subYears(now, 1);
+            startDate = startOfYear(lastYear);
+            endDate = endOfYear(lastYear);
             break;
         case 'all':
         default:
@@ -72,7 +88,16 @@ export default function AnalyticsDashboard({ unit, period }: AnalyticsDashboardP
     return reviews.filter(review => {
         const reviewDate = new Date(review.date);
         const unitMatch = unit ? review.unit === unit : true;
-        const dateMatch = period === 'all' ? true : reviewDate >= startDate;
+        
+        let dateMatch;
+        if (period === 'all') {
+            dateMatch = true;
+        } else if (period === 'today' || period === 'yesterday' || period === 'last_month' || period === 'last_year') {
+            dateMatch = reviewDate >= startDate && reviewDate <= endDate;
+        } else {
+             dateMatch = reviewDate >= startDate;
+        }
+        
         return unitMatch && dateMatch;
     });
 
