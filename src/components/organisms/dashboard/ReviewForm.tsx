@@ -17,21 +17,15 @@ import {
 } from "@/components/ui/form";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { StarRating } from "@/components/atoms/StarRating";
 import { GuidanceTooltip } from "@/components/molecules/dashboard/GuidanceTooltip";
 import { Separator } from "@/components/ui/separator";
-import { Loader2, Smile, ThumbsUp, ThumbsDown, Clock, Rocket, Turtle, HelpCircle, Building } from "lucide-react";
+import { Loader2, Smile, ThumbsUp, ThumbsDown, Clock, Rocket, Turtle, HelpCircle } from "lucide-react";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { ReviewContext } from "@/context/ReviewContext";
+import { RawUnitReview } from "@/lib/data";
 
 const reviewFormSchema = z.object({
   serviceSpeed: z.enum(["fast", "medium", "slow"], {
@@ -67,13 +61,12 @@ export default function ReviewForm() {
   function onSubmit(data: ReviewFormValues) {
     setIsSubmitting(true);
     
-    // Simulate API call
     setTimeout(() => {
-        const newReview = {
+        const newReview: RawUnitReview = {
             id: `rev-${Date.now()}`,
-            user: "Pengguna 001", // In a real app, this would be the logged-in user
+            user: "Pengguna 001",
             date: new Date().toISOString(),
-            unit: "Farmasi", // Unit is now hardcoded based on the logged-in user
+            unit: "Farmasi",
             rawCompleteness: data.serviceCompleteness,
             comments: data.comments || "",
             serviceSpeed: data.serviceSpeed,
@@ -168,36 +161,57 @@ export default function ReviewForm() {
                     control={form.control}
                     name="serviceCompleteness"
                     render={({ field }) => (
-                        <FormItem className="space-y-3">
-                            <div className="flex items-center gap-2">
-                                <HelpCircle className="h-5 w-5 text-primary"/>
-                                <FormLabel className="text-base">Kelengkapan Layanan/Produk</FormLabel>
-                                <GuidanceTooltip aspect="kelengkapan layanan" />
-                            </div>
+                      <FormItem className="space-y-3">
+                        <div className="flex items-center gap-2">
+                          <HelpCircle className="h-5 w-5 text-primary" />
+                          <FormLabel className="text-base">Kelengkapan Layanan/Produk</FormLabel>
+                          <GuidanceTooltip aspect="kelengkapan layanan" />
+                        </div>
                         <FormControl>
-                            <RadioGroup
-                                onValueChange={field.onChange}
-                                value={field.value}
-                                className="flex items-center gap-4"
-                            >
-                                <Label htmlFor="complete" className="flex items-center gap-2 text-base font-normal p-3 rounded-md border border-input cursor-pointer has-[:checked]:bg-primary has-[:checked]:text-primary-foreground has-[:checked]:border-primary">
-                                    <RadioGroupItem value="complete" id="complete"/>
-                                    <ThumbsUp className="h-5 w-5"/> Ya, Lengkap
-                                </Label>
-                                <Label htmlFor="incomplete" className="flex items-center gap-2 text-base font-normal p-3 rounded-md border border-input cursor-pointer has-[:checked]:bg-primary has-[:checked]:text-primary-foreground has-[:checked]:border-primary">
-                                    <RadioGroupItem value="incomplete" id="incomplete" />
-                                    <ThumbsDown className="h-5 w-5"/> Tidak Lengkap
-                                </Label>
-                                <Label htmlFor="not_applicable" className="flex items-center gap-2 text-base font-normal p-3 rounded-md border border-input cursor-pointer has-[:checked]:bg-primary has-[:checked]:text-primary-foreground has-[:checked]:border-primary">
-                                    <RadioGroupItem value="not_applicable" id="not_applicable" />
-                                    Tidak Tahu
-                                </Label>
-                            </RadioGroup>
+                          <RadioGroup
+                            onValueChange={field.onChange}
+                            value={field.value}
+                            className="flex items-center gap-4"
+                          >
+                            <FormItem>
+                              <Label
+                                htmlFor="complete"
+                                className="flex items-center gap-2 text-base font-normal p-3 rounded-md border border-input cursor-pointer has-[:checked]:bg-primary has-[:checked]:text-primary-foreground has-[:checked]:border-primary"
+                              >
+                                <FormControl>
+                                  <RadioGroupItem value="complete" id="complete" />
+                                </FormControl>
+                                <ThumbsUp className="h-5 w-5" /> Ya, Lengkap
+                              </Label>
+                            </FormItem>
+                            <FormItem>
+                              <Label
+                                htmlFor="incomplete"
+                                className="flex items-center gap-2 text-base font-normal p-3 rounded-md border border-input cursor-pointer has-[:checked]:bg-primary has-[:checked]:text-primary-foreground has-[:checked]:border-primary"
+                              >
+                                <FormControl>
+                                  <RadioGroupItem value="incomplete" id="incomplete" />
+                                </FormControl>
+                                <ThumbsDown className="h-5 w-5" /> Tidak Lengkap
+                              </Label>
+                            </FormItem>
+                            <FormItem>
+                              <Label
+                                htmlFor="not_applicable"
+                                className="flex items-center gap-2 text-base font-normal p-3 rounded-md border border-input cursor-pointer has-[:checked]:bg-primary has-[:checked]:text-primary-foreground has-[:checked]:border-primary"
+                              >
+                                <FormControl>
+                                  <RadioGroupItem value="not_applicable" id="not_applicable" />
+                                </FormControl>
+                                Tidak Tahu
+                              </Label>
+                            </FormItem>
+                          </RadioGroup>
                         </FormControl>
                         <FormMessage />
-                        </FormItem>
+                      </FormItem>
                     )}
-                />
+                  />
             </div>
 
             <div className="space-y-6">
