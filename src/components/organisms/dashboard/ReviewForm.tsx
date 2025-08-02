@@ -4,7 +4,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { useState } from "react";
+import { useState, useContext } from "react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -24,7 +24,7 @@ import { GuidanceTooltip } from "@/components/molecules/dashboard/GuidanceToolti
 import { Separator } from "@/components/ui/separator";
 import { Loader2, Smile, ThumbsUp, ThumbsDown, Clock, Rocket, Turtle, HelpCircle } from "lucide-react";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
-import { AISuggestions } from "@/components/molecules/dashboard/AISuggestions";
+import { ReviewContext } from "@/context/ReviewContext";
 
 const reviewFormSchema = z.object({
   serviceSpeed: z.enum(["fast", "medium", "slow"], {
@@ -49,6 +49,7 @@ const defaultValues: Partial<ReviewFormValues> = {
 export default function ReviewForm() {
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const { addReview } = useContext(ReviewContext);
 
   const form = useForm<ReviewFormValues>({
     resolver: zodResolver(reviewFormSchema),
@@ -58,13 +59,26 @@ export default function ReviewForm() {
 
   function onSubmit(data: ReviewFormValues) {
     setIsSubmitting(true);
+    
     // Simulate API call
     setTimeout(() => {
+        const newReview = {
+            id: `rev-${Date.now()}`,
+            user: "Pengguna 001", // In a real app, this would be the logged-in user
+            date: new Date().toISOString(),
+            rawCompleteness: data.serviceCompleteness,
+            comments: data.comments || "",
+            serviceSpeed: data.serviceSpeed,
+            serviceQuality: data.serviceQuality,
+            staffFriendliness: data.staffFriendliness,
+        };
+        addReview(newReview);
+        
         toast({
             title: "Ulasan Terkirim!",
             description: "Terima kasih atas umpan balik Anda yang berharga.",
         });
-        form.reset();
+        form.reset(defaultValues);
         setIsSubmitting(false);
     }, 1500);
   }
@@ -219,3 +233,5 @@ export default function ReviewForm() {
     </Form>
   );
 }
+
+    

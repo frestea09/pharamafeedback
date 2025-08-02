@@ -1,3 +1,4 @@
+
 export const commonIssues = [
   "Waktu tunggu yang lama pada jam sibuk",
   "Layanan atau produk tidak lengkap",
@@ -11,29 +12,20 @@ export const pastRatings = [
   { aspect: "Kelengkapan Layanan", rating: 4 },
 ];
 
-// Mapping from the new string-based service speed to a numeric value for completeness rating
-const completenessMapping: { [key: string]: number } = {
-  'complete': 5,
-  'incomplete': 1,
-  'not_applicable': 3
-};
 
-
-export interface UnitReview {
+export interface RawUnitReview {
   id: string;
   user: string;
   date: string;
-  ratings: {
-    serviceSpeed: 'slow' | 'medium' | 'fast';
-    serviceQuality: number;
-    serviceCompleteness: number; // This will now be derived from the 'complete'/'incomplete'/'not_applicable'
-    staffFriendliness: number;
-  };
+  serviceSpeed: 'slow' | 'medium' | 'fast';
+  serviceQuality: number;
+  staffFriendliness: number;
   comments: string;
   rawCompleteness: 'complete' | 'incomplete' | 'not_applicable';
 }
 
-const reviewsData: Omit<UnitReview, 'ratings'>[] = [
+
+export const initialReviews: RawUnitReview[] = [
    {
     id: "rev-1",
     user: "Pengguna Zero",
@@ -86,13 +78,4 @@ const reviewsData: Omit<UnitReview, 'ratings'>[] = [
   },
 ];
 
-
-export const unitReviews: UnitReview[] = reviewsData.map(r => ({
-  ...r,
-  ratings: {
-    serviceSpeed: r.serviceSpeed,
-    serviceQuality: r.serviceQuality,
-    staffFriendliness: r.staffFriendliness,
-    serviceCompleteness: completenessMapping[r.rawCompleteness]
-  }
-}));
+    

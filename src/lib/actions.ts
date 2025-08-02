@@ -1,9 +1,10 @@
+
 "use server";
 
 import { guideReviewProcess } from "@/ai/flows/guide-review-process";
 import { suggestFeedback } from "@/ai/flows/suggest-feedback";
 import { summarizeReviews } from "@/ai/flows/summarize-reviews";
-import { commonIssues, pastRatings, unitReviews } from "@/lib/data";
+import { commonIssues, pastRatings, initialReviews } from "@/lib/data";
 import type { SuggestFeedbackInput } from "@/ai/flows/suggest-feedback";
 import type { GuideReviewProcessInput } from "@/ai/flows/guide-review-process";
 import type { SummarizeReviewsInput } from "@/ai/flows/summarize-reviews";
@@ -48,7 +49,18 @@ export async function getReviewGuidance(aspect: string) {
  */
 export async function getAdminGuidance() {
     try {
-        const input: SummarizeReviewsInput = { reviews: unitReviews };
+        const input: SummarizeReviewsInput = { reviews: initialReviews.map(r => ({
+            id: r.id,
+            user: r.user,
+            date: r.date,
+            comments: r.comments,
+            ratings: {
+                serviceSpeed: r.serviceSpeed,
+                serviceQuality: r.serviceQuality,
+                staffFriendliness: r.staffFriendliness,
+                serviceCompleteness: r.rawCompleteness
+            }
+        })) as any };
         const result = await summarizeReviews(input);
         return result;
     } catch (error) {
@@ -56,3 +68,5 @@ export async function getAdminGuidance() {
         return null;
     }
 }
+
+    

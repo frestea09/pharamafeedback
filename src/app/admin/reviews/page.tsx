@@ -1,16 +1,19 @@
 
-import { unitReviews, UnitReview } from "@/lib/data"
-import { DataTable } from "@/components/organisms/admin/DataTable"
-import { columns } from "./columns"
-import { Input } from "@/components/ui/input"
+"use client";
+
+import { useContext } from "react";
+import { ReviewContext, UnitReview } from "@/context/ReviewContext";
+import { DataTable } from "@/components/organisms/admin/DataTable";
+import { columns } from "./columns";
+import { Input } from "@/components/ui/input";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select"
-import type { Table } from "@tanstack/react-table"
+} from "@/components/ui/select";
+import type { Table } from "@tanstack/react-table";
 
 function ReviewFilters({ table }: { table: Table<UnitReview> }) {
   return (
@@ -50,11 +53,14 @@ function ReviewFilters({ table }: { table: Table<UnitReview> }) {
 }
 
 export default function AllReviewsPage() {
+  const { reviews } = useContext(ReviewContext);
   return (
     <div className="container mx-auto py-2">
-      <DataTable columns={columns} data={unitReviews}>
+      <DataTable columns={columns} data={reviews}>
          <ReviewFilters />
       </DataTable>
     </div>
   )
 }
+
+    

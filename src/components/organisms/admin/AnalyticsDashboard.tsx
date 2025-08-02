@@ -1,5 +1,7 @@
+
 "use client";
 
+import { useContext, useMemo } from "react";
 import { Bar, BarChart, CartesianGrid, XAxis, YAxis, ResponsiveContainer, Pie, PieChart, Cell } from "recharts";
 import {
   Card,
@@ -15,54 +17,13 @@ import {
   ChartLegend,
   ChartLegendContent,
 } from "@/components/ui/chart";
-import { unitReviews } from "@/lib/data";
+import { ReviewContext, UnitReview } from "@/context/ReviewContext";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { formatDistanceToNow } from "date-fns";
 import { id } from "date-fns/locale";
 
 const speedMapping: { [key: string]: number } = { slow: 1, medium: 3, fast: 5 };
-
-const calculateAverageRatings = () => {
-  const totals = {
-    serviceSpeed: 0,
-    serviceQuality: 0,
-    serviceCompleteness: 0,
-    staffFriendliness: 0,
-  };
-  const count = unitReviews.length;
-
-  for (const review of unitReviews) {
-    totals.serviceSpeed += speedMapping[review.ratings.serviceSpeed];
-    totals.serviceQuality += review.ratings.serviceQuality;
-    totals.serviceCompleteness += review.ratings.serviceCompleteness;
-    totals.staffFriendliness += review.ratings.staffFriendliness;
-  }
-
-  return [
-    { name: "Kecepatan", average: totals.serviceSpeed / count, fill: "var(--color-speed)" },
-    { name: "Kualitas", average: totals.serviceQuality / count, fill: "var(--color-quality)" },
-    { name: "Kelengkapan", average: totals.serviceCompleteness / count, fill: "var(--color-completeness)" },
-    { name: "Keramahan", average: totals.staffFriendliness / count, fill: "var(--color-friendliness)" },
-  ];
-};
-
-const getRatingDistribution = (aspect: 'serviceQuality' | 'staffFriendliness' | 'serviceCompleteness') => {
-    const distribution = [
-        { name: '1 Bintang', count: 0 },
-        { name: '2 Bintang', count: 0 },
-        { name: '3 Bintang', count: 0 },
-        { name: '4 Bintang', count: 0 },
-        { name: '5 Bintang', count: 0 },
-    ];
-    unitReviews.forEach(review => {
-        const rating = review.ratings[aspect];
-        if (rating >= 1 && rating <= 5) {
-            distribution[rating-1].count++;
-        }
-    });
-    return distribution;
-}
 
 const chartConfig = {
   average: { label: "Peringkat Rata-rata" },
@@ -75,8 +36,57 @@ const chartConfig = {
 const COLORS = ["#FF8042", "#FFBB28", "#00C49F", "#0088FE", "#8884d8" ];
 
 export default function AnalyticsDashboard() {
-  const averageRatings = calculateAverageRatings();
-  const serviceQualityDistribution = getRatingDistribution('serviceQuality');
+  const { reviews } = useContext(ReviewContext);
+
+  const averageRatings = useMemo(() => {
+    if (!reviews.length) {
+      return [
+        { name: "Kecepatan", average: 0, fill: "var(--color-speed)" },
+        { name: "Kualitas", average: 0, fill: "var(--color-quality)" },
+        { name: "Kelengkapan", average: 0, fill: "var(--color-completeness)" },
+        { name: "Keramahan", average: 0, fill: "var(--color-friendliness)" },
+      ];
+    }
+    const totals = {
+      serviceSpeed: 0,
+      serviceQuality: 0,
+      serviceCompleteness: 0,
+      staffFriendliness: 0,
+    };
+    const count = reviews.length;
+
+    for (const review of reviews) {
+      totals.serviceSpeed += speedMapping[review.ratings.serviceSpeed];
+      totals.serviceQuality += review.ratings.serviceQuality;
+      totals.serviceCompleteness += review.ratings.serviceCompleteness;
+      totals.staffFriendliness += review.ratings.staffFriendliness;
+    }
+
+    return [
+      { name: "Kecepatan", average: totals.serviceSpeed / count, fill: "var(--color-speed)" },
+      { name: "Kualitas", average: totals.serviceQuality / count, fill: "var(--color-quality)" },
+      { name: "Kelengkapan", average: totals.serviceCompleteness / count, fill: "var(--color-completeness)" },
+      { name: "Keramahan", average: totals.staffFriendliness / count, fill: "var(--color-friendliness)" },
+    ];
+  }, [reviews]);
+
+  const serviceQualityDistribution = useMemo(() => {
+    const distribution = [
+        { name: '1 Bintang', count: 0 },
+        { name: '2 Bintang', count: 0 },
+        { name: '3 Bintang', count: 0 },
+        { name: '4 Bintang', count: 0 },
+        { name: '5 Bintang', count: 0 },
+    ];
+    reviews.forEach(review => {
+        const rating = review.ratings.serviceQuality;
+        if (rating >= 1 && rating <= 5) {
+            distribution[rating-1].count++;
+        }
+    });
+    return distribution;
+  }, [reviews]);
+
 
   const getRatingColor = (rating: number) => {
     if (rating < 3) return "destructive";
@@ -176,7 +186,7 @@ export default function AnalyticsDashboard() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {unitReviews.slice(0, 5).map((review) => (
+              {reviews.slice(0, 5).map((review) => (
                 <TableRow key={review.id}>
                   <TableCell className="font-medium">{review.user}</TableCell>
                   <TableCell className="text-muted-foreground">{formatDistanceToNow(new Date(review.date), { addSuffix: true, locale: id })}</TableCell>
@@ -202,3 +212,5 @@ export default function AnalyticsDashboard() {
     </div>
   );
 }
+
+    

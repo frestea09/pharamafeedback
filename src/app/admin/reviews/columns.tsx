@@ -2,7 +2,7 @@
 "use client"
 
 import { ColumnDef } from "@tanstack/react-table"
-import { UnitReview } from "@/lib/data"
+import { UnitReview } from "@/context/ReviewContext"
 import { Badge } from "@/components/ui/badge"
 import { format } from "date-fns"
 import { id } from "date-fns/locale"
@@ -109,3 +109,5 @@ export const columns: ColumnDef<UnitReview>[] = [
     },
   },
 ]
+
+    
