@@ -44,7 +44,7 @@ const formSchema = z.object({
   name: z.string().min(2, { message: "Nama harus memiliki setidaknya 2 karakter." }),
   email: z.string().email({ message: "Format email tidak valid." }),
   role: z.enum(["Admin", "User"]),
-  unit: z.enum(["Farmasi", "Rawat Jalan", "Rawat Inap"]).optional(),
+  unit: z.enum(["Farmasi", "Rawat Jalan", "Rawat Inap", "Laboratorium", "Radiologi"]).optional(),
 });
 
 type UserFormValues = z.infer<typeof formSchema>;
@@ -85,6 +85,8 @@ export function UserFormDialog({ isOpen, onOpenChange, onSubmit, user }: UserFor
     // Ensure unit is not sent if the role is not Admin
     if (values.role !== "Admin") {
       delete dataToSubmit.unit;
+    } else {
+       dataToSubmit.unit = values.unit || undefined;
     }
     onSubmit(dataToSubmit);
     form.reset();
@@ -165,18 +167,21 @@ export function UserFormDialog({ isOpen, onOpenChange, onSubmit, user }: UserFor
                   <FormItem>
                     <FormLabel>Unit (Khusus Admin)</FormLabel>
                     <Select
-                      onValueChange={field.onChange}
+                      onValueChange={(value) => field.onChange(value === "none" ? undefined : value)}
                       defaultValue={field.value}
                     >
                       <FormControl>
                         <SelectTrigger>
-                          <SelectValue placeholder="Pilih unit (opsional)" />
-                        </SelectTrigger>
+                          <SelectValue placeholder="Pilih unit (opsional untuk admin umum)" />
+                        </Trigger>
                       </FormControl>
                       <SelectContent>
+                        <SelectItem value="none">Admin Umum (Semua Unit)</SelectItem>
                         <SelectItem value="Farmasi">Farmasi</SelectItem>
                         <SelectItem value="Rawat Jalan">Rawat Jalan</SelectItem>
                         <SelectItem value="Rawat Inap">Rawat Inap</SelectItem>
+                        <SelectItem value="Laboratorium">Laboratorium</SelectItem>
+                        <SelectItem value="Radiologi">Radiologi</SelectItem>
                       </SelectContent>
                     </Select>
                     <FormMessage />

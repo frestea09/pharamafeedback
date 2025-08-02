@@ -6,7 +6,7 @@ export type User = {
   role: "Admin" | "User"
   lastLogin: string
   avatar: string
-  unit?: "Farmasi" | "Rawat Jalan" | "Rawat Inap"
+  unit?: "Farmasi" | "Rawat Jalan" | "Rawat Inap" | "Laboratorium" | "Radiologi"
 }
 
 export const users: User[] = [
@@ -26,6 +26,15 @@ export const users: User[] = [
     unit: "Farmasi",
     lastLogin: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(),
     avatar: "https://placehold.co/100x100.png?text=AF"
+  },
+    {
+    id: "user-9",
+    name: "Joko (Admin Rawat Jalan)",
+    email: "admin.rawatjalan@pharmafeedback.com",
+    role: "Admin",
+    unit: "Rawat Jalan",
+    lastLogin: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
+    avatar: "https://placehold.co/100x100.png?text=AJ"
   },
   {
     id: "user-2",
