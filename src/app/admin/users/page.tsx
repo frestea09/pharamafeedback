@@ -1,4 +1,6 @@
 
+"use client";
+
 import { users, User } from "@/lib/users"
 import { DataTable } from "@/components/organisms/admin/DataTable"
 import { columns } from "./columns"
