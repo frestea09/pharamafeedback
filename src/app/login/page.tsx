@@ -34,15 +34,18 @@ export default function LoginPage() {
     // Simple simulation logic based on email
     setTimeout(() => {
       if (password === "password123") {
-        if (email.toLowerCase().includes("farmasi")) {
+        const lowerCaseEmail = email.toLowerCase();
+        if (lowerCaseEmail.includes("farmasi")) {
           router.push("/dashboard?unit=Farmasi&name=Pengguna+Farmasi");
-        } else if (email.toLowerCase().includes("rawatjalan")) {
+        } else if (lowerCaseEmail.includes("rawatjalan")) {
           router.push("/dashboard?unit=Rawat+Jalan&name=Pengguna+Rawat+Jalan");
+        } else if (lowerCaseEmail.includes("rawatinap")) {
+          router.push("/dashboard?unit=Rawat+Inap&name=Pengguna+Rawat+Inap");
         } else {
            toast({
             variant: "destructive",
             title: "Login Gagal",
-            description: "Email tidak dikenali. Coba 'penggunafarmasi@mail.com' atau 'penggunarawatjalan@mail.com'.",
+            description: "Email tidak dikenali. Gunakan email yang mengandung 'farmasi', 'rawatjalan', atau 'rawatinap'.",
           });
           setIsLoading(false);
         }
@@ -85,7 +88,7 @@ export default function LoginPage() {
                   required
                 />
                  <p className="text-xs text-muted-foreground">
-                  Coba: <code>penggunafarmasi@mail.com</code> atau <code>penggunarawatjalan@mail.com</code>
+                  Coba: <code>penggunafarmasi@mail.com</code>, <code>penggunarawatjalan@mail.com</code>, atau <code>penggunarawatinap@mail.com</code>
                 </p>
               </div>
               <div className="space-y-2">
