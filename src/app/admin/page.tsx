@@ -86,8 +86,9 @@ export default function AdminLoginPage() {
                   onChange={(e) => setEmail(e.target.value)}
                   required
                 />
-                 <p className="text-xs text-muted-foreground">
-                  Coba: `admin@pharmafeedback.com` (umum) atau `admin.farmasi@pharmafeedback.com`
+                 <p className="text-xs text-muted-foreground space-y-1">
+                  <span>Email admin umum: <strong>admin@pharmafeedback.com</strong></span><br/>
+                  <span>Coba juga admin unit: <strong>admin.farmasi@pharmafeedback.com</strong></span>
                 </p>
               </div>
               <div className="space-y-2">
@@ -115,7 +116,7 @@ export default function AdminLoginPage() {
                   </button>
                 </div>
                  <p className="text-xs text-muted-foreground">
-                  Kata sandi: `admin123`
+                  Kata sandi untuk semua admin: <strong>admin123</strong>
                 </p>
               </div>
             </CardContent>
