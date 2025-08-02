@@ -20,13 +20,11 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { StarRating } from "@/components/atoms/StarRating";
-import { GuidanceTooltip } from "@/components/molecules/dashboard/GuidanceTooltip";
 import { Separator } from "@/components/ui/separator";
 import { Loader2, Smile, ThumbsUp, ThumbsDown, Clock, Rocket, Turtle, HelpCircle } from "lucide-react";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { ReviewContext } from "@/context/ReviewContext";
 import { RawUnitReview } from "@/lib/data";
-import { AISuggestions } from "@/components/molecules/dashboard/AISuggestions";
 
 
 const reviewFormSchema = z.object({
@@ -85,11 +83,6 @@ export default function ReviewForm() {
         setIsSubmitting(false);
     }, 1500);
   }
-  
-  const handleSuggestionSelect = (suggestion: string) => {
-    const currentComments = form.getValues("comments") || "";
-    form.setValue("comments", currentComments ? `${currentComments}\n- ${suggestion}` : `- ${suggestion}`);
-  };
 
   return (
     <Form {...form}>
@@ -105,7 +98,6 @@ export default function ReviewForm() {
                         <div className="flex items-center gap-2 mb-2">
                             <Smile className="h-5 w-5 text-primary"/>
                             <FormLabel className="text-base">Kualitas Pelayanan</FormLabel>
-                            <GuidanceTooltip aspect="kualitas pelayanan" />
                         </div>
                         <FormControl>
                            <StarRating value={field.value} onChange={field.onChange} />
@@ -123,7 +115,6 @@ export default function ReviewForm() {
                          <div className="flex items-center gap-2 mb-2">
                             <Smile className="h-5 w-5 text-primary"/>
                             <FormLabel className="text-base">Keramahan Staf</FormLabel>
-                            <GuidanceTooltip aspect="keramahan staf" />
                          </div>
                         <FormControl>
                             <StarRating value={field.value} onChange={field.onChange} />
@@ -141,7 +132,6 @@ export default function ReviewForm() {
                              <div className="flex items-center gap-2 mb-2">
                                 <Clock className="h-5 w-5 text-primary"/>
                                 <FormLabel className="text-base">Kecepatan Pelayanan</FormLabel>
-                                <GuidanceTooltip aspect="kecepatan pelayanan" />
                             </div>
                             <FormControl>
                                 <ToggleGroup type="single" value={field.value} onValueChange={field.onChange} className="grid grid-cols-3 gap-2">
@@ -172,7 +162,6 @@ export default function ReviewForm() {
                         <div className="flex items-center gap-2">
                           <HelpCircle className="h-5 w-5 text-primary" />
                           <FormLabel className="text-base">Kelengkapan Layanan/Produk</FormLabel>
-                          <GuidanceTooltip aspect="kelengkapan layanan" />
                         </div>
                         <FormControl>
                           <RadioGroup
@@ -180,39 +169,27 @@ export default function ReviewForm() {
                             value={field.value}
                             className="flex items-center gap-4"
                           >
-                            <FormItem>
-                              <Label
-                                htmlFor="complete"
-                                className="flex items-center gap-2 text-base font-normal p-3 rounded-md border border-input cursor-pointer has-[:checked]:bg-primary has-[:checked]:text-primary-foreground has-[:checked]:border-primary"
-                              >
-                                <FormControl>
-                                  <RadioGroupItem value="complete" id="complete" />
-                                </FormControl>
-                                <ThumbsUp className="h-5 w-5" /> Ya, Lengkap
-                              </Label>
-                            </FormItem>
-                            <FormItem>
-                              <Label
-                                htmlFor="incomplete"
-                                className="flex items-center gap-2 text-base font-normal p-3 rounded-md border border-input cursor-pointer has-[:checked]:bg-primary has-[:checked]:text-primary-foreground has-[:checked]:border-primary"
-                              >
-                                <FormControl>
-                                  <RadioGroupItem value="incomplete" id="incomplete" />
-                                </FormControl>
-                                <ThumbsDown className="h-5 w-5" /> Tidak Lengkap
-                              </Label>
-                            </FormItem>
-                            <FormItem>
-                              <Label
-                                htmlFor="not_applicable"
-                                className="flex items-center gap-2 text-base font-normal p-3 rounded-md border border-input cursor-pointer has-[:checked]:bg-primary has-[:checked]:text-primary-foreground has-[:checked]:border-primary"
-                              >
-                                <FormControl>
-                                  <RadioGroupItem value="not_applicable" id="not_applicable" />
-                                </FormControl>
-                                Tidak Tahu
-                              </Label>
-                            </FormItem>
+                            <Label
+                              htmlFor="complete"
+                              className="flex items-center gap-2 text-base font-normal p-3 rounded-md border border-input cursor-pointer has-[:checked]:bg-primary has-[:checked]:text-primary-foreground has-[:checked]:border-primary"
+                            >
+                              <RadioGroupItem value="complete" id="complete" />
+                              <ThumbsUp className="h-5 w-5" /> Ya, Lengkap
+                            </Label>
+                            <Label
+                              htmlFor="incomplete"
+                              className="flex items-center gap-2 text-base font-normal p-3 rounded-md border border-input cursor-pointer has-[:checked]:bg-primary has-[:checked]:text-primary-foreground has-[:checked]:border-primary"
+                            >
+                              <RadioGroupItem value="incomplete" id="incomplete" />
+                              <ThumbsDown className="h-5 w-5" /> Tidak Lengkap
+                            </Label>
+                            <Label
+                              htmlFor="not_applicable"
+                              className="flex items-center gap-2 text-base font-normal p-3 rounded-md border border-input cursor-pointer has-[:checked]:bg-primary has-[:checked]:text-primary-foreground has-[:checked]:border-primary"
+                            >
+                              <RadioGroupItem value="not_applicable" id="not_applicable" />
+                              Tidak Tahu
+                            </Label>
                           </RadioGroup>
                         </FormControl>
                         <FormMessage />
@@ -229,7 +206,6 @@ export default function ReviewForm() {
                         <FormItem>
                          <div className="flex items-center gap-2 mb-2">
                              <FormLabel>Komentar Tambahan</FormLabel>
-                             <GuidanceTooltip aspect="umpan balik umum" />
                          </div>
                         <FormControl>
                             <Textarea
@@ -242,7 +218,6 @@ export default function ReviewForm() {
                         </FormItem>
                     )}
                 />
-                 <AISuggestions onSelect={handleSuggestionSelect} />
             </div>
         </div>
         
