@@ -69,6 +69,8 @@ export default function UserFormPage() {
     },
   });
 
+  const watchedRole = form.watch("role");
+
   useEffect(() => {
     if (isEditing) {
       const existingUser = getUserById(id);
@@ -200,7 +202,7 @@ export default function UserFormPage() {
                   </FormItem>
                 )}
               />
-              {form.watch('role') === 'Admin' && (
+              {watchedRole === 'Admin' && (
                 <FormField
                   control={form.control}
                   name="unit"
