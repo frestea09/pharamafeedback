@@ -82,7 +82,6 @@ export function UserFormDialog({ isOpen, onOpenChange, onSubmit, user }: UserFor
 
   const handleFormSubmit = (values: UserFormValues) => {
     const dataToSubmit: any = { ...values };
-    // Ensure unit is not sent if the role is not Admin
     if (values.role !== "Admin") {
       delete dataToSubmit.unit;
     } else {
