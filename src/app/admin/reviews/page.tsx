@@ -20,7 +20,7 @@ function ReviewFilters({ table }: { table: Table<UnitReview> }) {
   const units = ["Semua Unit", "Farmasi", "Rawat Jalan", "Laboratorium", "Radiologi"];
   
   return (
-    <>
+    <div className="flex items-center gap-2">
        <Input
         placeholder="Cari berdasarkan pengguna..."
         value={(table.getColumn("user")?.getFilterValue() as string) ?? ""}
@@ -48,7 +48,7 @@ function ReviewFilters({ table }: { table: Table<UnitReview> }) {
             ))}
         </SelectContent>
       </Select>
-    </>
+    </div>
   )
 }
 
@@ -66,9 +66,7 @@ export default function AllReviewsPage() {
 
   return (
     <div className="container mx-auto py-2">
-      <DataTable columns={columns} data={reviews}>
-         <ReviewFilters />
-      </DataTable>
+      <DataTable columns={columns} data={reviews} filterComponent={<ReviewFilters />} />
       <ReviewDetailDialog review={selectedReview} isOpen={isDetailOpen} onOpenChange={setIsDetailOpen} />
     </div>
   )
