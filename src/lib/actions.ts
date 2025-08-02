@@ -2,9 +2,11 @@
 
 import { guideReviewProcess } from "@/ai/flows/guide-review-process";
 import { suggestFeedback } from "@/ai/flows/suggest-feedback";
-import { commonIssues, pastRatings } from "@/lib/data";
+import { summarizeReviews } from "@/ai/flows/summarize-reviews";
+import { commonIssues, pastRatings, unitReviews } from "@/lib/data";
 import type { SuggestFeedbackInput } from "@/ai/flows/suggest-feedback";
 import type { GuideReviewProcessInput } from "@/ai/flows/guide-review-process";
+import type { SummarizeReviewsInput } from "@/ai/flows/summarize-reviews";
 
 
 /**
@@ -39,4 +41,18 @@ export async function getReviewGuidance(aspect: string) {
     console.error(`Kesalahan saat mendapatkan panduan untuk ${aspect}:`, error);
     return "Tidak dapat memuat panduan saat ini.";
   }
+}
+
+/**
+ * Memanggil alur Genkit AI untuk mendapatkan ringkasan dan rekomendasi untuk admin.
+ */
+export async function getAdminGuidance() {
+    try {
+        const input: SummarizeReviewsInput = { reviews: unitReviews };
+        const result = await summarizeReviews(input);
+        return result;
+    } catch (error) {
+        console.error("Kesalahan saat mendapatkan panduan admin:", error);
+        return null;
+    }
 }

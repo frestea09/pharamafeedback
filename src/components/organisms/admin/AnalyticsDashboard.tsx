@@ -21,6 +21,8 @@ import { Badge } from "@/components/ui/badge";
 import { formatDistanceToNow } from "date-fns";
 import { id } from "date-fns/locale";
 
+const speedMapping: { [key: string]: number } = { slow: 1, medium: 3, fast: 5 };
+
 const calculateAverageRatings = () => {
   const totals = {
     serviceSpeed: 0,
@@ -31,7 +33,7 @@ const calculateAverageRatings = () => {
   const count = unitReviews.length;
 
   for (const review of unitReviews) {
-    totals.serviceSpeed += review.ratings.serviceSpeed;
+    totals.serviceSpeed += speedMapping[review.ratings.serviceSpeed];
     totals.serviceQuality += review.ratings.serviceQuality;
     totals.serviceCompleteness += review.ratings.serviceCompleteness;
     totals.staffFriendliness += review.ratings.staffFriendliness;
@@ -45,7 +47,7 @@ const calculateAverageRatings = () => {
   ];
 };
 
-const getRatingDistribution = (aspect: keyof (typeof unitReviews)[0]['ratings']) => {
+const getRatingDistribution = (aspect: 'serviceQuality' | 'staffFriendliness' | 'serviceCompleteness') => {
     const distribution = [
         { name: '1 Bintang', count: 0 },
         { name: '2 Bintang', count: 0 },
@@ -80,6 +82,19 @@ export default function AnalyticsDashboard() {
     if (rating < 3) return "destructive";
     if (rating < 4) return "secondary";
     return "default";
+  };
+  
+  const getSpeedBadge = (speed: 'slow' | 'medium' | 'fast') => {
+    switch (speed) {
+      case 'slow':
+        return <Badge variant="destructive">Lambat</Badge>;
+      case 'medium':
+        return <Badge variant="secondary">Sedang</Badge>;
+      case 'fast':
+        return <Badge variant="default">Cepat</Badge>;
+      default:
+        return <Badge variant="outline">N/A</Badge>;
+    }
   };
   
   return (
@@ -166,7 +181,7 @@ export default function AnalyticsDashboard() {
                   <TableCell className="font-medium">{review.user}</TableCell>
                   <TableCell className="text-muted-foreground">{formatDistanceToNow(new Date(review.date), { addSuffix: true, locale: id })}</TableCell>
                   <TableCell className="text-center">
-                    <Badge variant={getRatingColor(review.ratings.serviceSpeed)}>{review.ratings.serviceSpeed}/5</Badge>
+                    {getSpeedBadge(review.ratings.serviceSpeed)}
                   </TableCell>
                   <TableCell className="text-center">
                      <Badge variant={getRatingColor(review.ratings.serviceQuality)}>{review.ratings.serviceQuality}/5</Badge>

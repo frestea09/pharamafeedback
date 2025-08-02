@@ -11,78 +11,88 @@ export const pastRatings = [
   { aspect: "Kelengkapan Layanan", rating: 4 },
 ];
 
+// Mapping from the new string-based service speed to a numeric value for completeness rating
+const completenessMapping: { [key: string]: number } = {
+  'complete': 5,
+  'incomplete': 1,
+  'not_applicable': 3
+};
+
+
 export interface UnitReview {
   id: string;
   user: string;
   date: string;
   ratings: {
-    serviceSpeed: number; // 1-3 (slow, medium, fast) but we'll use 1-5 scale for avg
+    serviceSpeed: 'slow' | 'medium' | 'fast';
     serviceQuality: number;
-    serviceCompleteness: number; // 1-5 scale
+    serviceCompleteness: number; // This will now be derived from the 'complete'/'incomplete'/'not_applicable'
     staffFriendliness: number;
   };
   comments: string;
+  rawCompleteness: 'complete' | 'incomplete' | 'not_applicable';
 }
 
-export const unitReviews: UnitReview[] = [
-  {
+const reviewsData: Omit<UnitReview, 'ratings'>[] = [
+   {
     id: "rev-1",
     user: "Pengguna Zero",
     date: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
-    ratings: {
-      serviceSpeed: 2, // slow
-      serviceQuality: 4,
-      serviceCompleteness: 5,
-      staffFriendliness: 5,
-    },
+    rawCompleteness: 'complete',
     comments: "Staf sangat membantu dan ramah, tapi saya harus menunggu hampir 45 menit untuk dilayani.",
+    serviceSpeed: 'slow',
+    serviceQuality: 4,
+    staffFriendliness: 5,
   },
   {
     id: "rev-2",
     user: "Jane Doe",
     date: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString(),
-    ratings: {
-      serviceSpeed: 5, // fast
-      serviceQuality: 5,
-      serviceCompleteness: 3,
-      staffFriendliness: 5,
-    },
+    rawCompleteness: 'incomplete',
     comments: "Pelayanan yang sangat baik dan cepat! Namun, salah satu item yang saya butuhkan tidak tersedia.",
+    serviceSpeed: 'fast',
+    serviceQuality: 5,
+    staffFriendliness: 5,
   },
   {
     id: "rev-3",
     user: "John Smith",
     date: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000).toISOString(),
-    ratings: {
-      serviceSpeed: 3, // medium
-      serviceQuality: 3,
-      serviceCompleteness: 5,
-      staffFriendliness: 2,
-    },
+    rawCompleteness: 'complete',
     comments: "Waktu tunggunya oke, tapi stafnya terkesan agak acuh dan tidak menjelaskan informasi dengan jelas.",
+    serviceSpeed: 'medium',
+    serviceQuality: 3,
+    staffFriendliness: 2,
   },
     {
     id: "rev-4",
     user: "Emily White",
     date: new Date(Date.now() - 15 * 24 * 60 * 60 * 1000).toISOString(),
-    ratings: {
-      serviceSpeed: 5,
-      serviceQuality: 5,
-      serviceCompleteness: 5,
-      staffFriendliness: 5,
-    },
+    rawCompleteness: 'complete',
     comments: "Pengalaman yang sempurna. Cepat, ramah, dan semuanya tersedia. Staf memberi saya informasi yang bagus.",
+    serviceSpeed: 'fast',
+    serviceQuality: 5,
+    staffFriendliness: 5,
   },
    {
     id: "rev-5",
     user: "Michael Brown",
     date: new Date(Date.now() - 20 * 24 * 60 * 60 * 1000).toISOString(),
-    ratings: {
-      serviceSpeed: 1,
-      serviceQuality: 2,
-      serviceCompleteness: 2,
-      staffFriendliness: 1,
-    },
+    rawCompleteness: 'incomplete',
     comments: "Menunggu sangat lama, layanan yang saya butuhkan tidak lengkap, dan staf tidak membantu. Pengalaman yang sangat membuat frustrasi secara keseluruhan.",
+    serviceSpeed: 'slow',
+    serviceQuality: 2,
+    staffFriendliness: 1,
   },
 ];
+
+
+export const unitReviews: UnitReview[] = reviewsData.map(r => ({
+  ...r,
+  ratings: {
+    serviceSpeed: r.serviceSpeed,
+    serviceQuality: r.serviceQuality,
+    staffFriendliness: r.staffFriendliness,
+    serviceCompleteness: completenessMapping[r.rawCompleteness]
+  }
+}));

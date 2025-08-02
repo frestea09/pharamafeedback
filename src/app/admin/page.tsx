@@ -1,8 +1,10 @@
 import AnalyticsDashboard from "@/components/organisms/admin/AnalyticsDashboard";
+import { AdminGuidance } from "@/components/organisms/admin/AdminGuidance";
 
 export default function AdminPage() {
   return (
-    <div>
+    <div className="space-y-6">
+      <AdminGuidance />
       <AnalyticsDashboard />
     </div>
   );
