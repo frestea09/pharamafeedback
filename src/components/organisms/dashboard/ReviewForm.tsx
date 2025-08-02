@@ -140,11 +140,11 @@ export default function ReviewForm() {
                                         <span>Cepat</span>
                                     </ToggleGroupItem>
                                     <ToggleGroupItem value="medium" aria-label="Sedang" className="flex flex-col h-20 gap-1">
-                                         <Turtle className="h-6 w-6"/>
+                                         <Clock className="h-6 w-6"/>
                                         <span>Sedang</span>
                                     </ToggleGroupItem>
                                     <ToggleGroupItem value="slow" aria-label="Lambat" className="flex flex-col h-20 gap-1">
-                                        <Turtle className="h-6 w-6 opacity-50"/>
+                                        <Turtle className="h-6 w-6"/>
                                         <span>Lambat</span>
                                     </ToggleGroupItem>
                                 </ToggleGroup>
@@ -167,25 +167,25 @@ export default function ReviewForm() {
                           <RadioGroup
                             onValueChange={field.onChange}
                             value={field.value}
-                            className="flex items-center gap-4"
+                            className="flex flex-wrap items-center gap-4"
                           >
                             <Label
                               htmlFor="complete"
-                              className="flex items-center gap-2 text-base font-normal p-3 rounded-md border border-input cursor-pointer has-[:checked]:bg-primary has-[:checked]:text-primary-foreground has-[:checked]:border-primary"
+                              className="flex items-center gap-2 text-base font-normal p-3 rounded-md border border-input cursor-pointer has-[:checked]:bg-primary has-[:checked]:text-primary-foreground has-[:checked]:border-primary transition-colors"
                             >
                               <RadioGroupItem value="complete" id="complete" />
                               <ThumbsUp className="h-5 w-5" /> Ya, Lengkap
                             </Label>
                             <Label
                               htmlFor="incomplete"
-                              className="flex items-center gap-2 text-base font-normal p-3 rounded-md border border-input cursor-pointer has-[:checked]:bg-primary has-[:checked]:text-primary-foreground has-[:checked]:border-primary"
+                              className="flex items-center gap-2 text-base font-normal p-3 rounded-md border border-input cursor-pointer has-[:checked]:bg-primary has-[:checked]:text-primary-foreground has-[:checked]:border-primary transition-colors"
                             >
                               <RadioGroupItem value="incomplete" id="incomplete" />
                               <ThumbsDown className="h-5 w-5" /> Tidak Lengkap
                             </Label>
                             <Label
                               htmlFor="not_applicable"
-                              className="flex items-center gap-2 text-base font-normal p-3 rounded-md border border-input cursor-pointer has-[:checked]:bg-primary has-[:checked]:text-primary-foreground has-[:checked]:border-primary"
+                              className="flex items-center gap-2 text-base font-normal p-3 rounded-md border border-input cursor-pointer has-[:checked]:bg-primary has-[:checked]:text-primary-foreground has-[:checked]:border-primary transition-colors"
                             >
                               <RadioGroupItem value="not_applicable" id="not_applicable" />
                               Tidak Tahu
@@ -205,7 +205,7 @@ export default function ReviewForm() {
                     render={({ field }) => (
                         <FormItem>
                          <div className="flex items-center gap-2 mb-2">
-                             <FormLabel>Komentar Tambahan</FormLabel>
+                             <FormLabel>Komentar Tambahan (Opsional)</FormLabel>
                          </div>
                         <FormControl>
                             <Textarea
