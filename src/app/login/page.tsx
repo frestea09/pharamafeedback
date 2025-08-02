@@ -18,11 +18,19 @@ import { Label } from "@/components/ui/label";
 import { TestTube } from "lucide-react";
 import { Eye, EyeOff, Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
-  const [email, setEmail] = useState("penggunafarmasi@mail.com");
+  const [email, setEmail] = useState("pengguna@mail.com");
   const [password, setPassword] = useState("password123");
+  const [unit, setUnit] = useState("Farmasi");
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
   const { toast } = useToast();
@@ -31,34 +39,31 @@ export default function LoginPage() {
     e.preventDefault();
     setIsLoading(true);
 
-    // Simple simulation logic based on email
     setTimeout(() => {
       if (password === "password123") {
-        const lowerCaseEmail = email.toLowerCase();
-        if (lowerCaseEmail.includes("farmasi")) {
-          router.push("/dashboard?unit=Farmasi&name=Pengguna+Farmasi");
-        } else if (lowerCaseEmail.includes("rawatjalan")) {
-          router.push("/dashboard?unit=Rawat+Jalan&name=Pengguna+Rawat+Jalan");
-        } else if (lowerCaseEmail.includes("rawatinap")) {
-          router.push("/dashboard?unit=Rawat+Inap&name=Pengguna+Rawat+Inap");
-        } else {
-           toast({
-            variant: "destructive",
-            title: "Login Gagal",
-            description: "Email tidak dikenali. Gunakan email yang mengandung 'farmasi', 'rawatjalan', atau 'rawatinap'.",
-          });
-          setIsLoading(false);
+        if (!unit) {
+             toast({
+                variant: "destructive",
+                title: "Login Gagal",
+                description: "Silakan pilih unit layanan terlebih dahulu.",
+            });
+            setIsLoading(false);
+            return;
         }
+        const formattedName = `Pengguna ${unit}`;
+        router.push(`/dashboard?unit=${unit}&name=${formattedName.replace(/ /g, "+")}`);
       } else {
         toast({
           variant: "destructive",
           title: "Login Gagal",
-          description: "Kata sandi salah.",
+          description: "Email atau kata sandi salah.",
         });
         setIsLoading(false);
       }
     }, 1000);
   };
+  
+  const units = ["Farmasi", "Rawat Jalan", "Rawat Inap", "Laboratorium", "Radiologi"];
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-background p-4">
@@ -73,10 +78,21 @@ export default function LoginPage() {
               </div>
               <CardTitle className="text-2xl">Login Pengguna</CardTitle>
               <CardDescription>
-                Masukkan email dan kata sandi Anda untuk memberi ulasan.
+                Pilih unit dan masukkan kredensial Anda untuk memberi ulasan.
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
+                <div className="space-y-2">
+                    <Label htmlFor="unit">Unit Layanan</Label>
+                    <Select value={unit} onValueChange={setUnit}>
+                        <SelectTrigger id="unit">
+                            <SelectValue placeholder="Pilih unit layanan" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            {units.map(u => <SelectItem key={u} value={u}>{u}</SelectItem>)}
+                        </SelectContent>
+                    </Select>
+                </div>
               <div className="space-y-2">
                 <Label htmlFor="email">Email</Label>
                 <Input
@@ -87,9 +103,6 @@ export default function LoginPage() {
                   onChange={(e) => setEmail(e.target.value)}
                   required
                 />
-                 <p className="text-xs text-muted-foreground">
-                  Coba: <code>penggunafarmasi@mail.com</code>, <code>penggunarawatjalan@mail.com</code>, atau <code>penggunarawatinap@mail.com</code>
-                </p>
               </div>
               <div className="space-y-2">
                 <Label htmlFor="password">Kata Sandi</Label>
@@ -116,7 +129,7 @@ export default function LoginPage() {
                   </button>
                 </div>
                  <p className="text-xs text-muted-foreground">
-                  Kata sandi: <code>password123</code>
+                  Email: <code>pengguna@mail.com</code>, Kata sandi: <code>password123</code>
                 </p>
               </div>
             </CardContent>

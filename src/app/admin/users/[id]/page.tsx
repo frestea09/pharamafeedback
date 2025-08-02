@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useEffect } from "react";
@@ -214,7 +213,7 @@ export default function UserFormPage() {
                         <FormControl>
                           <SelectTrigger>
                             <SelectValue placeholder="Pilih unit (opsional untuk admin umum)" />
-                          </Trigger>
+                          </SelectTrigger>
                         </FormControl>
                         <SelectContent>
                           <SelectItem value="none">Admin Umum (Semua Unit)</SelectItem>
