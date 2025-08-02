@@ -7,7 +7,7 @@ import { Badge } from "@/components/ui/badge"
 import { format } from "date-fns"
 import { id } from "date-fns/locale"
 import { Button } from "@/components/ui/button"
-import { ArrowUpDown, MoreHorizontal, Trash2 } from "lucide-react"
+import { ArrowUpDown, MoreHorizontal, Trash2, ThumbsUp, ThumbsDown, HelpCircle } from "lucide-react"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { StarRating } from "@/components/atoms/StarRating"
 
@@ -27,6 +27,17 @@ const getSpeedBadge = (speed: 'slow' | 'medium' | 'fast') => {
         return <Badge variant="default" className="bg-green-500">Cepat</Badge>;
       default:
         return <Badge variant="outline">N/A</Badge>;
+    }
+};
+
+const getCompletenessBadge = (status: 'complete' | 'incomplete' | 'not_applicable') => {
+    switch(status) {
+        case 'complete':
+            return <Badge className="bg-green-500 gap-1.5"><ThumbsUp className="h-3 w-3" /> Lengkap</Badge>;
+        case 'incomplete':
+            return <Badge variant="destructive" className="gap-1.5"><ThumbsDown className="h-3 w-3" /> Tdk Lengkap</Badge>;
+        default:
+            return <Badge variant="secondary" className="gap-1.5"><HelpCircle className="h-3 w-3" /> Tdk Tahu</Badge>;
     }
 };
 
@@ -61,6 +72,11 @@ export const getColumns = (
     accessorKey: "ratings.serviceSpeed",
     header: "Kecepatan",
      cell: ({ row }) => getSpeedBadge(row.original.ratings.serviceSpeed),
+  },
+   {
+    accessorKey: "rawCompleteness",
+    header: "Kelengkapan",
+    cell: ({ row }) => getCompletenessBadge(row.original.rawCompleteness),
   },
   {
     accessorKey: "ratings.serviceQuality",
