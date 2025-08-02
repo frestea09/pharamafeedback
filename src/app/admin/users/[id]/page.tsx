@@ -122,17 +122,8 @@ export default function UserFormPage() {
     setIsLoading(false);
   }, [id, isEditing, router, form, toast, getUserById]);
 
-  useEffect(() => {
-    if (watchedRole === "User") {
-      form.setValue("unit", "none");
-    }
-  }, [watchedRole, form]);
-
   const onSubmit = (values: UserFormValues) => {
-    const unitValue =
-      values.role === "Admin" && values.unit !== "none"
-        ? values.unit
-        : undefined;
+    const unitValue = values.unit !== "none" ? values.unit : undefined;
 
     const userData = {
       name: values.name,
@@ -228,46 +219,46 @@ export default function UserFormPage() {
                   </FormItem>
                 )}
               />
-              <FormField
-                control={form.control}
-                name="role"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Peran</FormLabel>
-                    <Select onValueChange={field.onChange} value={field.value}>
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Pilih peran pengguna" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        <SelectItem value="User">User</SelectItem>
-                        <SelectItem value="Admin">Admin</SelectItem>
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              {watchedRole === "Admin" && (
+              <div className="grid grid-cols-2 gap-4">
                 <FormField
+                    control={form.control}
+                    name="role"
+                    render={({ field }) => (
+                    <FormItem>
+                        <FormLabel>Peran</FormLabel>
+                        <Select onValueChange={field.onChange} value={field.value}>
+                        <FormControl>
+                            <SelectTrigger>
+                            <SelectValue placeholder="Pilih peran pengguna" />
+                            </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                            <SelectItem value="User">User</SelectItem>
+                            <SelectItem value="Admin">Admin</SelectItem>
+                        </SelectContent>
+                        </Select>
+                        <FormMessage />
+                    </FormItem>
+                    )}
+                />
+                 <FormField
                   control={form.control}
                   name="unit"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Unit (Khusus Admin)</FormLabel>
+                      <FormLabel>Unit (Opsional)</FormLabel>
                       <Select
                         onValueChange={field.onChange}
                         value={field.value || "none"}
                       >
                         <FormControl>
                           <SelectTrigger>
-                            <SelectValue placeholder="Pilih unit (opsional untuk admin umum)" />
+                            <SelectValue placeholder="Pilih unit" />
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
                           <SelectItem value="none">
-                            Admin Umum (Semua Unit)
+                            Tidak ada unit
                           </SelectItem>
                           <SelectItem value="Farmasi">Farmasi</SelectItem>
                           <SelectItem value="Rawat Jalan">Rawat Jalan</SelectItem>
@@ -282,7 +273,7 @@ export default function UserFormPage() {
                     </FormItem>
                   )}
                 />
-              )}
+              </div>
             </CardContent>
           </Card>
 
