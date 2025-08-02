@@ -43,7 +43,7 @@ const formSchema = z.object({
   name: z.string().min(2, { message: "Nama harus memiliki setidaknya 2 karakter." }),
   email: z.string().email({ message: "Format email tidak valid." }),
   role: z.enum(["Admin", "User"]),
-  unit: z.enum(["Farmasi", "Rawat Jalan", "Rawat Inap", "Laboratorium", "Radiologi"]).optional(),
+  unit: z.enum(["Farmasi", "Rawat Jalan", "Rawat Inap", "Laboratorium", "Radiologi", "none"]).optional(),
 });
 
 type UserFormValues = z.infer<typeof formSchema>;
@@ -55,7 +55,7 @@ export function UserFormDialog({ isOpen, onOpenChange, onSubmit, user }: UserFor
       name: "",
       email: "",
       role: "User",
-      unit: undefined,
+      unit: "none",
     },
   });
 
@@ -65,14 +65,14 @@ export function UserFormDialog({ isOpen, onOpenChange, onSubmit, user }: UserFor
         name: user.name,
         email: user.email,
         role: user.role,
-        unit: user.unit,
+        unit: user.unit || "none",
       });
     } else {
       form.reset({
         name: "",
         email: "",
         role: "User",
-        unit: undefined,
+        unit: "none",
       });
     }
   }, [user, form, isOpen]);
@@ -80,12 +80,12 @@ export function UserFormDialog({ isOpen, onOpenChange, onSubmit, user }: UserFor
   const isEditing = !!user;
 
   const handleFormSubmit = (values: UserFormValues) => {
-    const dataToSubmit: any = { ...values };
-    if (values.role !== "Admin") {
-      dataToSubmit.unit = undefined;
-    } else {
-       dataToSubmit.unit = values.unit || undefined;
-    }
+    const dataToSubmit: Omit<User, 'id' | 'lastLogin' | 'avatar'> = {
+      name: values.name,
+      email: values.email,
+      role: values.role,
+      unit: values.role === 'Admin' && values.unit && values.unit !== 'none' ? values.unit : undefined,
+    };
     onSubmit(dataToSubmit);
     form.reset();
   };
@@ -141,7 +141,6 @@ export function UserFormDialog({ isOpen, onOpenChange, onSubmit, user }: UserFor
                   <FormLabel>Peran</FormLabel>
                   <Select
                     onValueChange={field.onChange}
-                    defaultValue={field.value}
                     value={field.value}
                   >
                     <FormControl>
@@ -166,8 +165,8 @@ export function UserFormDialog({ isOpen, onOpenChange, onSubmit, user }: UserFor
                   <FormItem>
                     <FormLabel>Unit (Khusus Admin)</FormLabel>
                     <Select
-                      onValueChange={(value) => field.onChange(value === "none" ? undefined : value)}
-                      value={field.value || "none"}
+                      onValueChange={field.onChange}
+                      value={field.value}
                     >
                       <FormControl>
                         <SelectTrigger>
