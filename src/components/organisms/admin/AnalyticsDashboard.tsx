@@ -22,6 +22,8 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Badge } from "@/components/ui/badge";
 import { formatDistanceToNow } from "date-fns";
 import { id } from "date-fns/locale";
+import { ThumbsUp, ThumbsDown, HelpCircle } from "lucide-react";
+
 
 const speedMapping: { [key: string]: number } = { slow: 1, medium: 3, fast: 5 };
 
@@ -43,8 +45,8 @@ export default function AnalyticsDashboard() {
       return [
         { name: "Kecepatan", average: 0, fill: "var(--color-speed)" },
         { name: "Kualitas", average: 0, fill: "var(--color-quality)" },
-        { name: "Kelengkapan", average: 0, fill: "var(--color-completeness)" },
         { name: "Keramahan", average: 0, fill: "var(--color-friendliness)" },
+        { name: "Kelengkapan", average: 0, fill: "var(--color-completeness)" },
       ];
     }
     const totals = {
@@ -65,9 +67,12 @@ export default function AnalyticsDashboard() {
     return [
       { name: "Kecepatan", average: totals.serviceSpeed / count, fill: "var(--color-speed)" },
       { name: "Kualitas", average: totals.serviceQuality / count, fill: "var(--color-quality)" },
-      { name: "Kelengkapan", average: totals.serviceCompleteness / count, fill: "var(--color-completeness)" },
       { name: "Keramahan", average: totals.staffFriendliness / count, fill: "var(--color-friendliness)" },
-    ];
+      { name: "Kelengkapan", average: totals.serviceCompleteness / count, fill: "var(--color-completeness)" },
+    ].sort((a, b) => {
+        const order = ["Kualitas", "Keramahan", "Kecepatan", "Kelengkapan"];
+        return order.indexOf(a.name) - order.indexOf(b.name);
+    });
   }, [reviews]);
 
   const serviceQualityDistribution = useMemo(() => {
@@ -101,9 +106,20 @@ export default function AnalyticsDashboard() {
       case 'medium':
         return <Badge variant="secondary">Sedang</Badge>;
       case 'fast':
-        return <Badge variant="default">Cepat</Badge>;
+        return <Badge variant="default" className="bg-green-500">Cepat</Badge>;
       default:
         return <Badge variant="outline">N/A</Badge>;
+    }
+  };
+
+   const getCompletenessBadge = (status: 'complete' | 'incomplete' | 'not_applicable') => {
+    switch(status) {
+        case 'complete':
+            return <Badge className="bg-green-500 gap-1.5"><ThumbsUp className="h-3 w-3" /> Lengkap</Badge>;
+        case 'incomplete':
+            return <Badge variant="destructive" className="gap-1.5"><ThumbsDown className="h-3 w-3" /> Tdk Lkp</Badge>;
+        default:
+            return <Badge variant="secondary" className="gap-1.5"><HelpCircle className="h-3 w-3" /> Tdk Tahu</Badge>;
     }
   };
   
@@ -178,10 +194,10 @@ export default function AnalyticsDashboard() {
               <TableRow>
                 <TableHead>Pengguna</TableHead>
                 <TableHead>Dikirim</TableHead>
-                <TableHead className="text-center">Kecepatan</TableHead>
                 <TableHead className="text-center">Kualitas</TableHead>
-                <TableHead className="text-center">Lengkap</TableHead>
                 <TableHead className="text-center">Keramahan</TableHead>
+                <TableHead className="text-center">Kecepatan</TableHead>
+                <TableHead className="text-center">Kelengkapan</TableHead>
                 <TableHead>Komentar</TableHead>
               </TableRow>
             </TableHeader>
@@ -191,16 +207,16 @@ export default function AnalyticsDashboard() {
                   <TableCell className="font-medium">{review.user}</TableCell>
                   <TableCell className="text-muted-foreground">{formatDistanceToNow(new Date(review.date), { addSuffix: true, locale: id })}</TableCell>
                   <TableCell className="text-center">
-                    {getSpeedBadge(review.ratings.serviceSpeed)}
-                  </TableCell>
-                  <TableCell className="text-center">
                      <Badge variant={getRatingColor(review.ratings.serviceQuality)}>{review.ratings.serviceQuality}/5</Badge>
                   </TableCell>
                   <TableCell className="text-center">
-                     <Badge variant={getRatingColor(review.ratings.serviceCompleteness)}>{review.ratings.serviceCompleteness}/5</Badge>
+                     <Badge variant={getRatingColor(review.ratings.staffFriendliness)}>{review.ratings.staffFriendliness}/5</Badge>
                   </TableCell>
                   <TableCell className="text-center">
-                     <Badge variant={getRatingColor(review.ratings.staffFriendliness)}>{review.ratings.staffFriendliness}/5</Badge>
+                    {getSpeedBadge(review.ratings.serviceSpeed)}
+                  </TableCell>
+                  <TableCell className="text-center">
+                    {getCompletenessBadge(review.rawCompleteness)}
                   </TableCell>
                   <TableCell className="max-w-xs truncate text-muted-foreground">{review.comments}</TableCell>
                 </TableRow>
@@ -212,5 +228,3 @@ export default function AnalyticsDashboard() {
     </div>
   );
 }
-
-    
