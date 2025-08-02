@@ -214,7 +214,7 @@ export default function UserFormPage() {
                         <FormControl>
                           <SelectTrigger>
                             <SelectValue placeholder="Pilih unit (opsional untuk admin umum)" />
-                          </SelectTrigger>
+                          </Trigger>
                         </FormControl>
                         <SelectContent>
                           <SelectItem value="none">Admin Umum (Semua Unit)</SelectItem>
