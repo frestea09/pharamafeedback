@@ -60,20 +60,22 @@ export function UserFormDialog({ isOpen, onOpenChange, onSubmit, user }: UserFor
   });
 
   useEffect(() => {
-    if (user) {
-      form.reset({
-        name: user.name,
-        email: user.email,
-        role: user.role,
-        unit: user.unit || "none",
-      });
-    } else {
-      form.reset({
-        name: "",
-        email: "",
-        role: "User",
-        unit: "none",
-      });
+    if (isOpen) {
+      if (user) {
+        form.reset({
+          name: user.name,
+          email: user.email,
+          role: user.role,
+          unit: user.unit || "none",
+        });
+      } else {
+        form.reset({
+          name: "",
+          email: "",
+          role: "User",
+          unit: "none",
+        });
+      }
     }
   }, [user, form, isOpen]);
 
