@@ -1,4 +1,3 @@
-
 "use client";
 
 import {
@@ -29,7 +28,7 @@ import {
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { User } from "@/lib/users";
+import { type User } from "@/lib/users";
 import { useEffect } from "react";
 import { Loader2 } from "lucide-react";
 
@@ -83,7 +82,7 @@ export function UserFormDialog({ isOpen, onOpenChange, onSubmit, user }: UserFor
   const handleFormSubmit = (values: UserFormValues) => {
     const dataToSubmit: any = { ...values };
     if (values.role !== "Admin") {
-      delete dataToSubmit.unit;
+      dataToSubmit.unit = undefined;
     } else {
        dataToSubmit.unit = values.unit || undefined;
     }
@@ -143,6 +142,7 @@ export function UserFormDialog({ isOpen, onOpenChange, onSubmit, user }: UserFor
                   <Select
                     onValueChange={field.onChange}
                     defaultValue={field.value}
+                    value={field.value}
                   >
                     <FormControl>
                       <SelectTrigger>
@@ -167,7 +167,7 @@ export function UserFormDialog({ isOpen, onOpenChange, onSubmit, user }: UserFor
                     <FormLabel>Unit (Khusus Admin)</FormLabel>
                     <Select
                       onValueChange={(value) => field.onChange(value === "none" ? undefined : value)}
-                      defaultValue={field.value}
+                      value={field.value || "none"}
                     >
                       <FormControl>
                         <SelectTrigger>
