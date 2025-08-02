@@ -107,6 +107,8 @@ export default function UserFormPage() {
           email: existingUser.email,
           role: existingUser.role,
           unit: existingUser.unit || "none",
+          password: "",
+          confirmPassword: "",
         });
       } else {
         toast({
@@ -336,5 +338,3 @@ export default function UserFormPage() {
     </div>
   );
 }
-
-    
