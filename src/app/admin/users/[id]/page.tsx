@@ -37,13 +37,37 @@ import { useUser } from "@/context/UserContext";
 import { Loader2, ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { User } from "@/lib/users";
+import { Separator } from "@/components/ui/separator";
 
-const formSchema = z.object({
-  name: z.string().min(2, { message: "Nama harus memiliki setidaknya 2 karakter." }),
-  email: z.string().email({ message: "Format email tidak valid." }),
-  role: z.enum(["Admin", "User"]),
-  unit: z.enum(["Farmasi", "Rawat Jalan", "Rawat Inap", "Laboratorium", "Radiologi", "none"]).optional(),
-});
+const formSchema = z
+  .object({
+    name: z
+      .string()
+      .min(2, { message: "Nama harus memiliki setidaknya 2 karakter." }),
+    email: z.string().email({ message: "Format email tidak valid." }),
+    role: z.enum(["Admin", "User"]),
+    unit: z
+      .enum(["Farmasi", "Rawat Jalan", "Rawat Inap", "Laboratorium", "Radiologi", "none"])
+      .optional(),
+    password: z
+      .string()
+      .min(6, { message: "Kata sandi harus memiliki setidaknya 6 karakter." })
+      .optional()
+      .or(z.literal("")),
+    confirmPassword: z.string().optional(),
+  })
+  .refine(
+    (data) => {
+      if (data.password && data.password !== data.confirmPassword) {
+        return false;
+      }
+      return true;
+    },
+    {
+      message: "Konfirmasi kata sandi tidak cocok.",
+      path: ["confirmPassword"],
+    }
+  );
 
 type UserFormValues = z.infer<typeof formSchema>;
 
@@ -57,7 +81,7 @@ export default function UserFormPage() {
   const [user, setUser] = useState<User | null>(null);
 
   const id = params.id as string;
-  const isEditing = id !== 'new';
+  const isEditing = id !== "new";
 
   const form = useForm<UserFormValues>({
     resolver: zodResolver(formSchema),
@@ -66,6 +90,8 @@ export default function UserFormPage() {
       email: "",
       role: "User",
       unit: "none",
+      password: "",
+      confirmPassword: "",
     },
   });
 
@@ -88,27 +114,32 @@ export default function UserFormPage() {
           title: "Pengguna Tidak Ditemukan",
           description: "Pengguna yang Anda coba edit tidak ada.",
         });
-        router.push('/admin/users');
+        router.push("/admin/users");
       }
     }
     setIsLoading(false);
   }, [id, isEditing, router, form, toast, getUserById]);
 
   useEffect(() => {
-    if (watchedRole === 'User') {
-      form.setValue('unit', 'none');
+    if (watchedRole === "User") {
+      form.setValue("unit", "none");
     }
   }, [watchedRole, form]);
 
   const onSubmit = (values: UserFormValues) => {
-    const unitValue = values.role === 'Admin' && values.unit !== 'none' ? values.unit : undefined;
-    
+    const unitValue =
+      values.role === "Admin" && values.unit !== "none"
+        ? values.unit
+        : undefined;
+
     const userData = {
-        name: values.name,
-        email: values.email,
-        role: values.role,
-        unit: unitValue
+      name: values.name,
+      email: values.email,
+      role: values.role,
+      unit: unitValue,
     };
+    
+    const passwordChanged = values.password && values.password.length > 0;
 
     if (isEditing && user) {
       updateUser({
@@ -117,16 +148,20 @@ export default function UserFormPage() {
       });
       toast({
         title: "Pengguna Diperbarui",
-        description: `Data untuk ${values.name} telah berhasil diperbarui.`,
+        description: `Data untuk ${values.name} telah berhasil diperbarui. ${passwordChanged ? 'Kata sandi juga telah diubah.' : ''}`,
       });
     } else {
+        if (!values.password) {
+            form.setError("password", { message: "Kata sandi wajib diisi untuk pengguna baru." });
+            return;
+        }
       addUser(userData);
       toast({
         title: "Pengguna Ditambahkan",
         description: `${values.name} telah berhasil ditambahkan sebagai pengguna baru.`,
       });
     }
-    router.push('/admin/users');
+    router.push("/admin/users");
   };
 
   if (isLoading) {
@@ -138,18 +173,22 @@ export default function UserFormPage() {
   }
 
   return (
-    <div className="max-w-2xl mx-auto">
-      <Button variant="ghost" asChild className="mb-4">
-        <Link href="/admin/users">
-          <ArrowLeft className="mr-2 h-4 w-4" />
-          Kembali ke Daftar Pengguna
-        </Link>
-      </Button>
-      <Card>
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)}>
+    <div className="max-w-2xl mx-auto space-y-6">
+      <div className="flex items-center">
+        <Button variant="ghost" asChild>
+          <Link href="/admin/users">
+            <ArrowLeft className="mr-2 h-4 w-4" />
+            Kembali ke Daftar Pengguna
+          </Link>
+        </Button>
+      </div>
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+          <Card>
             <CardHeader>
-              <CardTitle>{isEditing ? "Ubah Pengguna" : "Tambah Pengguna Baru"}</CardTitle>
+              <CardTitle>
+                {isEditing ? "Ubah Pengguna" : "Tambah Pengguna Baru"}
+              </CardTitle>
               <CardDescription>
                 {isEditing
                   ? `Ubah detail untuk ${user?.name}.`
@@ -193,10 +232,7 @@ export default function UserFormPage() {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Peran</FormLabel>
-                    <Select
-                      onValueChange={field.onChange}
-                      value={field.value}
-                    >
+                    <Select onValueChange={field.onChange} value={field.value}>
                       <FormControl>
                         <SelectTrigger>
                           <SelectValue placeholder="Pilih peran pengguna" />
@@ -211,7 +247,7 @@ export default function UserFormPage() {
                   </FormItem>
                 )}
               />
-              {watchedRole === 'Admin' && (
+              {watchedRole === "Admin" && (
                 <FormField
                   control={form.control}
                   name="unit"
@@ -228,11 +264,15 @@ export default function UserFormPage() {
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          <SelectItem value="none">Admin Umum (Semua Unit)</SelectItem>
+                          <SelectItem value="none">
+                            Admin Umum (Semua Unit)
+                          </SelectItem>
                           <SelectItem value="Farmasi">Farmasi</SelectItem>
                           <SelectItem value="Rawat Jalan">Rawat Jalan</SelectItem>
                           <SelectItem value="Rawat Inap">Rawat Inap</SelectItem>
-                          <SelectItem value="Laboratorium">Laboratorium</SelectItem>
+                          <SelectItem value="Laboratorium">
+                            Laboratorium
+                          </SelectItem>
                           <SelectItem value="Radiologi">Radiologi</SelectItem>
                         </SelectContent>
                       </Select>
@@ -242,15 +282,59 @@ export default function UserFormPage() {
                 />
               )}
             </CardContent>
-            <CardFooter className="border-t pt-6">
-              <Button type="submit" disabled={form.formState.isSubmitting}>
-                {form.formState.isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                {isEditing ? "Simpan Perubahan" : "Tambah Pengguna"}
-              </Button>
-            </CardFooter>
-          </form>
-        </Form>
-      </Card>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>Kelola Kata Sandi</CardTitle>
+              <CardDescription>
+                {isEditing
+                  ? "Kosongkan jika Anda tidak ingin mengubah kata sandi."
+                  : "Buat kata sandi untuk pengguna baru."}
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <FormField
+                control={form.control}
+                name="password"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Kata Sandi Baru</FormLabel>
+                    <FormControl>
+                      <Input type="password" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="confirmPassword"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Konfirmasi Kata Sandi Baru</FormLabel>
+                    <FormControl>
+                      <Input type="password" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </CardContent>
+          </Card>
+          
+          <div className="flex justify-end">
+            <Button type="submit" disabled={form.formState.isSubmitting}>
+              {form.formState.isSubmitting && (
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              )}
+              {isEditing ? "Simpan Perubahan" : "Tambah Pengguna"}
+            </Button>
+          </div>
+        </form>
+      </Form>
     </div>
   );
 }
+
+    
