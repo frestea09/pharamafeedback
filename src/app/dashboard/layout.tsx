@@ -2,6 +2,7 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import {
   SidebarProvider,
   Sidebar,
@@ -19,11 +20,28 @@ import { Button } from "@/components/ui/button";
 import { NotebookPen, History, User, LogOut } from "lucide-react";
 import { LayananReviewLogo } from "@/components/icons";
 
+
+const menuItems = [
+    { href: "/dashboard", icon: NotebookPen, label: "Ulasan Baru" },
+    { href: "/dashboard/history", icon: History, label: "Riwayat Saya" },
+    { href: "/dashboard/profile", icon: User, label: "Profil" },
+];
+
+const pageTitles: { [key: string]: string } = {
+    "/dashboard": "Dasbor Pengguna",
+    "/dashboard/history": "Riwayat Ulasan Saya",
+    "/dashboard/profile": "Profil Pengguna"
+};
+
+
 export default function DashboardLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const pathname = usePathname();
+  const currentPageTitle = pageTitles[pathname] || "Dasbor Pengguna";
+
   return (
     <SidebarProvider>
       <Sidebar>
@@ -35,24 +53,16 @@ export default function DashboardLayout({
         </SidebarHeader>
         <SidebarContent>
           <SidebarMenu>
-            <SidebarMenuItem>
-              <SidebarMenuButton href="/dashboard" tooltip="Ulasan Baru" isActive>
-                <NotebookPen />
-                <span>Ulasan Baru</span>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-            <SidebarMenuItem>
-              <SidebarMenuButton href="#" tooltip="Riwayat" className="opacity-50 cursor-not-allowed">
-                <History />
-                <span>Riwayat Saya</span>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-            <SidebarMenuItem>
-              <SidebarMenuButton href="#" tooltip="Profil" className="opacity-50 cursor-not-allowed">
-                <User />
-                <span>Profil</span>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
+             {menuItems.map((item) => (
+                <SidebarMenuItem key={item.href}>
+                    <SidebarMenuButton href={item.href} tooltip={item.label} isActive={pathname === item.href} asChild>
+                        <Link href={item.href}>
+                            <item.icon />
+                            <span>{item.label}</span>
+                        </Link>
+                    </SidebarMenuButton>
+                </SidebarMenuItem>
+             ))}
           </SidebarMenu>
         </SidebarContent>
         <SidebarFooter>
@@ -82,9 +92,8 @@ export default function DashboardLayout({
         <header className="flex h-14 items-center gap-4 border-b bg-card px-6">
             <SidebarTrigger />
             <div className="flex-1">
-                <h1 className="text-lg font-semibold">Dasbor Pengguna</h1>
+                <h1 className="text-lg font-semibold">{currentPageTitle}</h1>
             </div>
-            <Button variant="outline" size="sm">Hari Ini</Button>
         </header>
         <main className="flex-1 overflow-y-auto p-4 md:p-6">{children}</main>
       </SidebarInset>

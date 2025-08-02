@@ -3,7 +3,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 
 export default function DashboardPage() {
   return (
-    <div className="max-w-4xl mx-auto">
+    <div className="grid grid-cols-1">
       <Card>
         <CardHeader>
           <CardTitle className="text-2xl">Bagikan Pengalaman Anda</CardTitle>
