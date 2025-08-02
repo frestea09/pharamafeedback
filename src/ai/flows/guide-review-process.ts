@@ -35,10 +35,6 @@ const prompt = ai.definePrompt({
 
   Pengguna saat ini sedang meninjau aspek layanan berikut: {{{aspect}}}.
 
-  {{#if pastFeedback}}
-  Berikut adalah beberapa umpan balik mereka di masa lalu: {{{pastFeedback}}}
-  {{/if}}
-
   Berikan instruksi dan saran yang jelas dan ringkas untuk membantu pengguna memberikan umpan balik yang bermakna dan terperinci. Fokus pada pertanyaan spesifik yang mungkin mereka pertimbangkan untuk menguraikan pengalaman mereka. Dorong mereka untuk memberikan contoh dan menjadi sespesifik mungkin.
 
   Respons harus dalam nada yang ramah dan percakapan, dan dalam Bahasa Indonesia.
@@ -56,3 +52,4 @@ const guideReviewProcessFlow = ai.defineFlow(
     return output!;
   }
 );
+
