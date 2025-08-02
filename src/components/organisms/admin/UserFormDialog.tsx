@@ -168,7 +168,7 @@ export function UserFormDialog({ isOpen, onOpenChange, onSubmit, user }: UserFor
                     <FormLabel>Unit (Khusus Admin)</FormLabel>
                     <Select
                       onValueChange={field.onChange}
-                      value={field.value}
+                      value={field.value || "none"}
                     >
                       <FormControl>
                         <SelectTrigger>
