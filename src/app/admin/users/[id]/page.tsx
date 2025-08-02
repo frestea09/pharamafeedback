@@ -97,21 +97,24 @@ export default function UserFormPage() {
   const onSubmit = (values: UserFormValues) => {
     const unitValue = values.role === 'Admin' && values.unit !== 'none' ? values.unit : undefined;
     
+    const userData = {
+        name: values.name,
+        email: values.email,
+        role: values.role,
+        unit: unitValue
+    };
+
     if (isEditing && user) {
       updateUser({
         ...user,
-        ...values,
-        unit: unitValue,
+        ...userData,
       });
       toast({
         title: "Pengguna Diperbarui",
         description: `Data untuk ${values.name} telah berhasil diperbarui.`,
       });
     } else {
-      addUser({
-        ...values,
-        unit: unitValue,
-      });
+      addUser(userData);
       toast({
         title: "Pengguna Ditambahkan",
         description: `${values.name} telah berhasil ditambahkan sebagai pengguna baru.`,
