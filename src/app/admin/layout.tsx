@@ -22,13 +22,13 @@ import { LayananReviewLogo } from "@/components/icons";
 import { ReviewProvider } from "@/context/ReviewContext";
 
 const menuItems = [
-    { href: "/admin", icon: LayoutDashboard, label: "Dasbor", tooltip: "Dasbor" },
+    { href: "/admin/dashboard", icon: LayoutDashboard, label: "Dasbor", tooltip: "Dasbor" },
     { href: "/admin/reviews", icon: MessageSquare, label: "Semua Ulasan", tooltip: "Ulasan" },
     { href: "/admin/users", icon: Users, label: "Kelola Pengguna", tooltip: "Pengguna" },
 ];
 
 const pageTitles: { [key: string]: string } = {
-    "/admin": "Dasbor Admin",
+    "/admin/dashboard": "Dasbor Admin",
     "/admin/reviews": "Semua Ulasan",
     "/admin/users": "Kelola Pengguna"
 };
@@ -39,6 +39,12 @@ export default function AdminLayout({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
+
+  // Hide sidebar and header on the admin login page
+  if (pathname === '/admin') {
+    return <ReviewProvider>{children}</ReviewProvider>;
+  }
+
   const currentPageTitle = pageTitles[pathname] || "Admin";
 
   return (
@@ -68,8 +74,8 @@ export default function AdminLayout({
             <SidebarFooter>
             <SidebarMenu>
                 <SidebarMenuItem>
-                    <SidebarMenuButton href="/login" asChild>
-                        <Link href="/login">
+                    <SidebarMenuButton href="/" asChild>
+                        <Link href="/">
                             <LogOut />
                             <span>Keluar</span>
                         </Link>
@@ -78,11 +84,11 @@ export default function AdminLayout({
             </SidebarMenu>
             <div className="flex items-center gap-3 p-2 rounded-md bg-sidebar-accent">
                 <Avatar className="h-10 w-10">
-                    <AvatarImage src="https://placehold.co/100x100.png" alt="Admin" data-ai-hint="person glasses" />
-                    <AvatarFallback>A</AvatarFallback>
+                    <AvatarImage src="https://placehold.co/100x100.png?text=AS" alt="Ahmad Subarjo" data-ai-hint="person glasses" />
+                    <AvatarFallback>AS</AvatarFallback>
                 </Avatar>
                 <div className="flex flex-col">
-                    <span className="font-semibold text-sm">Pengguna Admin</span>
+                    <span className="font-semibold text-sm">Ahmad Subarjo</span>
                     <span className="text-xs text-muted-foreground">admin@layanan.com</span>
                 </div>
             </div>
@@ -115,5 +121,3 @@ export default function AdminLayout({
     </ReviewProvider>
   );
 }
-
-    
