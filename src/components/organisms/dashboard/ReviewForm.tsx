@@ -24,18 +24,16 @@ import { AISuggestions } from "@/components/molecules/dashboard/AISuggestions";
 import { Separator } from "@/components/ui/separator";
 import { Loader2, Smile, ThumbsUp, ThumbsDown, Clock, Rocket, Turtle, HelpCircle } from "lucide-react";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
-import { cn } from "@/lib/utils";
-
 
 const reviewFormSchema = z.object({
   serviceSpeed: z.enum(["fast", "medium", "slow"], {
     required_error: "Silakan pilih kecepatan layanan.",
   }),
-  serviceQuality: z.number().min(1).max(5, { message: "Silakan pilih peringkat." }),
+  serviceQuality: z.number().min(1, { message: "Silakan pilih peringkat." }).max(5),
   serviceCompleteness: z.enum(["complete", "incomplete", "not_applicable"], {
     required_error: "Anda harus memilih status kelengkapan layanan.",
   }),
-  staffFriendliness: z.number().min(1).max(5, { message: "Silakan pilih peringkat." }),
+  staffFriendliness: z.number().min(1, { message: "Silakan pilih peringkat." }).max(5),
   comments: z.string().max(500, "Komentar maksimal 500 karakter.").optional(),
 });
 
@@ -43,6 +41,8 @@ type ReviewFormValues = z.infer<typeof reviewFormSchema>;
 
 const defaultValues: Partial<ReviewFormValues> = {
   comments: "",
+  serviceQuality: 0,
+  staffFriendliness: 0
 };
 
 export default function ReviewForm() {
@@ -176,7 +176,7 @@ export default function ReviewForm() {
                                     </FormControl>
                                      <Label htmlFor="incomplete" className="flex items-center gap-2 text-base font-normal p-3 rounded-md border border-input cursor-pointer has-[:checked]:bg-primary has-[:checked]:text-primary-foreground has-[:checked]:border-primary">
                                         <ThumbsDown className="h-5 w-5"/> Tidak Lengkap
-                                    </Label>
+                                     </Label>
                                 </FormItem>
                                  <FormItem className="flex items-center space-x-2 space-y-0">
                                     <FormControl>
@@ -184,7 +184,7 @@ export default function ReviewForm() {
                                     </FormControl>
                                      <Label htmlFor="not_applicable" className="flex items-center gap-2 text-base font-normal p-3 rounded-md border border-input cursor-pointer has-[:checked]:bg-primary has-[:checked]:text-primary-foreground has-[:checked]:border-primary">
                                         Tidak Tahu
-                                    </Label>
+                                     </Label>
                                 </FormItem>
                             </RadioGroup>
                         </FormControl>
