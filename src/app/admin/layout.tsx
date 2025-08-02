@@ -14,13 +14,15 @@ import {
   SidebarFooter,
   SidebarTrigger,
   SidebarInset,
+  SidebarGroup,
+  SidebarGroupLabel
 } from "@/components/ui/sidebar";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { LayoutDashboard, Users, MessageSquare, LogOut, FileText, UserPlus, TestTube } from "lucide-react";
 
 const menuItems = [
-    { href: "/admin/dashboard", icon: LayoutDashboard, label: "Dasbor", tooltip: "Dasbor" },
+    { href: "/admin/dashboard", icon: LayoutDashboard, label: "Dasbor Utama", tooltip: "Dasbor" },
     { href: "/admin/reviews", icon: MessageSquare, label: "Semua Ulasan", tooltip: "Ulasan" },
     { href: "/admin/users", icon: Users, label: "Kelola Pengguna", tooltip: "Pengguna" },
 ];
@@ -44,7 +46,7 @@ export default function AdminLayout({
   const searchParams = useSearchParams();
   const unit = searchParams.get('unit');
 
-  if (pathname === '/admin') {
+  if (pathname === '/admin' || pathname.startsWith('/admin/users/')) {
     return <>{children}</>;
   }
 
@@ -57,30 +59,38 @@ export default function AdminLayout({
     <Sidebar>
         <SidebarHeader>
         <div className="flex items-center gap-2">
-            <TestTube className="size-7 text-primary" />
-            <span className="text-lg font-semibold">PharmaFeedback</span>
+            <TestTube className="size-8 text-primary" />
+            <span className="text-xl font-semibold">PharmaFeedback</span>
         </div>
         </SidebarHeader>
         <SidebarContent>
-        <SidebarMenu>
-            {menuItems.map((item) => (
-                <SidebarMenuItem key={item.href}>
-                    <SidebarMenuButton href={{ pathname: item.href, query: unit ? { unit } : {} }} tooltip={item.tooltip} isActive={pathname === item.href} asChild>
-                        <Link href={{ pathname: item.href, query: unit ? { unit } : {} }}>
-                            <item.icon />
-                            <span>{item.label}</span>
-                        </Link>
-                    </SidebarMenuButton>
-                </SidebarMenuItem>
-            ))}
-        </SidebarMenu>
+            <SidebarGroup>
+                 <SidebarGroupLabel>MENU UTAMA</SidebarGroupLabel>
+                <SidebarMenu>
+                    {menuItems.map((item) => (
+                        <SidebarMenuItem key={item.href}>
+                            <SidebarMenuButton 
+                                href={{ pathname: item.href, query: unit ? { unit } : {} }} 
+                                tooltip={item.tooltip} 
+                                isActive={pathname === item.href}
+                                className="text-base font-medium h-12" 
+                                asChild>
+                                <Link href={{ pathname: item.href, query: unit ? { unit } : {} }}>
+                                    <item.icon className="size-5" />
+                                    <span>{item.label}</span>
+                                </Link>
+                            </SidebarMenuButton>
+                        </SidebarMenuItem>
+                    ))}
+                </SidebarMenu>
+            </SidebarGroup>
         </SidebarContent>
         <SidebarFooter>
         <SidebarMenu>
             <SidebarMenuItem>
-                <SidebarMenuButton href="/" asChild>
+                <SidebarMenuButton href="/" asChild className="text-base font-medium h-12">
                     <Link href="/">
-                        <LogOut />
+                        <LogOut className="size-5" />
                         <span>Keluar</span>
                     </Link>
                 </SidebarMenuButton>
@@ -99,10 +109,10 @@ export default function AdminLayout({
         </SidebarFooter>
     </Sidebar>
     <SidebarInset>
-        <header className="flex h-14 items-center gap-4 border-b bg-card px-6">
+        <header className="flex h-16 items-center gap-4 border-b bg-card px-6">
             <SidebarTrigger className="md:hidden" />
             <div className="flex-1">
-                <h1 className="text-lg font-semibold">{currentPageTitle}</h1>
+                <h1 className="text-xl font-semibold">{currentPageTitle}</h1>
             </div>
             {pathname === '/admin/reviews' && (
                 <Button variant="outline" size="sm" className="gap-1">
