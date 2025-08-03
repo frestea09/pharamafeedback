@@ -30,13 +30,15 @@ interface DataTableProps<TData, TValue> {
   data: TData[]
   children?: React.ReactNode
   filterComponent?: React.ReactElement<{ table: ReturnType<typeof useReactTable<TData>> }>;
+  onFilterChange?: (table: ReturnType<typeof useReactTable<TData>>) => void;
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
   children,
-  filterComponent
+  filterComponent,
+  onFilterChange
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>([])
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
@@ -62,6 +64,13 @@ export function DataTable<TData, TValue>({
         }
     }
   })
+
+  React.useEffect(() => {
+    if (onFilterChange) {
+      onFilterChange(table);
+    }
+  }, [columnFilters, onFilterChange, table]);
+
 
   return (
     <div>

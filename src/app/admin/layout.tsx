@@ -43,6 +43,10 @@ const getPageTitle = (pathname: string, unit: string | null): string => {
         return id === 'new' ? "Tambah Pengguna Baru" : "Ubah Detail Pengguna";
     }
 
+    if (pathname.startsWith('/admin/reviews/export')) {
+        return "Laporan Ulasan untuk Dicetak";
+    }
+
     let baseTitle = baseTitles[pathname] || "Admin";
 
     if (unit) {
@@ -61,14 +65,14 @@ export default function AdminLayout({
   const searchParams = useSearchParams();
   const unit = searchParams.get('unit');
 
-  // Do not render layout for the main admin login page
-  if (pathname === '/admin') {
+  // Do not render layout for login or export pages
+  if (pathname === '/admin' || pathname === '/admin/reviews/export') {
     return <>{children}</>;
   }
 
   const currentPageTitle = getPageTitle(pathname, unit);
   const adminName = unit ? `Admin ${unit}` : "Admin Sistem";
-  const adminEmail = unit ? `admin.${unit.toLowerCase().replace(" ", "")}@pharmafeedback.com` : "admin@pharmafeedback.com";
+  const adminEmail = unit ? `admin.${unit.toLowerCase().replace(" ", "")}@pharmafeedback.com` : "admin@sim.rs";
 
   return (
     <SidebarProvider>
@@ -130,12 +134,6 @@ export default function AdminLayout({
             <div className="flex-1">
                 <h1 className="text-xl font-semibold">{currentPageTitle}</h1>
             </div>
-            {pathname === '/admin/reviews' && (
-                <Button variant="outline" size="sm" className="gap-1">
-                    <FileText className="h-3.5 w-3.5" />
-                    <span>Ekspor</span>
-                </Button>
-            )}
         </header>
         <main className="flex-1 overflow-y-auto p-4 md:p-6 bg-background/50">
         {children}
