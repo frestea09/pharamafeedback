@@ -9,18 +9,11 @@ import { format } from "date-fns";
 import { id } from "date-fns/locale";
 import { Calendar } from "@/components/ui/calendar";
 import { cn } from "@/lib/utils";
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import type { Table } from "@tanstack/react-table";
 import { UnitReview } from "@/store/reviewStore";
 import { serviceUnits } from "@/lib/constants";
-import { ScrollArea } from "@/components/ui/scroll-area";
+import { Combobox } from "@/components/ui/combobox";
 
 
 interface ReviewFiltersProps {
@@ -31,10 +24,11 @@ interface ReviewFiltersProps {
 }
 
 export function ReviewFilters({ table, date, setDate, onExport }: ReviewFiltersProps) {
-    const units = ["Semua Unit", ...serviceUnits];
+    const units = [{value: "Semua Unit", label: "Semua Unit"}, ...serviceUnits.map(unit => ({value: unit, label: unit}))];
     
     const handleUnitChange = (value: string) => {
-        table.getColumn("unit")?.setFilterValue(value === "Semua Unit" ? undefined : value);
+        const filterValue = value === "Semua Unit" ? undefined : value;
+        table.getColumn("unit")?.setFilterValue(filterValue);
     };
 
     return (
@@ -46,19 +40,16 @@ export function ReviewFilters({ table, date, setDate, onExport }: ReviewFiltersP
                     onChange={(event) => table.getColumn("user")?.setFilterValue(event.target.value)}
                     className="max-w-sm h-9"
                 />
-                <Select
-                    value={(table.getColumn("unit")?.getFilterValue() as string) ?? "Semua Unit"}
-                    onValueChange={handleUnitChange}
-                >
-                    <SelectTrigger className="w-[180px] h-9">
-                        <SelectValue placeholder="Filter Unit" />
-                    </SelectTrigger>
-                    <SelectContent>
-                        <ScrollArea className="h-72">
-                            {units.map(unit => <SelectItem key={unit} value={unit}>{unit}</SelectItem>)}
-                        </ScrollArea>
-                    </SelectContent>
-                </Select>
+                <div className="w-[200px]">
+                     <Combobox
+                        options={units}
+                        value={(table.getColumn("unit")?.getFilterValue() as string) ?? "Semua Unit"}
+                        onChange={handleUnitChange}
+                        placeholder="Filter Unit"
+                        searchPlaceholder="Cari unit..."
+                        emptyPlaceholder="Unit tidak ditemukan."
+                    />
+                </div>
                 <Popover>
                     <PopoverTrigger asChild>
                         <Button

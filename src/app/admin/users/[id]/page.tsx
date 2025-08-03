@@ -38,7 +38,7 @@ import { Loader2, ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { User } from "@/lib/users";
 import { serviceUnits } from "@/lib/constants";
-import { ScrollArea } from "@/components/ui/scroll-area";
+import { Combobox } from "@/components/ui/combobox";
 
 const formSchema = z
   .object({
@@ -83,6 +83,8 @@ export default function UserFormPage() {
   const id = params.id as string;
   const isEditing = id !== "new";
   const loggedInAdminUnit = searchParams.get('unit');
+
+  const unitOptions = [{ value: "none", label: "Tanpa Unit" }, ...serviceUnits.map(unit => ({ value: unit, label: unit }))];
 
   const form = useForm<UserFormValues>({
     resolver: zodResolver(formSchema),
@@ -255,30 +257,18 @@ export default function UserFormPage() {
                     control={form.control}
                     name="unit"
                     render={({ field }) => (
-                        <FormItem>
-                        <FormLabel>Unit (Opsional)</FormLabel>
-                        <Select
-                            onValueChange={field.onChange}
-                            value={field.value || "none"}
+                        <FormItem className="flex flex-col">
+                          <FormLabel>Unit (Opsional)</FormLabel>
+                          <Combobox
+                            options={unitOptions}
+                            value={field.value || 'none'}
+                            onChange={field.onChange}
+                            placeholder="Pilih unit..."
+                            searchPlaceholder="Cari unit..."
+                            emptyPlaceholder="Unit tidak ditemukan."
                             disabled={!!loggedInAdminUnit}
-                        >
-                            <FormControl>
-                            <SelectTrigger>
-                                <SelectValue placeholder="Pilih unit" />
-                            </SelectTrigger>
-                            </FormControl>
-                            <SelectContent>
-                              <ScrollArea className="h-72">
-                                <SelectItem value="none">
-                                    Tanpa Unit
-                                </SelectItem>
-                                {serviceUnits.map(unit => (
-                                  <SelectItem key={unit} value={unit}>{unit}</SelectItem>
-                                ))}
-                              </ScrollArea>
-                            </SelectContent>
-                        </Select>
-                        <FormMessage />
+                          />
+                          <FormMessage />
                         </FormItem>
                     )}
                     />
