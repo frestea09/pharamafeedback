@@ -79,6 +79,9 @@ export default function LoginPage() {
                   onChange={(e) => setEmail(e.target.value)}
                   required
                 />
+                 <p className="text-xs text-muted-foreground pt-1">
+                  Contoh: <code>budi.santoso@example.com</code>
+                </p>
               </div>
               <div className="space-y-2">
                 <Label htmlFor="password">Kata Sandi</Label>
@@ -105,7 +108,7 @@ export default function LoginPage() {
                   </button>
                 </div>
                  <p className="text-xs text-muted-foreground pt-1">
-                  Contoh: <code>budi.santoso@example.com</code>, Kata sandi: <code>password123</code>
+                  Kata sandi untuk semua pengguna contoh adalah: <code>password123</code>
                 </p>
               </div>
             </CardContent>
