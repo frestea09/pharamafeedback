@@ -19,9 +19,6 @@ export default function DashboardPage() {
       <Card>
         <CardHeader>
           <CardTitle className="text-2xl">Beri Ulasan untuk Unit {unit}</CardTitle>
-          <CardDescription>
-             Ulasan Anda akan dicatat atas nama <strong>{name}</strong>.
-          </CardDescription>
         </CardHeader>
         <CardContent>
           <ReviewForm />
