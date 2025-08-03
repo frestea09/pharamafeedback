@@ -70,7 +70,7 @@ export default function LoginPage() {
               </div>
               <CardTitle className="text-2xl">Login Pegawai (Mode Kios)</CardTitle>
               <CardDescription>
-                Halaman ini khusus untuk pegawai. Masuk untuk memulai sesi ulasan anonim bagi pasien di unit Anda.
+                 Halaman ini khusus untuk pegawai. Masuk untuk memulai sesi ulasan anonim bagi pasien di unit Anda.
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -79,7 +79,6 @@ export default function LoginPage() {
                 <Input
                   id="email"
                   type="email"
-                  placeholder="pegawai.[unit]@pharmafeedback.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required

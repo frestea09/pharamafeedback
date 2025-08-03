@@ -19,12 +19,8 @@ import { TestTube } from "lucide-react";
 import { Eye, EyeOff, Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useUserStore } from "@/store/userStore";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
+import { LoginFAQ } from "@/components/organisms/admin/LoginFAQ";
+import { userFaqItems } from "@/lib/constants";
 
 export default function UserLoginPage() {
   const [showPassword, setShowPassword] = useState(false);
@@ -59,7 +55,7 @@ export default function UserLoginPage() {
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-background p-4">
-      <div className="w-full max-w-md">
+      <div className="w-full max-w-md space-y-6">
         <form onSubmit={handleLogin}>
           <Card>
             <CardHeader className="text-center">
@@ -79,7 +75,6 @@ export default function UserLoginPage() {
                 <Input
                   id="email"
                   type="email"
-                  placeholder="pengguna@example.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
@@ -128,6 +123,7 @@ export default function UserLoginPage() {
             </CardFooter>
           </Card>
         </form>
+        <LoginFAQ title="Panduan Pengguna" items={userFaqItems} />
       </div>
     </div>
   );

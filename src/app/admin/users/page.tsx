@@ -5,15 +5,6 @@ import { useState } from "react";
 import { User } from "@/lib/users";
 import { DataTable } from "@/components/organisms/admin/DataTable";
 import { getColumns } from "./columns";
-import { Input } from "@/components/ui/input";
-import type { Table } from "@tanstack/react-table";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { UserPlus } from "lucide-react";
 import {
@@ -29,40 +20,7 @@ import {
 import { useToast } from "@/hooks/use-toast";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useUserStore } from "@/store/userStore";
-
-function UserFilters({ table }: { table: Table<User> }) {
-  return (
-    <div className="flex items-center gap-2">
-      <Input
-        placeholder="Cari berdasarkan email..."
-        value={(table.getColumn("email")?.getFilterValue() as string) ?? ""}
-        onChange={(event) =>
-          table.getColumn("email")?.setFilterValue(event.target.value)
-        }
-        className="max-w-sm"
-      />
-      <Select
-        value={(table.getColumn("role")?.getFilterValue() as string) ?? "all"}
-        onValueChange={(value) => {
-          if (value === "all") {
-            table.getColumn("role")?.setFilterValue(undefined);
-          } else {
-            table.getColumn("role")?.setFilterValue(value);
-          }
-        }}
-      >
-        <SelectTrigger className="w-[180px]">
-          <SelectValue placeholder="Filter Peran" />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectItem value="all">Semua Peran</SelectItem>
-          <SelectItem value="Admin">Admin</SelectItem>
-          <SelectItem value="User">User</SelectItem>
-        </SelectContent>
-      </Select>
-    </div>
-  );
-}
+import { UserFilters } from "@/components/organisms/admin/UserFilters";
 
 export default function AllUsersPage() {
   const { users, deleteUser } = useUserStore();

@@ -20,8 +20,10 @@ import {
 } from "@/components/ui/sidebar";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { Home, LogOut, FileText, TestTube, Eye, EyeOff, HelpCircle } from "lucide-react";
+import { LogOut, TestTube, Eye, EyeOff } from "lucide-react";
 import { useUserStore } from "@/store/userStore";
+import { userMenuItems } from "@/lib/constants";
+import { getPageTitle } from "@/lib/utils";
 
 export default function DashboardLayout({
   children,
@@ -34,19 +36,8 @@ export default function DashboardLayout({
   const { getUserByEmail } = useUserStore();
   const currentUser = getUserByEmail(`${name.toLowerCase().replace(" ", ".")}@example.com`);
 
-  const menuItems = [
-    { href: "/dashboard", icon: Home, label: "Beri Ulasan Baru" },
-    { href: "/dashboard/history", icon: FileText, label: "Riwayat Ulasan" },
-    { href: "/faq", icon: HelpCircle, label: "Bantuan & Panduan" },
-  ];
-  
   const [isPatientMode, setIsPatientMode] = useState(false);
-
-  const getPageTitle = (path: string) => {
-    if (path.includes('/history')) return "Riwayat Ulasan";
-    if (path.includes('/faq')) return "Bantuan & Panduan";
-    return "Formulir Ulasan Pasien";
-  }
+  const pageTitle = getPageTitle(pathname);
   
   if (isPatientMode) {
       return (
@@ -83,7 +74,7 @@ export default function DashboardLayout({
             <SidebarGroup>
                  <SidebarGroupLabel>MENU PENGGUNA</SidebarGroupLabel>
                 <SidebarMenu>
-                    {menuItems.map((item) => (
+                    {userMenuItems.map((item) => (
                         <SidebarMenuItem key={item.href}>
                             <SidebarMenuButton 
                                 href={`${item.href}?name=${name}`}
@@ -127,7 +118,7 @@ export default function DashboardLayout({
         <header className="flex h-16 items-center gap-4 border-b bg-card px-6">
             <SidebarTrigger className="md:hidden" />
             <div className="flex-1">
-                <h1 className="text-xl font-semibold">{getPageTitle(pathname)}</h1>
+                <h1 className="text-xl font-semibold">{pageTitle}</h1>
             </div>
             {pathname === '/dashboard' && (
                 <Button onClick={() => setIsPatientMode(true)}>

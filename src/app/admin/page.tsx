@@ -19,12 +19,8 @@ import { TestTube } from "lucide-react";
 import { Eye, EyeOff, Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useUserStore } from "@/store/userStore";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
+import { LoginFAQ } from "@/components/organisms/admin/LoginFAQ";
+import { adminFaqItems } from "@/lib/constants";
 
 export default function AdminLoginPage() {
   const [showPassword, setShowPassword] = useState(false);
@@ -39,7 +35,6 @@ export default function AdminLoginPage() {
     e.preventDefault();
     setIsLoading(true);
 
-    // Simulate API call
     setTimeout(() => {
       const user = getUserByEmail(email);
       
@@ -59,7 +54,7 @@ export default function AdminLoginPage() {
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-background p-4">
-      <div className="w-full max-w-md">
+      <div className="w-full max-w-md space-y-6">
         <Card>
           <CardHeader className="text-center">
             <div className="flex justify-center mb-4">
@@ -79,7 +74,6 @@ export default function AdminLoginPage() {
                 <Input
                   id="email"
                   type="email"
-                  placeholder="admin@example.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
@@ -128,6 +122,7 @@ export default function AdminLoginPage() {
             </CardFooter>
           </form>
         </Card>
+        <LoginFAQ title="Panduan & Pertanyaan Umum Admin" items={adminFaqItems} />
       </div>
     </div>
   );
