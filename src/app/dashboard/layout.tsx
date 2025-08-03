@@ -20,7 +20,7 @@ import {
 } from "@/components/ui/sidebar";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { Home, LogOut, FileText, UserCircle, TestTube, Eye, EyeOff } from "lucide-react";
+import { Home, LogOut, FileText, TestTube, Eye, EyeOff } from "lucide-react";
 import { useUserStore } from "@/store/userStore";
 
 export default function DashboardLayout({
@@ -37,14 +37,12 @@ export default function DashboardLayout({
   const menuItems = [
     { href: "/dashboard", icon: Home, label: "Beri Ulasan Baru" },
     { href: "/dashboard/history", icon: FileText, label: "Riwayat Ulasan" },
-    { href: "/dashboard/profile", icon: UserCircle, label: "Profil Saya" },
   ];
   
   const [isPatientMode, setIsPatientMode] = useState(false);
 
   const getPageTitle = (path: string) => {
     if (path.includes('/history')) return "Riwayat Ulasan";
-    if (path.includes('/profile')) return "Pengaturan Profil";
     return "Formulir Ulasan Pasien";
   }
   
