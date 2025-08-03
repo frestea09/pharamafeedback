@@ -19,6 +19,12 @@ import { TestTube } from "lucide-react";
 import { Eye, EyeOff, Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useUserStore } from "@/store/userStore";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 
 export default function UserLoginPage() {
   const [showPassword, setShowPassword] = useState(false);
@@ -52,7 +58,7 @@ export default function UserLoginPage() {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background p-4">
+    <div className="flex min-h-screen flex-col items-center justify-center bg-background p-4">
       <div className="w-full max-w-md">
         <form onSubmit={handleLogin}>
           <Card>
@@ -122,6 +128,23 @@ export default function UserLoginPage() {
             </CardFooter>
           </Card>
         </form>
+      </div>
+
+       <div className="w-full max-w-2xl mt-8">
+        <Accordion type="single" collapsible>
+          <AccordionItem value="item-1">
+            <AccordionTrigger>Panduan untuk Pengguna</AccordionTrigger>
+            <AccordionContent className="space-y-2">
+              <p>Selamat datang! Akun Pengguna memungkinkan Anda untuk memberikan umpan balik yang berharga dan melacak semua ulasan yang pernah Anda berikan.</p>
+              <ul className="list-disc pl-5 space-y-1">
+                <li><strong>Akun Pribadi:</strong> Akun Anda dibuat oleh seorang Admin. Silakan hubungi admin jika Anda belum memiliki akun.</li>
+                <li><strong>Beri Ulasan:</strong> Setelah login, Anda akan diarahkan ke dasbor utama di mana Anda dapat langsung mengisi formulir ulasan untuk berbagai unit layanan.</li>
+                <li><strong>Riwayat Ulasan:</strong> Gunakan menu navigasi untuk mengakses halaman "Riwayat Ulasan" dan melihat semua umpan balik yang telah Anda kirimkan.</li>
+                <li><strong>Pentingnya Ulasan Anda:</strong> Setiap ulasan yang Anda berikan membantu kami mengidentifikasi area yang perlu ditingkatkan, mulai dari kecepatan layanan hingga ketersediaan produk.</li>
+              </ul>
+            </AccordionContent>
+          </AccordionItem>
+        </Accordion>
       </div>
     </div>
   );

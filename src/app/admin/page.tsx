@@ -19,6 +19,12 @@ import { TestTube } from "lucide-react";
 import { Eye, EyeOff, Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useUserStore } from "@/store/userStore";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 
 export default function AdminLoginPage() {
   const [showPassword, setShowPassword] = useState(false);
@@ -52,7 +58,7 @@ export default function AdminLoginPage() {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background p-4">
+    <div className="flex min-h-screen flex-col items-center justify-center bg-background p-4">
       <div className="w-full max-w-md">
         <Card>
           <CardHeader className="text-center">
@@ -122,6 +128,22 @@ export default function AdminLoginPage() {
             </CardFooter>
           </form>
         </Card>
+      </div>
+      <div className="w-full max-w-2xl mt-8">
+        <Accordion type="single" collapsible>
+          <AccordionItem value="item-1">
+            <AccordionTrigger>Panduan untuk Admin</AccordionTrigger>
+            <AccordionContent className="space-y-2">
+              <p>Selamat datang di Portal Admin. Halaman ini adalah gerbang Anda untuk mengelola seluruh ekosistem PharmaFeedback.</p>
+              <ul className="list-disc pl-5 space-y-1">
+                <li><strong>Admin Sistem:</strong> Memiliki akses penuh untuk melihat data dari semua unit dan mengelola semua akun (Admin dan Pengguna). Gunakan akun ini untuk tugas-tugas administratif tingkat tinggi.</li>
+                <li><strong>Admin Unit:</strong> Dibatasi untuk melihat analitik dan mengelola pengguna hanya di unit mereka sendiri (misalnya, Farmasi). Ini berguna untuk manajer unit.</li>
+                <li><strong>Dasbor Analitik:</strong> Setelah login, Anda akan disambut dengan dasbor yang merangkum semua data umpan balik.</li>
+                <li><strong>Kelola Pengguna:</strong> Anda dapat menambah, mengubah, dan menghapus akun Admin dan Pengguna.</li>
+              </ul>
+            </AccordionContent>
+          </AccordionItem>
+        </Accordion>
       </div>
     </div>
   );
