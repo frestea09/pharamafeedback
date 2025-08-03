@@ -21,7 +21,7 @@ import { useToast } from "@/hooks/use-toast";
 
 export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
-  const [email, setEmail] = useState("pegawai.farmasi@pharmafeedback.com");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("pegawai123");
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
@@ -68,9 +68,9 @@ export default function LoginPage() {
                   <TestTube className="h-12 w-12 text-primary" />
                 </Link>
               </div>
-              <CardTitle className="text-2xl">Login Pegawai</CardTitle>
+              <CardTitle className="text-2xl">Login Pegawai (Mode Kios)</CardTitle>
               <CardDescription>
-                Masuk untuk memulai sesi ulasan pasien untuk unit Anda.
+                Halaman ini khusus untuk pegawai. Masuk untuk memulai sesi ulasan anonim bagi pasien di unit Anda.
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -84,14 +84,6 @@ export default function LoginPage() {
                   onChange={(e) => setEmail(e.target.value)}
                   required
                 />
-                 <div className="text-xs text-muted-foreground space-y-1 pt-2">
-                  <p><strong>Contoh Email Pegawai per Unit:</strong></p>
-                  <ul className="list-disc pl-5">
-                    <li><code>pegawai.farmasi@pharmafeedback.com</code></li>
-                    <li><code>pegawai.rawatjalan@pharmafeedback.com</code></li>
-                    <li><code>pegawai.rawatinap@pharmafeedback.com</code></li>
-                  </ul>
-                </div>
               </div>
               <div className="space-y-2">
                 <Label htmlFor="password">Kata Sandi</Label>
@@ -117,9 +109,6 @@ export default function LoginPage() {
                     )}
                   </button>
                 </div>
-                 <p className="text-xs text-muted-foreground pt-1">
-                  Kata sandi untuk semua akun pegawai adalah: <strong>pegawai123</strong>
-                </p>
               </div>
             </CardContent>
             <CardFooter className="flex flex-col gap-4">
@@ -128,12 +117,12 @@ export default function LoginPage() {
                 Masuk & Mulai Sesi
               </Button>
               <p className="text-sm text-muted-foreground">
-                Apakah Anda seorang admin?{" "}
+                atau login sebagai{" "}
                 <Link
-                  href="/admin"
+                  href="/login/user"
                   className="font-medium text-primary hover:underline"
                 >
-                  Masuk di sini
+                  Pengguna Individu
                 </Link>
               </p>
             </CardFooter>

@@ -2,7 +2,7 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Smile, Users, Clock, TestTube } from "lucide-react";
+import { Smile, Users, Clock, TestTube, LogIn } from "lucide-react";
 
 export default function Home() {
   return (
@@ -82,6 +82,46 @@ export default function Home() {
                   Bantu kami mengidentifikasi hambatan dan merampingkan proses kami untuk melayani Anda lebih cepat.
                 </CardContent>
               </Card>
+            </div>
+             <div className="mt-20 text-center">
+              <h3 className="text-3xl font-bold text-foreground">Mulai Dari Mana?</h3>
+              <p className="mt-2 text-muted-foreground max-w-2xl mx-auto">
+                Aplikasi ini memiliki beberapa alur masuk tergantung pada peran Anda. Pilih yang paling sesuai untuk Anda.
+              </p>
+               <div className="mt-8 grid gap-8 md:grid-cols-2">
+                 <Card className="text-left">
+                    <CardHeader className="flex flex-row items-start gap-4">
+                      <div className="bg-primary/10 p-3 rounded-full">
+                        <LogIn className="h-6 w-6 text-primary" />
+                      </div>
+                      <div>
+                        <CardTitle>Login Pengguna</CardTitle>
+                        <CardContent className="p-0 pt-2">
+                            Jika Anda adalah pengguna individu yang ingin memberikan ulasan atau melihat riwayat ulasan Anda, gunakan login ini.
+                             <Button asChild className="mt-4">
+                              <Link href="/login/user">Lanjutkan sebagai Pengguna</Link>
+                            </Button>
+                        </CardContent>
+                      </div>
+                    </CardHeader>
+                  </Card>
+                   <Card className="text-left">
+                    <CardHeader className="flex flex-row items-start gap-4">
+                      <div className="bg-primary/10 p-3 rounded-full">
+                        <LogIn className="h-6 w-6 text-primary" />
+                      </div>
+                       <div>
+                        <CardTitle>Login Pegawai (Mode Kios)</CardTitle>
+                        <CardContent className="p-0 pt-2">
+                            Jika Anda adalah pegawai yang bertugas untuk membantu pasien memberikan ulasan secara langsung di unit layanan (mode kios), gunakan login ini.
+                             <Button asChild className="mt-4">
+                              <Link href="/login">Lanjutkan sebagai Pegawai</Link>
+                            </Button>
+                        </CardContent>
+                      </div>
+                    </CardHeader>
+                  </Card>
+              </div>
             </div>
           </div>
         </section>

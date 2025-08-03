@@ -61,9 +61,9 @@ export default function AdminLoginPage() {
                 <TestTube className="h-12 w-12 text-primary" />
               </Link>
             </div>
-            <CardTitle className="text-2xl">Login Admin</CardTitle>
+            <CardTitle className="text-2xl">Portal Admin</CardTitle>
             <CardDescription>
-              Masukkan kredensial Anda untuk mengakses dasbor admin.
+              Masuk untuk mengakses dasbor analitik, mengelola ulasan, dan mengatur akun pengguna.
             </CardDescription>
           </CardHeader>
           <form onSubmit={handleLogin}>
@@ -73,7 +73,7 @@ export default function AdminLoginPage() {
                 <Input
                   id="email"
                   type="email"
-                  placeholder="admin@pharmafeedback.com"
+                  placeholder="admin@example.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
