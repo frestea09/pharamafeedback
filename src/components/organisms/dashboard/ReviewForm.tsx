@@ -42,10 +42,12 @@ const reviewFormSchema = z.object({
 
 type ReviewFormValues = z.infer<typeof reviewFormSchema>;
 
-const defaultValues: Partial<ReviewFormValues> = {
-  comments: "",
+const defaultValues: ReviewFormValues = {
+  serviceSpeed: "fast",
+  serviceCompleteness: "complete",
   serviceQuality: 0,
-  staffFriendliness: 0
+  staffFriendliness: 0,
+  comments: "",
 };
 
 export default function ReviewForm() {
