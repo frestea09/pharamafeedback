@@ -62,7 +62,7 @@ export default function AdminLoginPage() {
             </div>
             <CardTitle className="text-2xl">Portal Admin</CardTitle>
             <CardDescription>
-              Masuk untuk mengakses dasbor analitik, mengelola ulasan, dan mengatur akun pengguna.
+              Masuk untuk mengakses dasbor analitik dan mengelola sistem.
             </CardDescription>
           </CardHeader>
           <form onSubmit={handleLogin}>

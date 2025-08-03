@@ -64,7 +64,7 @@ export default function UserLoginPage() {
               </div>
               <CardTitle className="text-2xl">Login Pengguna</CardTitle>
               <CardDescription>
-                Masuk untuk memberikan ulasan baru atau melihat riwayat ulasan yang pernah Anda kirimkan.
+                Masuk untuk memberi ulasan atau melihat riwayat Anda.
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
