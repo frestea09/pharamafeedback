@@ -87,8 +87,8 @@ export default function AdminLoginPage() {
                   required
                 />
                  <div className="text-xs text-muted-foreground space-y-1 pt-1">
-                  <p><strong>Admin Umum:</strong> <code>admin@pharmafeedback.com</code></p>
-                  <p><strong>Admin Unit:</strong></p>
+                  <p><strong>Admin Sistem:</strong> <code>admin@pharmafeedback.com</code> (akses semua unit)</p>
+                  <p><strong>Contoh Admin Unit:</strong></p>
                   <ul className="list-disc pl-5">
                     <li><code>admin.farmasi@pharmafeedback.com</code></li>
                     <li><code>admin.rawatjalan@pharmafeedback.com</code></li>
@@ -120,7 +120,7 @@ export default function AdminLoginPage() {
                   </button>
                 </div>
                  <p className="text-xs text-muted-foreground pt-1">
-                  Kata sandi untuk semua admin: <strong>admin123</strong>
+                  Kata sandi untuk semua akun admin: <strong>admin123</strong>
                 </p>
               </div>
             </CardContent>

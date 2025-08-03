@@ -18,40 +18,29 @@ import { Label } from "@/components/ui/label";
 import { TestTube } from "lucide-react";
 import { Eye, EyeOff, Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { useUser } from "@/context/UserContext";
 
 export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
-  const [email, setEmail] = useState("pengguna@mail.com");
+  const [email, setEmail] = useState("budi.santoso@example.com");
   const [password, setPassword] = useState("password123");
-  const [unit, setUnit] = useState("Farmasi");
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
   const { toast } = useToast();
+  const { users } = useUser();
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
 
     setTimeout(() => {
-      if (password === "password123") {
-        if (!unit) {
-             toast({
-                variant: "destructive",
-                title: "Login Gagal",
-                description: "Silakan pilih unit layanan terlebih dahulu.",
-            });
-            setIsLoading(false);
-            return;
-        }
-        const formattedName = `Pengguna ${unit}`;
-        router.push(`/dashboard?unit=${unit}&name=${formattedName.replace(/ /g, "+")}`);
+      const user = users.find(u => u.email === email && u.role === 'User');
+
+      if (user && password === "password123") {
+        // For simulation, we'll use a default unit if one isn't specified
+        const unit = user.unit || "Farmasi"; 
+        const name = user.name;
+        router.push(`/dashboard?unit=${unit}&name=${name.replace(/ /g, "+")}`);
       } else {
         toast({
           variant: "destructive",
@@ -62,8 +51,6 @@ export default function LoginPage() {
       }
     }, 1000);
   };
-  
-  const units = ["Farmasi", "Rawat Jalan", "Rawat Inap", "Laboratorium", "Radiologi"];
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-background p-4">
@@ -78,21 +65,10 @@ export default function LoginPage() {
               </div>
               <CardTitle className="text-2xl">Login Pengguna</CardTitle>
               <CardDescription>
-                Pilih unit dan masukkan kredensial Anda untuk memberi ulasan.
+                Masukkan kredensial Anda untuk memberi ulasan.
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-                <div className="space-y-2">
-                    <Label htmlFor="unit">Unit Layanan</Label>
-                    <Select value={unit} onValueChange={setUnit}>
-                        <SelectTrigger id="unit">
-                            <SelectValue placeholder="Pilih unit layanan" />
-                        </SelectTrigger>
-                        <SelectContent>
-                            {units.map(u => <SelectItem key={u} value={u}>{u}</SelectItem>)}
-                        </SelectContent>
-                    </Select>
-                </div>
               <div className="space-y-2">
                 <Label htmlFor="email">Email</Label>
                 <Input
@@ -128,8 +104,8 @@ export default function LoginPage() {
                     )}
                   </button>
                 </div>
-                 <p className="text-xs text-muted-foreground">
-                  Email: <code>pengguna@mail.com</code>, Kata sandi: <code>password123</code>
+                 <p className="text-xs text-muted-foreground pt-1">
+                  Contoh: <code>budi.santoso@example.com</code>, Kata sandi: <code>password123</code>
                 </p>
               </div>
             </CardContent>

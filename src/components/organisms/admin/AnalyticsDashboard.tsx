@@ -70,13 +70,11 @@ export default function AnalyticsDashboard({ unit, period }: AnalyticsDashboardP
         { name: "Kualitas", average: 0, fill: "var(--color-quality)" },
         { name: "Keramahan", average: 0, fill: "var(--color-friendliness)" },
         { name: "Kecepatan", average: 0, fill: "var(--color-speed)" },
-        { name: "Kelengkapan", average: 0, fill: "var(--color-completeness)" },
       ];
     }
     const totals = {
       serviceSpeed: 0,
       serviceQuality: 0,
-      serviceCompleteness: 0,
       staffFriendliness: 0,
     };
     const count = filteredReviews.length;
@@ -84,7 +82,6 @@ export default function AnalyticsDashboard({ unit, period }: AnalyticsDashboardP
     for (const review of filteredReviews) {
       totals.serviceSpeed += speedMapping[review.ratings.serviceSpeed];
       totals.serviceQuality += review.ratings.serviceQuality;
-      totals.serviceCompleteness += review.ratings.serviceCompleteness;
       totals.staffFriendliness += review.ratings.staffFriendliness;
     }
 
@@ -92,9 +89,8 @@ export default function AnalyticsDashboard({ unit, period }: AnalyticsDashboardP
       { name: "Kualitas", average: totals.serviceQuality / count, fill: "var(--color-quality)" },
       { name: "Keramahan", average: totals.staffFriendliness / count, fill: "var(--color-friendliness)" },
       { name: "Kecepatan", average: totals.serviceSpeed / count, fill: "var(--color-speed)" },
-      { name: "Kelengkapan", average: totals.serviceCompleteness / count, fill: "var(--color-completeness)" },
     ].sort((a, b) => {
-        const order = ["Kualitas", "Keramahan", "Kecepatan", "Kelengkapan"];
+        const order = ["Kualitas", "Keramahan", "Kecepatan"];
         return order.indexOf(a.name) - order.indexOf(b.name);
     });
   }, [filteredReviews]);
@@ -163,7 +159,7 @@ export default function AnalyticsDashboard({ unit, period }: AnalyticsDashboardP
   
   return (
     <div className="grid gap-6">
-      <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
          {averageRatings.map((item) => (
             <Card key={item.name}>
                 <CardHeader>

@@ -126,7 +126,7 @@ export default function DashboardLayout({
         <header className="flex h-16 items-center gap-4 border-b bg-card px-6">
             <SidebarTrigger />
             <div className="flex-1">
-                <h1 className="text-xl font-semibold">{currentPageTitle} - Unit {unit}</h1>
+                <h1 className="text-xl font-semibold">{currentPageTitle}</h1>
             </div>
         </header>
         <main className="flex-1 overflow-y-auto p-4 md:p-6">{children}</main>

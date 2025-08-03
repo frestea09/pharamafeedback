@@ -241,38 +241,40 @@ export default function UserFormPage() {
                     </FormItem>
                     )}
                 />
-                 <FormField
-                  control={form.control}
-                  name="unit"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Unit (Opsional)</FormLabel>
-                      <Select
-                        onValueChange={field.onChange}
-                        value={field.value || "none"}
-                      >
-                        <FormControl>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Pilih unit" />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          <SelectItem value="none">
-                            Tidak ada unit
-                          </SelectItem>
-                          <SelectItem value="Farmasi">Farmasi</SelectItem>
-                          <SelectItem value="Rawat Jalan">Rawat Jalan</SelectItem>
-                          <SelectItem value="Rawat Inap">Rawat Inap</SelectItem>
-                          <SelectItem value="Laboratorium">
-                            Laboratorium
-                          </SelectItem>
-                          <SelectItem value="Radiologi">Radiologi</SelectItem>
-                        </SelectContent>
-                      </Select>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+                 {watchedRole === 'Admin' && (
+                    <FormField
+                    control={form.control}
+                    name="unit"
+                    render={({ field }) => (
+                        <FormItem>
+                        <FormLabel>Unit (Khusus Admin)</FormLabel>
+                        <Select
+                            onValueChange={field.onChange}
+                            value={field.value || "none"}
+                        >
+                            <FormControl>
+                            <SelectTrigger>
+                                <SelectValue placeholder="Pilih unit" />
+                            </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                            <SelectItem value="none">
+                                Admin Umum (Tanpa Unit)
+                            </SelectItem>
+                            <SelectItem value="Farmasi">Farmasi</SelectItem>
+                            <SelectItem value="Rawat Jalan">Rawat Jalan</SelectItem>
+                            <SelectItem value="Rawat Inap">Rawat Inap</SelectItem>
+                            <SelectItem value="Laboratorium">
+                                Laboratorium
+                            </SelectItem>
+                            <SelectItem value="Radiologi">Radiologi</SelectItem>
+                            </SelectContent>
+                        </Select>
+                        <FormMessage />
+                        </FormItem>
+                    )}
+                    />
+                 )}
               </div>
             </CardContent>
           </Card>
@@ -294,7 +296,7 @@ export default function UserFormPage() {
                   <FormItem>
                     <FormLabel>Kata Sandi Baru</FormLabel>
                     <FormControl>
-                      <Input type="password" {...field} />
+                      <Input type="password" {...field} value={field.value ?? ''} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -307,7 +309,7 @@ export default function UserFormPage() {
                   <FormItem>
                     <FormLabel>Konfirmasi Kata Sandi Baru</FormLabel>
                     <FormControl>
-                      <Input type="password" {...field} />
+                      <Input type="password" {...field} value={field.value ?? ''} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
