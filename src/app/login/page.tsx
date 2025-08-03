@@ -18,6 +18,7 @@ import { Label } from "@/components/ui/label";
 import { TestTube } from "lucide-react";
 import { Eye, EyeOff, Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { serviceUnits } from "@/lib/constants";
 
 export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
@@ -36,11 +37,11 @@ export default function LoginPage() {
       const lowerCaseEmail = email.toLowerCase();
       
       if (lowerCaseEmail.startsWith("pegawai.")) {
-          if (lowerCaseEmail.includes("farmasi")) unit = "Farmasi";
-          else if (lowerCaseEmail.includes("rawatjalan")) unit = "Rawat Jalan";
-          else if (lowerCaseEmail.includes("rawatinap")) unit = "Rawat Inap";
-          else if (lowerCaseEmail.includes("laboratorium")) unit = "Laboratorium";
-          else if (lowerCaseEmail.includes("radiologi")) unit = "Radiologi";
+          const unitIdentifier = lowerCaseEmail.split('@')[0].split('.')[1];
+          const matchedUnit = serviceUnits.find(u => u.toLowerCase().replace(/[^a-z0-9]/g, '').includes(unitIdentifier));
+          if (matchedUnit) {
+            unit = matchedUnit;
+          }
       }
 
       if (password === "pegawai123" && unit) {
@@ -50,7 +51,7 @@ export default function LoginPage() {
         toast({
           variant: "destructive",
           title: "Login Gagal",
-          description: "Kredensial salah atau format email tidak sesuai.",
+          description: "Kredensial salah atau format email tidak sesuai (cth: pegawai.farmasi@sim.rs).",
         });
       }
       setIsLoading(false);
@@ -81,6 +82,7 @@ export default function LoginPage() {
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
+                  placeholder="cth: pegawai.farmasi@sim.rs"
                   required
                 />
               </div>

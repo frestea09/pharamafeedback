@@ -37,6 +37,8 @@ import { useUserStore } from "@/store/userStore";
 import { Loader2, ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { User } from "@/lib/users";
+import { serviceUnits } from "@/lib/constants";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 const formSchema = z
   .object({
@@ -45,9 +47,7 @@ const formSchema = z
       .min(2, { message: "Nama harus memiliki setidaknya 2 karakter." }),
     email: z.string().email({ message: "Format email tidak valid." }),
     role: z.enum(["Admin", "User"]),
-    unit: z
-      .enum(["Farmasi", "Rawat Jalan", "Rawat Inap", "Laboratorium", "Radiologi", "none"])
-      .optional(),
+    unit: z.string().optional(),
     password: z
       .string()
       .min(6, { message: "Kata sandi harus memiliki setidaknya 6 karakter." })
@@ -69,7 +69,6 @@ const formSchema = z
   );
 
 type UserFormValues = z.infer<typeof formSchema>;
-type UnitType = "Farmasi" | "Rawat Jalan" | "Rawat Inap" | "Laboratorium" | "Radiologi";
 
 export default function UserFormPage() {
   const router = useRouter();
@@ -83,7 +82,7 @@ export default function UserFormPage() {
 
   const id = params.id as string;
   const isEditing = id !== "new";
-  const loggedInAdminUnit = searchParams.get('unit') as UnitType | null;
+  const loggedInAdminUnit = searchParams.get('unit');
 
   const form = useForm<UserFormValues>({
     resolver: zodResolver(formSchema),
@@ -269,16 +268,14 @@ export default function UserFormPage() {
                             </SelectTrigger>
                             </FormControl>
                             <SelectContent>
-                            <SelectItem value="none">
-                                Tanpa Unit
-                            </SelectItem>
-                            <SelectItem value="Farmasi">Farmasi</SelectItem>
-                            <SelectItem value="Rawat Jalan">Rawat Jalan</SelectItem>
-                            <SelectItem value="Rawat Inap">Rawat Inap</SelectItem>
-                            <SelectItem value="Laboratorium">
-                                Laboratorium
-                            </SelectItem>
-                            <SelectItem value="Radiologi">Radiologi</SelectItem>
+                              <ScrollArea className="h-72">
+                                <SelectItem value="none">
+                                    Tanpa Unit
+                                </SelectItem>
+                                {serviceUnits.map(unit => (
+                                  <SelectItem key={unit} value={unit}>{unit}</SelectItem>
+                                ))}
+                              </ScrollArea>
                             </SelectContent>
                         </Select>
                         <FormMessage />

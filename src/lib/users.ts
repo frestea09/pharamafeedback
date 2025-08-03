@@ -7,7 +7,7 @@ export type User = {
   role: "Admin" | "User"
   lastLogin: string
   avatar: string
-  unit?: "Farmasi" | "Rawat Jalan" | "Rawat Inap" | "Laboratorium" | "Radiologi"
+  unit?: string
 }
 
 export const users: User[] = [

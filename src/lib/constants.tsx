@@ -1,7 +1,55 @@
 
 import { LayoutDashboard, Users, MessageSquare, HelpCircle, Home, FileText } from "lucide-react";
 
-export const serviceUnits = ["Farmasi", "Rawat Jalan", "Rawat Inap", "Laboratorium", "Radiologi"];
+export const serviceUnits = [
+  // Lantai 4 (L4)
+  "L4 - Ruang Direktur",
+  "L4 - Ruang Rapat",
+  "L4 - Ruang Aula",
+  "L4 - Ruang Wadir 1/2/3",
+  "L4 - Ruang Tata Usaha",
+  "L4 - Ruang Keuangan",
+  "L4 - Ruang Komite Medik",
+  "L4 - Ruang Komite Keperawatan",
+  // Lantai 3 (L3)
+  "L3 - Ruang Perawatan Kelas I Anggrek",
+  "L3 - Ruang Perawatan VIP Anggrek",
+  "L3 - Ruang Perawatan VVIP Anggrek",
+  "L3 - Ruang Tata Usaha",
+  "L3 - Ruang Keuangan",
+  // Lantai 2 (L2)
+  "L2 - Ruang Perawatan Dewasa Flamboyan",
+  "L2 - Ruang Perawatan Anak Anyelir",
+  // Lantai 1 (L1)
+  "L1 - Instalasi Laboratorium",
+  "L1 - Laboratorium PA",
+  "L1 - Bank Darah",
+  // Lantai GF (Ground Floor)
+  "GF - Pusat Informasi",
+  "GF - Instalasi Radiologi",
+  "GF - Instalasi Farmasi",
+  // Gedung A - Lantai 3 (L3)
+  "Gedung A L3 - Ruang IBS / Ruang Operasi",
+  "Gedung A L3 - Ruang Cath Lab / Catheterisasi",
+  // Gedung A - Lantai 2 (L2)
+  "Gedung A L2 - Ruang ICU, NICU, PICU",
+  "Gedung A L2 - Ruang Hemodialisis",
+  "Gedung A L2 - Ruang Stroke Unit",
+  // Gedung A - Lantai 1 (L1)
+  "Gedung A L1 - Ruang Bougenville (Ruang Bayi)",
+  "Gedung A L1 - Ruang Dahlia (Bersalin)",
+  "Gedung A L1 - Ruang Camelia",
+  // Gedung A - Lantai GF (Ground Floor)
+  "Gedung A GF - Ruang IGD (Instalasi Gawat Darurat)",
+  "Gedung A GF - Ruang IGD PONEK",
+  "Gedung A GF - Ruang CSSD",
+  // Gedung BTC - Lantai GF (Ground Floor)
+  "Gedung BTC GF - Instalasi Farmasi",
+  "Gedung BTC GF - Bank Darah",
+  // Gedung A - Lantai LG (Lower Ground)
+  "Gedung A LG - IPSRS",
+  "Gedung A LG - Ruang Pemulasaran Jenazah"
+];
 
 export const adminMenuItems = [
     { href: "/admin/dashboard", icon: LayoutDashboard, label: "Dasbor Utama", tooltip: "Dasbor" },
@@ -30,14 +78,7 @@ export const generalFaqItems = [
     {
       value: "item-3",
       trigger: "Apa saja unit layanan yang ada?",
-      content: `Saat ini, kami memiliki lima unit layanan:
-        <ul class="list-disc pl-5 mt-2 space-y-1">
-          <li><strong>Farmasi:</strong> Melayani pengambilan resep dan konsultasi obat.</li>
-          <li><strong>Rawat Jalan:</strong> Unit untuk pasien yang berobat tanpa menginap.</li>
-          <li><strong>Rawat Inap:</strong> Unit perawatan untuk pasien yang memerlukan observasi dan perawatan intensif.</li>
-          <li><strong>Laboratorium:</strong> Unit untuk pemeriksaan sampel medis.</li>
-          <li><strong>Radiologi:</strong> Unit untuk layanan pencitraan medis seperti X-ray dan USG.</li>
-        </ul>`
+      content: `Aplikasi ini mencakup semua unit layanan di rumah sakit, mulai dari ruang perawatan, instalasi farmasi, laboratorium, hingga unit penunjang lainnya. Anda dapat memilih unit spesifik saat memberikan ulasan.`
     },
   ];
   
