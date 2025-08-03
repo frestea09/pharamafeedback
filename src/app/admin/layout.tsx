@@ -89,7 +89,7 @@ export default function AdminLayout({
               <AvatarFallback>{adminName.split(" ").map(n => n[0]).join("")}</AvatarFallback>
             </Avatar>
             <div className="flex flex-col">
-              <span className="font-semibold text-sm">{name}</span>
+              <span className="font-semibold text-sm">{adminName}</span>
               <span className="text-xs text-muted-foreground">{adminEmail}</span>
             </div>
           </div>
