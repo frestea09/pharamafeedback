@@ -78,14 +78,6 @@ export default function AdminLoginPage() {
                   onChange={(e) => setEmail(e.target.value)}
                   required
                 />
-                 <div className="text-xs text-muted-foreground space-y-1 pt-2">
-                  <p><strong>Admin Sistem (Semua Unit):</strong><br/><code>admin@pharmafeedback.com</code> (Sandi: admin123)</p>
-                  <p className="mt-2"><strong>Contoh Admin per Unit:</strong></p>
-                  <ul className="list-disc pl-5">
-                    <li><code>admin.farmasi@pharmafeedback.com</code> (Sandi: admin123)</li>
-                    <li><code>admin.rawatjalan@pharmafeedback.com</code> (Sandi: admin123)</li>
-                  </ul>
-                </div>
               </div>
               <div className="space-y-2">
                 <Label htmlFor="password">Kata Sandi</Label>

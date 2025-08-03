@@ -22,8 +22,8 @@ import { useUser } from "@/context/UserContext";
 
 export default function UserLoginPage() {
   const [showPassword, setShowPassword] = useState(false);
-  const [email, setEmail] = useState("budi.santoso@example.com");
-  const [password, setPassword] = useState("password123");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
   const { toast } = useToast();
@@ -36,7 +36,7 @@ export default function UserLoginPage() {
     setTimeout(() => {
       const user = getUserByEmail(email);
 
-      if (user && user.password === password) { // Check both role and user type
+      if (user && user.password === password) { 
         const unit = user.unit || "Layanan";
         const name = user.name;
         router.push(`/dashboard?unit=${encodeURIComponent(unit)}&name=${encodeURIComponent(name)}`);
@@ -78,9 +78,6 @@ export default function UserLoginPage() {
                   onChange={(e) => setEmail(e.target.value)}
                   required
                 />
-                 <div className="text-xs text-muted-foreground space-y-1 pt-2">
-                  <p><strong>Contoh Akun Pengguna:</strong><br/><code>budi.santoso@example.com</code></p>
-                </div>
               </div>
               <div className="space-y-2">
                 <Label htmlFor="password">Kata Sandi</Label>
@@ -106,9 +103,6 @@ export default function UserLoginPage() {
                     )}
                   </button>
                 </div>
-                 <p className="text-xs text-muted-foreground pt-1">
-                  Kata sandi default untuk pengguna awal: <strong>password123</strong>
-                </p>
               </div>
             </CardContent>
             <CardFooter className="flex flex-col gap-4">
