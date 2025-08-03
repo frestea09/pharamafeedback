@@ -15,40 +15,44 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { TestTube } from "lucide-react";
 import { Eye, EyeOff, Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { useUser } from "@/context/UserContext";
 
 export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
-  const [email, setEmail] = useState("budi.santoso@example.com");
-  const [password, setPassword] = useState("password123");
+  const [email, setEmail] = useState("pegawai@pharmafeedback.com");
+  const [password, setPassword] = useState("pegawai123");
+  const [unit, setUnit] = useState("Farmasi");
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
   const { toast } = useToast();
-  const { users } = useUser();
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
 
     setTimeout(() => {
-      const user = users.find(u => u.email === email && u.role === 'User');
-
-      if (user && password === "password123") {
-        // For simulation, we'll use a default unit if one isn't specified
-        const unit = user.unit || "Farmasi"; 
-        const name = user.name;
+      // Simplified login logic for staff
+      if (password === "pegawai123" && unit) {
+        // In a real app, you'd verify staff credentials
+        const name = "Budi Santoso"; // Generic patient name for the session
         router.push(`/dashboard?unit=${unit}&name=${name.replace(/ /g, "+")}`);
       } else {
         toast({
           variant: "destructive",
           title: "Login Gagal",
-          description: "Email atau kata sandi salah.",
+          description: "Kredensial salah atau unit belum dipilih.",
         });
-        setIsLoading(false);
       }
+      setIsLoading(false);
     }, 1000);
   };
 
@@ -63,24 +67,39 @@ export default function LoginPage() {
                   <TestTube className="h-12 w-12 text-primary" />
                 </Link>
               </div>
-              <CardTitle className="text-2xl">Login Pengguna</CardTitle>
+              <CardTitle className="text-2xl">Login Pegawai</CardTitle>
               <CardDescription>
-                Masukkan kredensial Anda untuk memberi ulasan.
+                Pilih unit Anda dan masuk untuk memulai sesi ulasan pasien.
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
+               <div className="space-y-2">
+                <Label htmlFor="unit">Unit Layanan</Label>
+                <Select value={unit} onValueChange={setUnit}>
+                  <SelectTrigger id="unit">
+                    <SelectValue placeholder="Pilih unit layanan Anda" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="Farmasi">Farmasi</SelectItem>
+                    <SelectItem value="Rawat Jalan">Rawat Jalan</SelectItem>
+                    <SelectItem value="Rawat Inap">Rawat Inap</SelectItem>
+                    <SelectItem value="Laboratorium">Laboratorium</SelectItem>
+                    <SelectItem value="Radiologi">Radiologi</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
               <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
+                <Label htmlFor="email">Email Pegawai</Label>
                 <Input
                   id="email"
                   type="email"
-                  placeholder="pengguna@mail.com"
+                  placeholder="pegawai@pharmafeedback.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
                 />
                  <p className="text-xs text-muted-foreground pt-1">
-                  Contoh: <code>budi.santoso@example.com</code>
+                  Gunakan: <code>pegawai@pharmafeedback.com</code>
                 </p>
               </div>
               <div className="space-y-2">
@@ -108,14 +127,14 @@ export default function LoginPage() {
                   </button>
                 </div>
                  <p className="text-xs text-muted-foreground pt-1">
-                  Kata sandi untuk semua pengguna contoh adalah: <code>password123</code>
+                  Kata sandi untuk semua pegawai: <code>pegawai123</code>
                 </p>
               </div>
             </CardContent>
             <CardFooter className="flex flex-col gap-4">
-              <Button type="submit" className="w-full" disabled={isLoading}>
+              <Button type="submit" className="w-full" disabled={isLoading || !unit}>
                 {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                Masuk
+                Masuk & Mulai Sesi
               </Button>
               <p className="text-sm text-muted-foreground">
                 Apakah Anda seorang admin?{" "}

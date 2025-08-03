@@ -13,9 +13,9 @@ export default function DashboardPage() {
     <div className="grid grid-cols-1">
       <Card>
         <CardHeader>
-          <CardTitle className="text-2xl">Bagikan Pengalaman Anda di Unit {unit}</CardTitle>
+          <CardTitle className="text-2xl">Beri Ulasan untuk Unit {unit}</CardTitle>
           <CardDescription>
-            Umpan balik Anda yang terperinci membantu kami meningkatkan unit layanan kami. Silakan beri peringkat pada aspek-aspek berikut dari kunjungan terakhir Anda.
+            Silakan berikan umpan balik Anda untuk membantu kami meningkatkan layanan kami. Ulasan Anda bersifat anonim.
           </CardDescription>
         </CardHeader>
         <CardContent>

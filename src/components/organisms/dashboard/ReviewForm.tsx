@@ -4,8 +4,8 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { useState, useContext, useEffect } from "react";
-import { useSearchParams } from "next/navigation";
+import { useState, useContext } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -29,6 +29,7 @@ import { RawUnitReview } from "@/lib/data";
 
 
 const reviewFormSchema = z.object({
+  user: z.string().min(1, "Nama pasien harus diisi."),
   serviceSpeed: z.enum(["fast", "medium", "slow"], {
     required_error: "Silakan pilih kecepatan layanan.",
   }),
@@ -43,6 +44,7 @@ const reviewFormSchema = z.object({
 type ReviewFormValues = z.infer<typeof reviewFormSchema>;
 
 const defaultValues: Partial<ReviewFormValues> = {
+  user: "Pasien Anonim",
   comments: "",
   serviceQuality: 0,
   staffFriendliness: 0
@@ -50,12 +52,11 @@ const defaultValues: Partial<ReviewFormValues> = {
 
 export default function ReviewForm() {
   const { toast } = useToast();
+  const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { addReview } = useContext(ReviewContext);
   const searchParams = useSearchParams();
   const unit = searchParams.get('unit') || "Tidak Diketahui";
-  const name = searchParams.get('name') || "Pengguna Anonim";
-
 
   const form = useForm<ReviewFormValues>({
     resolver: zodResolver(reviewFormSchema),
@@ -69,7 +70,7 @@ export default function ReviewForm() {
     setTimeout(() => {
         const newReview: RawUnitReview = {
             id: `rev-${Date.now()}`,
-            user: name,
+            user: data.user,
             date: new Date().toISOString(),
             unit: unit,
             rawCompleteness: data.serviceCompleteness,
@@ -82,10 +83,17 @@ export default function ReviewForm() {
         
         toast({
             title: "Ulasan Terkirim!",
-            description: "Terima kasih atas umpan balik Anda yang berharga.",
+            description: "Terima kasih atas umpan balik Anda. Mengalihkan kembali ke halaman login...",
         });
+        
+        // Reset form and redirect back to login page after submission
         form.reset(defaultValues);
         setIsSubmitting(false);
+
+        setTimeout(() => {
+            router.push('/login');
+        }, 2000);
+
     }, 1500);
   }
 
