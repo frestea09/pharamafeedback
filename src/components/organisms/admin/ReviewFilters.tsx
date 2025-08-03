@@ -20,6 +20,7 @@ import { Input } from "@/components/ui/input";
 import type { Table } from "@tanstack/react-table";
 import { UnitReview } from "@/store/reviewStore";
 import { serviceUnits } from "@/lib/constants";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 
 interface ReviewFiltersProps {
@@ -53,7 +54,9 @@ export function ReviewFilters({ table, date, setDate, onExport }: ReviewFiltersP
                         <SelectValue placeholder="Filter Unit" />
                     </SelectTrigger>
                     <SelectContent>
-                        {units.map(unit => <SelectItem key={unit} value={unit}>{unit}</SelectItem>)}
+                        <ScrollArea className="h-72">
+                            {units.map(unit => <SelectItem key={unit} value={unit}>{unit}</SelectItem>)}
+                        </ScrollArea>
                     </SelectContent>
                 </Select>
                 <Popover>

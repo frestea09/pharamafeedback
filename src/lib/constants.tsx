@@ -29,26 +29,26 @@ export const serviceUnits = [
   "GF - Instalasi Radiologi",
   "GF - Instalasi Farmasi",
   // Gedung A - Lantai 3 (L3)
-  "Gedung A L3 - Ruang IBS / Ruang Operasi",
-  "Gedung A L3 - Ruang Cath Lab / Catheterisasi",
+  "L3 - Ruang IBS / Ruang Operasi",
+  "L3 - Ruang Cath Lab / Catheterisasi",
   // Gedung A - Lantai 2 (L2)
-  "Gedung A L2 - Ruang ICU, NICU, PICU",
-  "Gedung A L2 - Ruang Hemodialisis",
-  "Gedung A L2 - Ruang Stroke Unit",
+  "L2 - Ruang ICU, NICU, PICU",
+  "L2 - Ruang Hemodialisis",
+  "L2 - Ruang Stroke Unit",
   // Gedung A - Lantai 1 (L1)
-  "Gedung A L1 - Ruang Bougenville (Ruang Bayi)",
-  "Gedung A L1 - Ruang Dahlia (Bersalin)",
-  "Gedung A L1 - Ruang Camelia",
+  "L1 - Ruang Bougenville (Ruang Bayi)",
+  "L1 - Ruang Dahlia (Bersalin)",
+  "L1 - Ruang Camelia",
   // Gedung A - Lantai GF (Ground Floor)
-  "Gedung A GF - Ruang IGD (Instalasi Gawat Darurat)",
-  "Gedung A GF - Ruang IGD PONEK",
-  "Gedung A GF - Ruang CSSD",
+  "GF - Ruang IGD (Instalasi Gawat Darurat)",
+  "GF - Ruang IGD PONEK",
+  "GF - Ruang CSSD",
   // Gedung BTC - Lantai GF (Ground Floor)
-  "Gedung BTC GF - Instalasi Farmasi",
-  "Gedung BTC GF - Bank Darah",
+  "GF - Instalasi Farmasi",
+  "GF - Bank Darah",
   // Gedung A - Lantai LG (Lower Ground)
-  "Gedung A LG - IPSRS",
-  "Gedung A LG - Ruang Pemulasaran Jenazah"
+  "LG - IPSRS",
+  "LG - Ruang Pemulasaran Jenazah"
 ];
 
 export const adminMenuItems = [
