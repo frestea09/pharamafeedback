@@ -15,22 +15,14 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { TestTube } from "lucide-react";
 import { Eye, EyeOff, Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
-  const [email, setEmail] = useState("pegawai@pharmafeedback.com");
+  const [email, setEmail] = useState("pegawai.farmasi@pharmafeedback.com");
   const [password, setPassword] = useState("pegawai123");
-  const [unit, setUnit] = useState("Farmasi");
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
   const { toast } = useToast();
@@ -40,16 +32,25 @@ export default function LoginPage() {
     setIsLoading(true);
 
     setTimeout(() => {
-      // Simplified login logic for staff
+      let unit = "";
+      const lowerCaseEmail = email.toLowerCase();
+      
+      if (lowerCaseEmail.startsWith("pegawai.")) {
+          if (lowerCaseEmail.includes("farmasi")) unit = "Farmasi";
+          else if (lowerCaseEmail.includes("rawatjalan")) unit = "Rawat Jalan";
+          else if (lowerCaseEmail.includes("rawatinap")) unit = "Rawat Inap";
+          else if (lowerCaseEmail.includes("laboratorium")) unit = "Laboratorium";
+          else if (lowerCaseEmail.includes("radiologi")) unit = "Radiologi";
+      }
+
       if (password === "pegawai123" && unit) {
-        // In a real app, you'd verify staff credentials
-        const name = "Budi Santoso"; // Generic patient name for the session
+        const name = "Pasien Anonim";
         router.push(`/dashboard?unit=${unit}&name=${name.replace(/ /g, "+")}`);
       } else {
         toast({
           variant: "destructive",
           title: "Login Gagal",
-          description: "Kredensial salah atau unit belum dipilih.",
+          description: "Kredensial salah atau format email tidak sesuai.",
         });
       }
       setIsLoading(false);
@@ -69,38 +70,28 @@ export default function LoginPage() {
               </div>
               <CardTitle className="text-2xl">Login Pegawai</CardTitle>
               <CardDescription>
-                Pilih unit Anda dan masuk untuk memulai sesi ulasan pasien.
+                Masuk untuk memulai sesi ulasan pasien untuk unit Anda.
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-               <div className="space-y-2">
-                <Label htmlFor="unit">Unit Layanan</Label>
-                <Select value={unit} onValueChange={setUnit}>
-                  <SelectTrigger id="unit">
-                    <SelectValue placeholder="Pilih unit layanan Anda" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="Farmasi">Farmasi</SelectItem>
-                    <SelectItem value="Rawat Jalan">Rawat Jalan</SelectItem>
-                    <SelectItem value="Rawat Inap">Rawat Inap</SelectItem>
-                    <SelectItem value="Laboratorium">Laboratorium</SelectItem>
-                    <SelectItem value="Radiologi">Radiologi</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
               <div className="space-y-2">
                 <Label htmlFor="email">Email Pegawai</Label>
                 <Input
                   id="email"
                   type="email"
-                  placeholder="pegawai@pharmafeedback.com"
+                  placeholder="pegawai.[unit]@pharmafeedback.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
                 />
-                 <p className="text-xs text-muted-foreground pt-1">
-                  Gunakan: <code>pegawai@pharmafeedback.com</code>
-                </p>
+                 <div className="text-xs text-muted-foreground space-y-1 pt-2">
+                  <p><strong>Contoh Email Pegawai per Unit:</strong></p>
+                  <ul className="list-disc pl-5">
+                    <li><code>pegawai.farmasi@pharmafeedback.com</code></li>
+                    <li><code>pegawai.rawatjalan@pharmafeedback.com</code></li>
+                    <li><code>pegawai.rawatinap@pharmafeedback.com</code></li>
+                  </ul>
+                </div>
               </div>
               <div className="space-y-2">
                 <Label htmlFor="password">Kata Sandi</Label>
@@ -127,12 +118,12 @@ export default function LoginPage() {
                   </button>
                 </div>
                  <p className="text-xs text-muted-foreground pt-1">
-                  Kata sandi untuk semua pegawai: <code>pegawai123</code>
+                  Kata sandi untuk semua akun pegawai adalah: <strong>pegawai123</strong>
                 </p>
               </div>
             </CardContent>
             <CardFooter className="flex flex-col gap-4">
-              <Button type="submit" className="w-full" disabled={isLoading || !unit}>
+              <Button type="submit" className="w-full" disabled={isLoading}>
                 {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                 Masuk & Mulai Sesi
               </Button>
