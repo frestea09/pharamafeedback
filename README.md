@@ -17,20 +17,18 @@ Aplikasi web modern yang dibangun dengan Next.js dan TypeScript untuk mengumpulk
 -   **Framework**: Next.js (dengan App Router)
 -   **Bahasa**: TypeScript
 -   **Styling**: Tailwind CSS & ShadCN/UI
--   **Manajemen State**: Zustand
+-   **Manajemen State**: Zustand (untuk data demo)
+-   **ORM**: Prisma (siap untuk diintegrasikan)
 -   **Validasi Formulir**: React Hook Form & Zod
 -   **Visualisasi Data**: Recharts
 
 ## Struktur Proyek
 
 -   `src/app`: Rute utama aplikasi (App Router).
-    -   `/`: Halaman utama.
-    -   `/admin`: Grup rute untuk dasbor admin.
-    -   `/dashboard`: Grup rute untuk dasbor pengguna.
-    -   `/login`: Halaman login untuk berbagai peran.
--   `src/components`: Komponen React yang dapat digunakan kembali (atom, molekul, organisme).
+-   `src/components`: Komponen React yang dapat digunakan kembali.
 -   `src/lib`: Logika bisnis, konstanta, dan fungsi utilitas.
--   `src/store`: Pengelolaan state global dengan Zustand (untuk ulasan dan pengguna).
+-   `src/store`: Pengelolaan state global dengan Zustand (digunakan untuk demo).
+-   `prisma`: Konfigurasi dan skema database Prisma.
 
 ## Memulai
 
@@ -45,6 +43,19 @@ Aplikasi web modern yang dibangun dengan Next.js dan TypeScript untuk mengumpulk
     ```
 
 Aplikasi akan berjalan di `http://localhost:9002`.
+
+## Integrasi Prisma (Langkah Selanjutnya)
+
+Proyek ini telah disiapkan untuk menggunakan Prisma ORM. Saat ini, aplikasi masih berjalan menggunakan data sementara dari Zustand. Untuk beralih ke database:
+
+1.  **Siapkan Database Anda**: Pastikan Anda memiliki server database (misalnya PostgreSQL) yang berjalan.
+2.  **Konfigurasi `.env`**: Ubah variabel `DATABASE_URL` di file `.env` agar sesuai dengan string koneksi database Anda.
+3.  **Jalankan Migrasi**: Terapkan skema database dengan menjalankan perintah berikut:
+    ```bash
+    npm run prisma:migrate
+    ```
+    Ini akan membuat tabel `User` dan `Review` di database Anda.
+4.  **Implementasikan Prisma Client**: Ganti logika di `src/store/*.ts` untuk menggunakan Prisma Client untuk mengambil dan memanipulasi data dari database Anda, bukan dari array statis.
 
 ## Kredensial Login Demo
 
