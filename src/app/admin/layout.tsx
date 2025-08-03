@@ -1,5 +1,4 @@
 
-
 "use client";
 
 import Link from "next/link";
@@ -20,12 +19,13 @@ import {
 } from "@/components/ui/sidebar";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { LayoutDashboard, Users, MessageSquare, LogOut, FileText, UserPlus, TestTube } from "lucide-react";
+import { LayoutDashboard, Users, MessageSquare, LogOut, FileText, UserPlus, TestTube, HelpCircle } from "lucide-react";
 
 const menuItems = [
     { href: "/admin/dashboard", icon: LayoutDashboard, label: "Dasbor Utama", tooltip: "Dasbor" },
     { href: "/admin/reviews", icon: MessageSquare, label: "Semua Ulasan", tooltip: "Ulasan" },
     { href: "/admin/users", icon: Users, label: "Kelola Pengguna", tooltip: "Pengguna" },
+    { href: "/admin/faq", icon: HelpCircle, label: "Bantuan & Panduan", tooltip: "Bantuan" },
 ];
 
 
@@ -33,7 +33,8 @@ const getPageTitle = (pathname: string, unit: string | null): string => {
     const baseTitles: { [key: string]: string } = {
         "/admin/dashboard": "Dasbor Admin",
         "/admin/reviews": "Semua Ulasan",
-        "/admin/users": "Kelola Pengguna"
+        "/admin/users": "Kelola Pengguna",
+        "/admin/faq": "Bantuan & Panduan"
     };
 
     // Special handling for user edit/add pages
@@ -66,7 +67,7 @@ export default function AdminLayout({
   }
 
   const currentPageTitle = getPageTitle(pathname, unit);
-  const adminName = unit ? `Admin ${unit}` : "Ahmad Subarjo";
+  const adminName = unit ? `Admin ${unit}` : "Admin Sistem";
   const adminEmail = unit ? `admin.${unit.toLowerCase().replace(" ", "")}@pharmafeedback.com` : "admin@pharmafeedback.com";
 
   return (
