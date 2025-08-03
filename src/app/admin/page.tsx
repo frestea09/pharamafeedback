@@ -18,7 +18,7 @@ import { Label } from "@/components/ui/label";
 import { TestTube } from "lucide-react";
 import { Eye, EyeOff, Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { useUser } from "@/context/UserContext";
+import { useUserStore } from "@/store/userStore";
 
 export default function AdminLoginPage() {
   const [showPassword, setShowPassword] = useState(false);
@@ -27,7 +27,7 @@ export default function AdminLoginPage() {
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
   const { toast } = useToast();
-  const { getUserByEmail } = useUser();
+  const { getUserByEmail } = useUserStore();
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
@@ -36,7 +36,7 @@ export default function AdminLoginPage() {
     // Simulate API call
     setTimeout(() => {
       const user = getUserByEmail(email);
-
+      
       if (user && user.role === 'Admin' && user.password === password) {
         const queryParams = user.unit ? `?unit=${encodeURIComponent(user.unit)}` : '';
         router.push(`/admin/dashboard${queryParams}`);

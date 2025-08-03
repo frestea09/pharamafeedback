@@ -28,7 +28,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { useToast } from "@/hooks/use-toast";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useUser } from "@/context/UserContext";
+import { useUserStore } from "@/store/userStore";
 
 function UserFilters({ table }: { table: Table<User> }) {
   return (
@@ -65,7 +65,7 @@ function UserFilters({ table }: { table: Table<User> }) {
 }
 
 export default function AllUsersPage() {
-  const { users, deleteUser } = useUser();
+  const { users, deleteUser } = useUserStore();
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const { toast } = useToast();

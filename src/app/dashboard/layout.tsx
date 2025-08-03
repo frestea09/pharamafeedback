@@ -21,7 +21,7 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Home, LogOut, FileText, UserCircle, TestTube, Eye, EyeOff } from "lucide-react";
-import { useUser } from "@/context/UserContext";
+import { useUserStore } from "@/store/userStore";
 
 export default function DashboardLayout({
   children,
@@ -31,7 +31,7 @@ export default function DashboardLayout({
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const name = searchParams.get('name') || "Pengguna";
-  const { getUserByEmail } = useUser();
+  const { getUserByEmail } = useUserStore();
   const currentUser = getUserByEmail(`${name.toLowerCase().replace(" ", ".")}@example.com`);
 
   const menuItems = [

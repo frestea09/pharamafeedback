@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useContext, useMemo } from "react";
+import { useMemo } from "react";
 import { Bar, BarChart, CartesianGrid, XAxis, YAxis, ResponsiveContainer, Pie, PieChart, Cell } from "recharts";
 import {
   Card,
@@ -17,7 +17,7 @@ import {
   ChartLegend,
   ChartLegendContent,
 } from "@/components/ui/chart";
-import { ReviewContext, UnitReview } from "@/context/ReviewContext";
+import { useReviewStore, UnitReview } from "@/store/reviewStore";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { formatDistanceToNow, startOfDay, endOfDay } from "date-fns";
@@ -44,7 +44,7 @@ interface AnalyticsDashboardProps {
 }
 
 export default function AnalyticsDashboard({ unit, period }: AnalyticsDashboardProps) {
-  const { reviews } = useContext(ReviewContext);
+  const { reviews } = useReviewStore();
   
   const filteredReviews = useMemo(() => {
     return reviews.filter(review => {

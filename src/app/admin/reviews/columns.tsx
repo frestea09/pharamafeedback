@@ -2,7 +2,7 @@
 "use client"
 
 import { ColumnDef } from "@tanstack/react-table"
-import { UnitReview } from "@/context/ReviewContext"
+import { UnitReview } from "@/store/reviewStore"
 import { Badge } from "@/components/ui/badge"
 import { format } from "date-fns"
 import { id } from "date-fns/locale"

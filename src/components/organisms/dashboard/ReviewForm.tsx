@@ -4,8 +4,8 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { useState, useContext, useEffect } from "react";
-import { useSearchParams, useRouter } from "next/navigation";
+import { useState } from "react";
+import { useSearchParams } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -24,7 +24,7 @@ import { StarRating } from "@/components/atoms/StarRating";
 import { Separator } from "@/components/ui/separator";
 import { Loader2, Smile, ThumbsUp, ThumbsDown, Clock, Rocket, Turtle, HelpCircle } from "lucide-react";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
-import { ReviewContext } from "@/context/ReviewContext";
+import { useReviewStore } from "@/store/reviewStore";
 import { RawUnitReview } from "@/lib/data";
 
 
@@ -51,7 +51,7 @@ const defaultValues: Partial<ReviewFormValues> = {
 export default function ReviewForm() {
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const { addReview } = useContext(ReviewContext);
+  const { addReview } = useReviewStore();
   const searchParams = useSearchParams();
   const unit = searchParams.get('unit') || "Tidak Diketahui";
   const user = searchParams.get('name') || "Anonim";

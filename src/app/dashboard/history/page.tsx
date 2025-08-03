@@ -1,8 +1,8 @@
 
 "use client";
 
-import { useContext, useState, useMemo } from "react";
-import { ReviewContext, UnitReview } from "@/context/ReviewContext";
+import { useState, useMemo } from "react";
+import { useReviewStore, UnitReview } from "@/store/reviewStore";
 import { DataTable } from "@/components/organisms/admin/DataTable";
 import { getColumns } from "./columns";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -10,7 +10,7 @@ import { ReviewDetailDialog } from "@/components/organisms/ReviewDetailDialog";
 import { useSearchParams } from "next/navigation";
 
 export default function HistoryPage() {
-  const { reviews } = useContext(ReviewContext);
+  const { reviews } = useReviewStore();
   const [selectedReview, setSelectedReview] = useState<UnitReview | null>(null);
   const [isDetailOpen, setIsDetailOpen] = useState(false);
   const searchParams = useSearchParams();

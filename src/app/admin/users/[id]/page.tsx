@@ -33,7 +33,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
-import { useUser } from "@/context/UserContext";
+import { useUserStore } from "@/store/userStore";
 import { Loader2, ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { User } from "@/lib/users";
@@ -76,7 +76,7 @@ export default function UserFormPage() {
   const params = useParams();
   const searchParams = useSearchParams();
   const { toast } = useToast();
-  const { getUserById, addUser, updateUser } = useUser();
+  const { getUserById, addUser, updateUser } = useUserStore();
 
   const [isLoading, setIsLoading] = useState(true);
   const [user, setUser] = useState<User | null>(null);

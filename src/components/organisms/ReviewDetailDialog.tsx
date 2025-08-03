@@ -10,7 +10,7 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { UnitReview } from "@/context/ReviewContext";
+import { UnitReview } from "@/store/reviewStore";
 import { Badge } from "../ui/badge";
 import { StarRating } from "../atoms/StarRating";
 import { format } from "date-fns";

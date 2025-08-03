@@ -18,7 +18,7 @@ import { Label } from "@/components/ui/label";
 import { TestTube } from "lucide-react";
 import { Eye, EyeOff, Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { useUser } from "@/context/UserContext";
+import { useUserStore } from "@/store/userStore";
 
 export default function UserLoginPage() {
   const [showPassword, setShowPassword] = useState(false);
@@ -27,7 +27,7 @@ export default function UserLoginPage() {
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
   const { toast } = useToast();
-  const { getUserByEmail } = useUser();
+  const { getUserByEmail } = useUserStore();
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();

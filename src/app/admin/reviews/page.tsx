@@ -1,8 +1,8 @@
 
 "use client";
 
-import { useContext, useState, useMemo } from "react";
-import { ReviewContext, UnitReview } from "@/context/ReviewContext";
+import { useState, useMemo } from "react";
+import { UnitReview } from "@/store/reviewStore";
 import { DataTable } from "@/components/organisms/admin/DataTable";
 import { getColumns } from "./columns";
 import { Input } from "@/components/ui/input";
@@ -35,7 +35,7 @@ import { format, subDays, startOfDay, endOfDay } from "date-fns";
 import { id } from "date-fns/locale";
 import { Calendar } from "@/components/ui/calendar";
 import { cn } from "@/lib/utils";
-import { Label } from "@/components/ui/label";
+import { useReviewStore } from "@/store/reviewStore";
 
 function ReviewFilters({ table, date, setDate }: { table: Table<UnitReview>, date: DateRange | undefined, setDate: (date: DateRange | undefined) => void }) {
   const units = ["Semua Unit", "Farmasi", "Rawat Jalan", "Rawat Inap", "Laboratorium", "Radiologi"];
@@ -112,7 +112,7 @@ function ReviewFilters({ table, date, setDate }: { table: Table<UnitReview>, dat
 }
 
 export default function AllReviewsPage() {
-  const { reviews, deleteReview } = useContext(ReviewContext);
+  const { reviews, deleteReview } = useReviewStore();
   const { toast } = useToast();
   const searchParams = useSearchParams();
   const unit = searchParams.get('unit');
