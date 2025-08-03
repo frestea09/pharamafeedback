@@ -36,7 +36,7 @@ export default function UserLoginPage() {
     setTimeout(() => {
       const user = getUserByEmail(email);
 
-      if (user && user.role === 'User' && user.password === password) {
+      if (user && user.password === password) { // Check both role and user type
         const unit = user.unit || "Layanan";
         const name = user.name;
         router.push(`/dashboard?unit=${encodeURIComponent(unit)}&name=${encodeURIComponent(name)}`);
@@ -46,8 +46,8 @@ export default function UserLoginPage() {
           title: "Login Gagal",
           description: "Email atau kata sandi salah.",
         });
+        setIsLoading(false);
       }
-      setIsLoading(false);
     }, 1000);
   };
 
@@ -78,6 +78,9 @@ export default function UserLoginPage() {
                   onChange={(e) => setEmail(e.target.value)}
                   required
                 />
+                 <div className="text-xs text-muted-foreground space-y-1 pt-2">
+                  <p><strong>Contoh Akun Pengguna:</strong><br/><code>budi.santoso@example.com</code></p>
+                </div>
               </div>
               <div className="space-y-2">
                 <Label htmlFor="password">Kata Sandi</Label>
@@ -113,24 +116,15 @@ export default function UserLoginPage() {
                 {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                 Masuk
               </Button>
-              <div className="flex items-center justify-center w-full gap-4">
-                 <p className="text-sm text-muted-foreground">
-                    <Link
-                        href="/login"
-                        className="font-medium text-primary hover:underline"
-                    >
-                        Login sebagai pegawai?
-                    </Link>
-                </p>
-                 <p className="text-sm text-muted-foreground">
-                     <Link
-                        href="/admin"
-                        className="font-medium text-primary hover:underline"
-                    >
-                        Login sebagai admin?
-                    </Link>
-                </p>
-              </div>
+              <p className="text-sm text-muted-foreground">
+                 Bukan pengguna individu?{" "}
+                <Link
+                    href="/admin"
+                    className="font-medium text-primary hover:underline"
+                >
+                    Login sebagai Admin
+                </Link>
+              </p>
             </CardFooter>
           </Card>
         </form>
