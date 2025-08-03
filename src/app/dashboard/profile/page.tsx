@@ -37,13 +37,17 @@ export default function ProfilePage() {
 
 
   useEffect(() => {
-    const userName = searchParams.get('name') || "";
-    const userEmail = `${userName.toLowerCase().replace(" ", ".")}@example.com`
-    const user = getUserByEmail(userEmail);
-    if (user) {
-      setCurrentUser(user);
-      setName(user.name);
-      setEmail(user.email);
+    const userName = searchParams.get('name');
+    if (userName) {
+      // This is a simplified lookup based on the current architecture.
+      // In a real app, you'd likely use a user ID from a session.
+      const userEmail = `${userName.toLowerCase().replace(" ", ".")}@example.com`;
+      const user = getUserByEmail(userEmail);
+      if (user) {
+        setCurrentUser(user);
+        setName(user.name);
+        setEmail(user.email);
+      }
     }
   }, [searchParams, getUserByEmail]);
 
@@ -81,6 +85,15 @@ export default function ProfilePage() {
             variant: "destructive",
             title: "Gagal Mengubah Kata Sandi",
             description: "Kata sandi baru dan konfirmasi tidak cocok.",
+        });
+        return;
+    }
+
+    if (newPassword.length < 6) {
+        toast({
+            variant: "destructive",
+            title: "Kata Sandi Terlalu Pendek",
+            description: "Kata sandi baru harus memiliki setidaknya 6 karakter.",
         });
         return;
     }
