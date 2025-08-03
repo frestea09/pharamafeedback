@@ -2,7 +2,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -70,10 +70,12 @@ const formSchema = z
   );
 
 type UserFormValues = z.infer<typeof formSchema>;
+type UnitType = "Farmasi" | "Rawat Jalan" | "Rawat Inap" | "Laboratorium" | "Radiologi";
 
 export default function UserFormPage() {
   const router = useRouter();
   const params = useParams();
+  const searchParams = useSearchParams();
   const { toast } = useToast();
   const { getUserById, addUser, updateUser } = useUser();
 
@@ -82,6 +84,7 @@ export default function UserFormPage() {
 
   const id = params.id as string;
   const isEditing = id !== "new";
+  const loggedInAdminUnit = searchParams.get('unit') as UnitType | null;
 
   const form = useForm<UserFormValues>({
     resolver: zodResolver(formSchema),
@@ -89,13 +92,11 @@ export default function UserFormPage() {
       name: "",
       email: "",
       role: "User",
-      unit: "none",
+      unit: loggedInAdminUnit || "none",
       password: "",
       confirmPassword: "",
     },
   });
-
-  const watchedRole = form.watch("role");
 
   useEffect(() => {
     if (isEditing) {
@@ -124,15 +125,19 @@ export default function UserFormPage() {
 
   const onSubmit = (values: UserFormValues) => {
     const unitValue = values.unit !== "none" ? values.unit : undefined;
+    
+    const finalUnit = loggedInAdminUnit || unitValue;
 
     const userData = {
       name: values.name,
       email: values.email,
       role: values.role,
-      unit: unitValue,
+      unit: finalUnit,
     };
     
     const passwordChanged = values.password && values.password.length > 0;
+
+    const queryParams = loggedInAdminUnit ? `?unit=${loggedInAdminUnit}` : '';
 
     if (isEditing && user) {
       updateUser({
@@ -154,7 +159,7 @@ export default function UserFormPage() {
         description: `${values.name} telah berhasil ditambahkan sebagai pengguna baru.`,
       });
     }
-    router.push("/admin/users");
+    router.push(`/admin/users${queryParams}`);
   };
 
   if (isLoading) {
@@ -165,11 +170,13 @@ export default function UserFormPage() {
     );
   }
 
+  const queryParams = loggedInAdminUnit ? { unit: loggedInAdminUnit } : {};
+
   return (
     <div className="max-w-2xl mx-auto space-y-6">
       <div className="flex items-center">
         <Button variant="ghost" asChild>
-          <Link href="/admin/users">
+          <Link href={{ pathname: "/admin/users", query: queryParams }}>
             <ArrowLeft className="mr-2 h-4 w-4" />
             Kembali ke Daftar Pengguna
           </Link>
@@ -189,37 +196,39 @@ export default function UserFormPage() {
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
-              <FormField
-                control={form.control}
-                name="name"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Nama Lengkap</FormLabel>
-                    <FormControl>
-                      <Input placeholder="cth. Budi Santoso" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="email"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Alamat Email</FormLabel>
-                    <FormControl>
-                      <Input
-                        type="email"
-                        placeholder="cth. budi@example.com"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                 <FormField
+                    control={form.control}
+                    name="name"
+                    render={({ field }) => (
+                    <FormItem>
+                        <FormLabel>Nama Lengkap</FormLabel>
+                        <FormControl>
+                        <Input placeholder="cth. Budi Santoso" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                    </FormItem>
+                    )}
+                 />
+                <FormField
+                    control={form.control}
+                    name="email"
+                    render={({ field }) => (
+                    <FormItem>
+                        <FormLabel>Alamat Email</FormLabel>
+                        <FormControl>
+                        <Input
+                            type="email"
+                            placeholder="cth. budi@example.com"
+                            {...field}
+                        />
+                        </FormControl>
+                        <FormMessage />
+                    </FormItem>
+                    )}
+                />
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <FormField
                     control={form.control}
                     name="role"
@@ -241,16 +250,16 @@ export default function UserFormPage() {
                     </FormItem>
                     )}
                 />
-                 {watchedRole === 'Admin' && (
-                    <FormField
+                <FormField
                     control={form.control}
                     name="unit"
                     render={({ field }) => (
                         <FormItem>
-                        <FormLabel>Unit (Khusus Admin)</FormLabel>
+                        <FormLabel>Unit (Opsional)</FormLabel>
                         <Select
                             onValueChange={field.onChange}
                             value={field.value || "none"}
+                            disabled={!!loggedInAdminUnit}
                         >
                             <FormControl>
                             <SelectTrigger>
@@ -259,7 +268,7 @@ export default function UserFormPage() {
                             </FormControl>
                             <SelectContent>
                             <SelectItem value="none">
-                                Admin Umum (Tanpa Unit)
+                                Tanpa Unit
                             </SelectItem>
                             <SelectItem value="Farmasi">Farmasi</SelectItem>
                             <SelectItem value="Rawat Jalan">Rawat Jalan</SelectItem>
@@ -274,7 +283,6 @@ export default function UserFormPage() {
                         </FormItem>
                     )}
                     />
-                 )}
               </div>
             </CardContent>
           </Card>

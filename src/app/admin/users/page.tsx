@@ -27,7 +27,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { useToast } from "@/hooks/use-toast";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useUser } from "@/context/UserContext";
 
 function UserFilters({ table }: { table: Table<User> }) {
@@ -70,9 +70,12 @@ export default function AllUsersPage() {
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const { toast } = useToast();
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const unit = searchParams.get('unit');
 
   const handleEditUser = (user: User) => {
-    router.push(`/admin/users/${user.id}`);
+    const queryParams = unit ? `?unit=${unit}` : '';
+    router.push(`/admin/users/${user.id}${queryParams}`);
   };
 
   const handleDeleteUser = (user: User) => {
@@ -93,15 +96,22 @@ export default function AllUsersPage() {
   };
 
   const columns = getColumns({ onEdit: handleEditUser, onDelete: handleDeleteUser });
+  
+  const filteredUsers = unit ? users.filter(user => user.unit === unit || user.role !== 'Admin') : users;
+
+  const handleAddUser = () => {
+    const queryParams = unit ? `?unit=${unit}` : '';
+    router.push(`/admin/users/new${queryParams}`);
+  }
 
   return (
     <div className="container mx-auto py-2">
       <DataTable
         columns={columns}
-        data={users}
+        data={filteredUsers}
         filterComponent={<UserFilters />}
       >
-        <Button onClick={() => router.push('/admin/users/new')}>
+        <Button onClick={handleAddUser}>
           <UserPlus className="mr-2 h-4 w-4" />
           Tambah Pengguna
         </Button>
