@@ -1,4 +1,5 @@
 
+
 "use client";
 
 import Link from "next/link";
@@ -38,7 +39,7 @@ export default function AdminLayout({
 
   const currentPageTitle = getPageTitle(pathname, unit);
   const adminName = unit ? `Admin ${unit}` : "Admin Sistem";
-  const adminEmail = unit ? `admin.${unit.toLowerCase().replace(" ", "")}@pharmafeedback.com` : "admin@sim.rs";
+  const adminEmail = unit ? `admin.${unit.toLowerCase().replace(/[^a-z0-9]/g, '')}@sim.rs` : "admin@sim.rs";
 
   return (
     <SidebarProvider>
@@ -88,7 +89,7 @@ export default function AdminLayout({
               <AvatarFallback>{adminName.split(" ").map(n => n[0]).join("")}</AvatarFallback>
             </Avatar>
             <div className="flex flex-col">
-              <span className="font-semibold text-sm">{adminName}</span>
+              <span className="font-semibold text-sm">{name}</span>
               <span className="text-xs text-muted-foreground">{adminEmail}</span>
             </div>
           </div>
