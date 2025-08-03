@@ -1,11 +1,10 @@
+"use client";
 
-"use client"
+import * as React from "react";
+import { Check, ChevronsUpDown } from "lucide-react";
 
-import * as React from "react"
-import { Check, ChevronsUpDown } from "lucide-react"
-
-import { cn } from "@/lib/utils"
-import { Button } from "@/components/ui/button"
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
 import {
   Command,
   CommandEmpty,
@@ -13,13 +12,13 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-} from "@/components/ui/command"
+} from "@/components/ui/command";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/popover"
-import { ScrollArea } from "./scroll-area"
+} from "@/components/ui/popover";
+import { ScrollArea } from "./scroll-area";
 
 interface ComboboxProps {
   options: { value: string; label: string }[];
@@ -31,16 +30,16 @@ interface ComboboxProps {
   disabled?: boolean;
 }
 
-export function Combobox({ 
-    options, 
-    value, 
-    onChange,
-    placeholder = "Pilih...",
-    searchPlaceholder = "Cari...",
-    emptyPlaceholder = "Tidak ditemukan.",
-    disabled = false
+export function Combobox({
+  options,
+  value,
+  onChange,
+  placeholder = "Pilih...",
+  searchPlaceholder = "Cari...",
+  emptyPlaceholder = "Tidak ditemukan.",
+  disabled = false,
 }: ComboboxProps) {
-  const [open, setOpen] = React.useState(false)
+  const [open, setOpen] = React.useState(false);
   const selectedLabel = options.find((option) => option.value === value)?.label;
 
   return (
@@ -64,13 +63,13 @@ export function Combobox({
           <CommandList>
             <ScrollArea className="h-72">
               <CommandGroup>
-                {options.map((option) => (
+                {options.map((option, index) => (
                   <CommandItem
-                    key={option.value}
+                    key={`${option.value}-${index}`}
                     value={option.label}
                     onSelect={() => {
-                      onChange(option.value === value ? "" : option.value)
-                      setOpen(false)
+                      onChange(option.value === value ? "" : option.value);
+                      setOpen(false);
                     }}
                   >
                     <Check
@@ -88,5 +87,5 @@ export function Combobox({
         </Command>
       </PopoverContent>
     </Popover>
-  )
+  );
 }
