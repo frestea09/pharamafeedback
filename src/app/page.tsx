@@ -14,7 +14,7 @@ export default function Home() {
         </div>
         <nav className="flex items-center gap-4">
           <Button variant="ghost" asChild>
-            <Link href="/login">Login Pengguna</Link>
+            <Link href="/login/user">Login Pengguna</Link>
           </Button>
           <Button asChild>
             <Link href="/admin">Login Admin</Link>
@@ -32,7 +32,7 @@ export default function Home() {
           </p>
           <div className="mt-8 flex justify-center gap-4">
             <Button size="lg" asChild>
-              <Link href="/login">Berikan Ulasan</Link>
+              <Link href="/login/user">Berikan Ulasan</Link>
             </Button>
             <Button size="lg" variant="outline" asChild>
               <Link href="#features">Pelajari Lebih Lanjut</Link>

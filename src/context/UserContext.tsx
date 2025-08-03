@@ -10,6 +10,7 @@ export interface UserContextType {
   updateUser: (user: User) => void;
   deleteUser: (userId: string) => void;
   getUserById: (userId: string) => User | undefined;
+  getUserByEmail: (email: string) => User | undefined;
 }
 
 export const UserContext = createContext<UserContextType | undefined>(undefined);
@@ -53,8 +54,12 @@ export const UserProvider = ({ children }: UserProviderProps) => {
     return users.find(user => user.id === userId);
   }
 
+  const getUserByEmail = (email: string) => {
+    return users.find(user => user.email.toLowerCase() === email.toLowerCase());
+  };
+
   return (
-    <UserContext.Provider value={{ users, addUser, updateUser, deleteUser, getUserById }}>
+    <UserContext.Provider value={{ users, addUser, updateUser, deleteUser, getUserById, getUserByEmail }}>
       {children}
     </UserContext.Provider>
   );

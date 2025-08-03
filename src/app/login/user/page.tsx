@@ -20,10 +20,10 @@ import { Eye, EyeOff, Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useUser } from "@/context/UserContext";
 
-export default function AdminLoginPage() {
+export default function UserLoginPage() {
   const [showPassword, setShowPassword] = useState(false);
-  const [email, setEmail] = useState("admin@pharmafeedback.com");
-  const [password, setPassword] = useState("admin123");
+  const [email, setEmail] = useState("budi.santoso@example.com");
+  const [password, setPassword] = useState("password123");
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
   const { toast } = useToast();
@@ -33,18 +33,18 @@ export default function AdminLoginPage() {
     e.preventDefault();
     setIsLoading(true);
 
-    // Simulate API call
     setTimeout(() => {
       const user = getUserByEmail(email);
 
-      if (user && user.role === 'Admin' && user.password === password) {
-        const queryParams = user.unit ? `?unit=${encodeURIComponent(user.unit)}` : '';
-        router.push(`/admin/dashboard${queryParams}`);
+      if (user && user.role === 'User' && user.password === password) {
+        const unit = user.unit || "Layanan";
+        const name = user.name;
+        router.push(`/dashboard?unit=${encodeURIComponent(unit)}&name=${encodeURIComponent(name)}`);
       } else {
         toast({
           variant: "destructive",
           title: "Login Gagal",
-          description: "Email atau kata sandi yang Anda masukkan salah.",
+          description: "Email atau kata sandi salah.",
         });
       }
       setIsLoading(false);
@@ -54,38 +54,30 @@ export default function AdminLoginPage() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-background p-4">
       <div className="w-full max-w-md">
-        <Card>
-          <CardHeader className="text-center">
-            <div className="flex justify-center mb-4">
-              <Link href="/" aria-label="Beranda">
-                <TestTube className="h-12 w-12 text-primary" />
-              </Link>
-            </div>
-            <CardTitle className="text-2xl">Login Admin</CardTitle>
-            <CardDescription>
-              Masukkan kredensial Anda untuk mengakses dasbor admin.
-            </CardDescription>
-          </CardHeader>
-          <form onSubmit={handleLogin}>
+        <form onSubmit={handleLogin}>
+          <Card>
+            <CardHeader className="text-center">
+              <div className="flex justify-center mb-4">
+                <Link href="/" aria-label="Beranda">
+                  <TestTube className="h-12 w-12 text-primary" />
+                </Link>
+              </div>
+              <CardTitle className="text-2xl">Login Pengguna</CardTitle>
+              <CardDescription>
+                Masuk untuk memberi atau melihat riwayat ulasan Anda.
+              </CardDescription>
+            </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
+                <Label htmlFor="email">Email Pengguna</Label>
                 <Input
                   id="email"
                   type="email"
-                  placeholder="admin@pharmafeedback.com"
+                  placeholder="pengguna@example.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
                 />
-                 <div className="text-xs text-muted-foreground space-y-1 pt-2">
-                  <p><strong>Admin Sistem (Semua Unit):</strong><br/><code>admin@pharmafeedback.com</code> (Sandi: admin123)</p>
-                  <p className="mt-2"><strong>Contoh Admin per Unit:</strong></p>
-                  <ul className="list-disc pl-5">
-                    <li><code>admin.farmasi@pharmafeedback.com</code> (Sandi: admin123)</li>
-                    <li><code>admin.rawatjalan@pharmafeedback.com</code> (Sandi: admin123)</li>
-                  </ul>
-                </div>
               </div>
               <div className="space-y-2">
                 <Label htmlFor="password">Kata Sandi</Label>
@@ -111,6 +103,9 @@ export default function AdminLoginPage() {
                     )}
                   </button>
                 </div>
+                 <p className="text-xs text-muted-foreground pt-1">
+                  Kata sandi default untuk pengguna awal: <strong>password123</strong>
+                </p>
               </div>
             </CardContent>
             <CardFooter className="flex flex-col gap-4">
@@ -118,18 +113,27 @@ export default function AdminLoginPage() {
                 {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                 Masuk
               </Button>
-               <p className="text-sm text-muted-foreground">
-                Bukan seorang admin?{" "}
-                <Link
-                    href="/login/user"
-                    className="font-medium text-primary hover:underline"
-                >
-                    Login sebagai pengguna
-                </Link>
+              <div className="flex items-center justify-center w-full gap-4">
+                 <p className="text-sm text-muted-foreground">
+                    <Link
+                        href="/login"
+                        className="font-medium text-primary hover:underline"
+                    >
+                        Login sebagai pegawai?
+                    </Link>
                 </p>
+                 <p className="text-sm text-muted-foreground">
+                     <Link
+                        href="/admin"
+                        className="font-medium text-primary hover:underline"
+                    >
+                        Login sebagai admin?
+                    </Link>
+                </p>
+              </div>
             </CardFooter>
-          </form>
-        </Card>
+          </Card>
+        </form>
       </div>
     </div>
   );

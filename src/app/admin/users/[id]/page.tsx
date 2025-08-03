@@ -37,7 +37,6 @@ import { useUser } from "@/context/UserContext";
 import { Loader2, ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { User } from "@/lib/users";
-import { Separator } from "@/components/ui/separator";
 
 const formSchema = z
   .object({
@@ -128,7 +127,7 @@ export default function UserFormPage() {
     
     const finalUnit = loggedInAdminUnit || unitValue;
 
-    const userData = {
+    const userData: Partial<User> = {
       name: values.name,
       email: values.email,
       role: values.role,
@@ -136,6 +135,9 @@ export default function UserFormPage() {
     };
     
     const passwordChanged = values.password && values.password.length > 0;
+    if (passwordChanged) {
+        userData.password = values.password;
+    }
 
     const queryParams = loggedInAdminUnit ? `?unit=${loggedInAdminUnit}` : '';
 
@@ -153,7 +155,7 @@ export default function UserFormPage() {
             form.setError("password", { message: "Kata sandi wajib diisi untuk pengguna baru." });
             return;
         }
-      addUser(userData);
+      addUser(userData as Omit<User, 'id' | 'lastLogin' | 'avatar'>);
       toast({
         title: "Pengguna Ditambahkan",
         description: `${values.name} telah berhasil ditambahkan sebagai pengguna baru.`,
