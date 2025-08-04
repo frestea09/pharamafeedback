@@ -11,7 +11,7 @@ import { Calendar } from "@/components/ui/calendar";
 import { cn } from "@/lib/utils";
 import { Input } from "@/components/ui/input";
 import type { Table } from "@tanstack/react-table";
-import { UnitReview } from "@/store/reviewStore";
+import { UnitReview } from "@/lib/definitions";
 import { serviceUnits } from "@/lib/constants";
 import { Combobox } from "@/components/ui/combobox";
 
@@ -36,8 +36,8 @@ export function ReviewFilters({ table, date, setDate, onExport }: ReviewFiltersP
             <div className="flex flex-wrap items-center gap-2">
                 <Input
                     placeholder="Cari berdasarkan pengguna..."
-                    value={(table.getColumn("user")?.getFilterValue() as string) ?? ""}
-                    onChange={(event) => table.getColumn("user")?.setFilterValue(event.target.value)}
+                    value={(table.getColumn("user.name")?.getFilterValue() as string) ?? ""}
+                    onChange={(event) => table.getColumn("user.name")?.setFilterValue(event.target.value)}
                     className="max-w-sm h-9"
                 />
                 <div className="w-[200px]">
@@ -80,7 +80,7 @@ export function ReviewFilters({ table, date, setDate, onExport }: ReviewFiltersP
                 </Popover>
             </div>
             <Button variant="outline" size="sm" onClick={onExport}>
-                <FileText className="h-3.5 w-3.5" />
+                <FileText className="h-3.5 w-3.5 mr-1" />
                 <span>Ekspor</span>
             </Button>
         </div>

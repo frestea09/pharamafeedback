@@ -40,7 +40,8 @@ export const getColumns = (
   onDelete: (review: UnitReview) => void
 ): ColumnDef<UnitReview>[] => [
   {
-    accessorKey: "user.name",
+    accessorFn: (row) => row.user.name,
+    id: "user.name",
     header: ({ column }) => (
       <Button
         variant="ghost"
