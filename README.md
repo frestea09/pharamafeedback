@@ -1,6 +1,6 @@
-# PharmaFeedback - Aplikasi Ulasan Layanan Rumah Sakit
+# LayananReview - Aplikasi Ulasan Layanan RSUD Oto Iskandar Dinata
 
-Aplikasi web modern yang dibangun dengan Next.js dan TypeScript untuk mengumpulkan dan menganalisis umpan balik pasien di berbagai unit layanan rumah sakit. Aplikasi ini menyediakan portal terpisah untuk admin, pengguna, dan mode kios untuk pegawai.
+Aplikasi web modern yang dibangun dengan Next.js dan TypeScript untuk mengumpulkan dan menganalisis umpan balik pasien di berbagai unit layanan RSUD Oto Iskandar Dinata. Aplikasi ini menyediakan portal terpisah untuk admin, pengguna, dan mode kios untuk pegawai.
 
 ## Fitur Utama
 

@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { TestTube } from "lucide-react";
+import { Hospital } from "lucide-react";
 import { Eye, EyeOff, Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { validateUser } from "@/lib/actions";
@@ -59,7 +59,7 @@ export default function AdminLoginPage() {
           <CardHeader className="text-center">
             <div className="flex justify-center mb-4">
               <Link href="/" aria-label="Beranda">
-                <TestTube className="h-12 w-12 text-primary" />
+                <Hospital className="h-12 w-12 text-primary" />
               </Link>
             </div>
             <CardTitle className="text-2xl">Portal Admin</CardTitle>

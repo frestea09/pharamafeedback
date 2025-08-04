@@ -19,7 +19,7 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { getPageTitle } from "@/lib/utils";
 import { adminMenuItems } from "@/lib/constants";
-import { LogOut, TestTube } from "lucide-react";
+import { LogOut, Hospital } from "lucide-react";
 
 export default function AdminLayout({
   children,
@@ -46,12 +46,8 @@ export default function AdminLayout({
       <Sidebar>
         <SidebarHeader>
           <div className="flex items-center gap-2">
-            <img
-              src="/logo-polos.ico"
-              alt="Logo"
-              className="h-8 w-8 text-primary"
-            />
-            <span className="text-xl font-semibold">PharmaFeedback</span>
+            <Hospital className="h-8 w-8 text-primary" />
+            <span className="text-xl font-semibold">LayananReview RSUD</span>
           </div>
         </SidebarHeader>
         <SidebarContent>

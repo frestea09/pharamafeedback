@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname, useSearchParams } from "next/navigation";
+import { usePathname, useSearchParams, useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import {
   SidebarProvider,
@@ -22,7 +22,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
   LogOut,
-  TestTube,
+  Hospital,
   Eye,
   EyeOff,
   Loader2,
@@ -47,12 +47,8 @@ function DashboardHeaderContent() {
       <div className="flex min-h-screen flex-col">
         <header className="sticky top-0 z-10 flex h-20 items-center justify-between border-b bg-card px-6">
           <div className="flex items-center gap-3">
-            <img
-              src="/logo-polos.ico"
-              alt="Logo"
-              className="h-8 w-8 text-primary"
-            />
-            <span className="text-2xl font-semibold">PharmaFeedback</span>
+            <Hospital className="h-8 w-8 text-primary" />
+            <span className="text-2xl font-semibold">LayananReview RSUD</span>
           </div>
           <Button variant="outline" onClick={() => setIsPatientMode(false)}>
             <EyeOff className="mr-2" />
@@ -94,6 +90,7 @@ export default function DashboardLayout({
 }) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
+  const router = useRouter();
   const userId = searchParams.get("userId");
 
   const [currentUser, setCurrentUser] = useState<User | null>(null);
@@ -116,8 +113,6 @@ export default function DashboardLayout({
     }
   }, [userId]);
 
-  const pageTitle = getPageTitle(pathname);
-
   if (isLoading) {
     return (
       <div className="flex h-screen items-center justify-center">
@@ -131,12 +126,8 @@ export default function DashboardLayout({
       <div className="flex min-h-screen flex-col">
         <header className="sticky top-0 z-10 flex h-20 items-center justify-between border-b bg-card px-6">
           <div className="flex items-center gap-3">
-            <img
-              src="/logo-polos.ico"
-              alt="Logo"
-              className="h-8 w-8 text-primary"
-            />
-            <span className="text-2xl font-semibold">PharmaFeedback</span>
+            <Hospital className="h-8 w-8 text-primary" />
+            <span className="text-2xl font-semibold">LayananReview RSUD</span>
           </div>
           <Button variant="outline" onClick={() => setIsPatientMode(false)}>
             <EyeOff className="mr-2" />
@@ -155,14 +146,19 @@ export default function DashboardLayout({
   const getSidebarParams = () => {
     return new URLSearchParams(searchParams.toString());
   };
+  
+  const handleLogout = () => {
+    // Navigate to the user login page
+    router.push("/login/user");
+  };
 
   return (
     <SidebarProvider>
       <Sidebar>
         <SidebarHeader>
           <div className="flex items-center gap-2">
-            <TestTube className="size-8 text-primary" />
-            <span className="text-xl font-semibold">PharmaFeedback</span>
+            <Hospital className="size-8 text-primary" />
+            <span className="text-xl font-semibold">LayananReview RSUD</span>
           </div>
         </SidebarHeader>
         <SidebarContent>
@@ -191,14 +187,14 @@ export default function DashboardLayout({
           <SidebarMenu>
             <SidebarMenuItem>
               <SidebarMenuButton
-                href="/login/user"
+                onClick={handleLogout}
                 asChild
                 className="h-12 text-base font-medium"
               >
-                <Link href="/login/user">
+                <button type="button">
                   <LogOut className="size-5" />
                   <span>Keluar</span>
-                </Link>
+                </button>
               </SidebarMenuButton>
             </SidebarMenuItem>
           </SidebarMenu>

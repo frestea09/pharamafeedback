@@ -15,7 +15,7 @@ export default function FAQPage() {
       <CardHeader>
         <CardTitle>Bantuan & Pertanyaan Umum (FAQ)</CardTitle>
         <CardDescription>
-          Temukan jawaban atas pertanyaan umum tentang peran dan fungsi dalam aplikasi PharmaFeedback.
+          Temukan jawaban atas pertanyaan umum tentang peran dan fungsi dalam aplikasi LayananReview RSUD.
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -41,13 +41,12 @@ export default function FAQPage() {
            <AccordionItem value="item-4">
             <AccordionTrigger>Apa saja unit layanan yang ada?</AccordionTrigger>
             <AccordionContent>
-              Saat ini, kami memiliki lima unit layanan:
+              Saat ini, aplikasi mencakup semua unit layanan yang terdaftar di RSUD Oto Iskandar Dinata, termasuk:
               <ul className="list-disc pl-5 mt-2 space-y-1">
-                <li><strong>Farmasi:</strong> Melayani pengambilan resep dan konsultasi obat.</li>
-                <li><strong>Rawat Jalan:</strong> Unit untuk pasien yang berobat tanpa menginap.</li>
-                <li><strong>Rawat Inap:</strong> Unit perawatan untuk pasien yang memerlukan observasi dan perawatan intensif.</li>
-                <li><strong>Laboratorium:</strong> Unit untuk pemeriksaan sampel medis.</li>
-                <li><strong>Radiologi:</strong> Unit untuk layanan pencitraan medis seperti X-ray dan USG.</li>
+                <li>Unit Perawatan (Rawat Inap, Rawat Jalan, ICU)</li>
+                <li>Unit Penunjang Medis (Farmasi, Laboratorium, Radiologi)</li>
+                <li>Unit Gawat Darurat (IGD)</li>
+                <li>dan unit administrasi serta layanan lainnya.</li>
               </ul>
             </AccordionContent>
           </AccordionItem>

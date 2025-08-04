@@ -6,7 +6,7 @@ services:
     command: --default-authentication-plugin=mysql_native_password
     restart: always
     environment:
-      MYSQL_DATABASE: 'feedback'
+      MYSQL_DATABASE: 'layanan_review'
       MYSQL_USER: 'user'
       MYSQL_PASSWORD: 'password'
       MYSQL_ROOT_PASSWORD: 'password'
@@ -25,7 +25,7 @@ services:
     depends_on:
       - db
     environment:
-      DATABASE_URL: "mysql://user:password@db:3306/feedback"
+      DATABASE_URL: "mysql://user:password@db:3306/layanan_review"
       NEXT_PUBLIC_CLIENT_KEY: "abc"
 
 volumes:

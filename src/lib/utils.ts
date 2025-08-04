@@ -27,7 +27,7 @@ export const getPageTitle = (pathname: string, unit: string | null = null): stri
       return "Laporan Ulasan untuk Dicetak";
   }
 
-  let baseTitle = baseTitles[pathname] || "PharmaFeedback";
+  let baseTitle = baseTitles[pathname] || "LayananReview RSUD";
 
   if (unit && pathname.startsWith('/admin/')) {
     baseTitle = `${baseTitle} - Unit ${unit}`;

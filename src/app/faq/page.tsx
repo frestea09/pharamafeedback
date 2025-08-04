@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/accordion";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { TestTube } from "lucide-react";
+import { Hospital } from "lucide-react";
 import Link from "next/link";
 
 
@@ -18,16 +18,16 @@ export default function FAQPage() {
     <div className="container mx-auto max-w-4xl py-12">
         <div className="flex flex-col items-center text-center mb-12">
             <Link href="/" aria-label="Beranda">
-                <TestTube className="h-12 w-12 text-primary" />
+                <Hospital className="h-12 w-12 text-primary" />
             </Link>
             <h1 className="text-4xl font-bold mt-4">Pusat Bantuan</h1>
-            <p className="text-muted-foreground mt-2">Semua yang perlu Anda ketahui tentang PharmaFeedback.</p>
+            <p className="text-muted-foreground mt-2">Semua yang perlu Anda ketahui tentang LayananReview RSUD.</p>
         </div>
         <Card>
         <CardHeader>
             <CardTitle>Pertanyaan Umum (FAQ)</CardTitle>
             <CardDescription>
-            Temukan jawaban atas pertanyaan umum tentang peran dan fungsi dalam aplikasi PharmaFeedback.
+            Temukan jawaban atas pertanyaan umum tentang peran dan fungsi dalam aplikasi LayananReview RSUD.
             </CardDescription>
         </CardHeader>
         <CardContent>

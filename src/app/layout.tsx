@@ -12,8 +12,8 @@ const fontSans = Inter({
 });
 
 // export const metadata: Metadata = {
-//   title: "PharmaFeedback",
-//   description: "Aplikasi web untuk mengumpulkan ulasan dan umpan balik layanan farmasi.",
+//   title: "LayananReview RSUD",
+//   description: "Aplikasi web untuk mengumpulkan ulasan dan umpan balik layanan RSUD Oto Iskandar Dinata.",
 // };
 
 // export const metadata: Metadata = {
@@ -29,12 +29,15 @@ export default function RootLayout({
   return (
     <html lang="id" suppressHydrationWarning>
       <head>
-        <link rel="icon" type="image/x-icon" href="favicon.ico" />
+        <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+        <link rel="shortcut icon" href="/favicon.ico" />
+        <link rel="apple-touch-icon" href="/apple-icon.png" />
+        <link rel="icon" href="/icon.svg" type="image/svg+xml" />
         <title>RSUD Oto Iskandar Dinata</title>
 
         <meta
           name="description"
-          content="Aplikasi web untuk mengumpulkan ulasan dan umpan balik layanan farmasi."
+          content="Aplikasi web untuk mengumpulkan ulasan dan umpan balik layanan RSUD Oto Iskandar Dinata."
         />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link
