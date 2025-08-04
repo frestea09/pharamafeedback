@@ -1,8 +1,9 @@
+
 "use client";
 
 import Link from "next/link";
 import { usePathname, useSearchParams, useRouter } from "next/navigation";
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import {
   SidebarProvider,
   Sidebar,
@@ -83,11 +84,7 @@ function DashboardHeaderContent() {
   );
 }
 
-export default function DashboardLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+function DashboardLayoutContent({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -229,4 +226,16 @@ export default function DashboardLayout({
       </SidebarInset>
     </SidebarProvider>
   );
+}
+
+export default function Layout({ children }: { children: React.ReactNode }) {
+    return (
+        <Suspense fallback={
+            <div className="flex h-screen w-full items-center justify-center">
+                <Loader2 className="h-8 w-8 animate-spin" />
+            </div>
+        }>
+            <DashboardLayoutContent>{children}</DashboardLayoutContent>
+        </Suspense>
+    )
 }
