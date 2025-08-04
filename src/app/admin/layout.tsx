@@ -1,4 +1,3 @@
-
 "use client";
 
 import Link from "next/link";
@@ -15,7 +14,7 @@ import {
   SidebarTrigger,
   SidebarInset,
   SidebarGroup,
-  SidebarGroupLabel
+  SidebarGroupLabel,
 } from "@/components/ui/sidebar";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { getPageTitle } from "@/lib/utils";
@@ -29,23 +28,29 @@ export default function AdminLayout({
 }) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const unit = searchParams.get('unit');
+  const unit = searchParams.get("unit");
 
   // Do not render layout for login or export pages
-  if (pathname === '/admin' || pathname.startsWith('/admin/reviews/export')) {
+  if (pathname === "/admin" || pathname.startsWith("/admin/reviews/export")) {
     return <>{children}</>;
   }
 
   const currentPageTitle = getPageTitle(pathname, unit);
   const adminName = unit ? `Admin ${unit}` : "Admin Sistem";
-  const adminEmail = unit ? `admin.${unit.toLowerCase().replace(/[^a-z0-9]/g, '')}@sim.rs` : "admin@sim.rs";
+  const adminEmail = unit
+    ? `admin.${unit.toLowerCase().replace(/[^a-z0-9]/g, "")}@sim.rs`
+    : "admin@sim.rs";
 
   return (
     <SidebarProvider>
       <Sidebar>
         <SidebarHeader>
           <div className="flex items-center gap-2">
-            <TestTube className="size-8 text-primary" />
+            <img
+              src="/logo-polos.ico"
+              alt="Logo"
+              className="h-8 w-8 text-primary"
+            />
             <span className="text-xl font-semibold">PharmaFeedback</span>
           </div>
         </SidebarHeader>
@@ -55,13 +60,19 @@ export default function AdminLayout({
             <SidebarMenu>
               {adminMenuItems.map((item) => (
                 <SidebarMenuItem key={item.href}>
-                  <SidebarMenuButton 
-                    href={{ pathname: item.href, query: unit ? { unit } : {} }} 
-                    tooltip={item.tooltip} 
+                  <SidebarMenuButton
+                    href={{ pathname: item.href, query: unit ? { unit } : {} }}
+                    tooltip={item.tooltip}
                     isActive={pathname === item.href}
-                    className="text-base font-medium h-12" 
-                    asChild>
-                    <Link href={{ pathname: item.href, query: unit ? { unit } : {} }}>
+                    className="h-12 text-base font-medium"
+                    asChild
+                  >
+                    <Link
+                      href={{
+                        pathname: item.href,
+                        query: unit ? { unit } : {},
+                      }}
+                    >
                       <item.icon className="size-5" />
                       <span>{item.label}</span>
                     </Link>
@@ -74,7 +85,11 @@ export default function AdminLayout({
         <SidebarFooter>
           <SidebarMenu>
             <SidebarMenuItem>
-              <SidebarMenuButton href="/" asChild className="text-base font-medium h-12">
+              <SidebarMenuButton
+                href="/"
+                asChild
+                className="h-12 text-base font-medium"
+              >
                 <Link href="/">
                   <LogOut className="size-5" />
                   <span>Keluar</span>
@@ -82,14 +97,25 @@ export default function AdminLayout({
               </SidebarMenuButton>
             </SidebarMenuItem>
           </SidebarMenu>
-          <div className="flex items-center gap-3 p-2 rounded-md bg-sidebar-accent">
+          <div className="flex items-center gap-3 rounded-md bg-sidebar-accent p-2">
             <Avatar className="h-10 w-10">
-              <AvatarImage src="https://placehold.co/100x100.png" alt={adminName} data-ai-hint="person glasses" />
-              <AvatarFallback>{adminName.split(" ").map(n => n[0]).join("")}</AvatarFallback>
+              <AvatarImage
+                src="https://placehold.co/100x100.png"
+                alt={adminName}
+                data-ai-hint="person glasses"
+              />
+              <AvatarFallback>
+                {adminName
+                  .split(" ")
+                  .map((n) => n[0])
+                  .join("")}
+              </AvatarFallback>
             </Avatar>
             <div className="flex flex-col">
-              <span className="font-semibold text-sm">{adminName}</span>
-              <span className="text-xs text-muted-foreground">{adminEmail}</span>
+              <span className="text-sm font-semibold">{adminName}</span>
+              <span className="text-xs text-muted-foreground">
+                {adminEmail}
+              </span>
             </div>
           </div>
         </SidebarFooter>
@@ -101,7 +127,7 @@ export default function AdminLayout({
             <h1 className="text-xl font-semibold">{currentPageTitle}</h1>
           </div>
         </header>
-        <main className="flex-1 overflow-y-auto p-4 md:p-6 bg-background/50">
+        <main className="flex-1 overflow-y-auto bg-background/50 p-4 md:p-6">
           {children}
         </main>
       </SidebarInset>

@@ -1,4 +1,3 @@
-
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -10,26 +9,33 @@ const features = [
   {
     icon: Smile,
     title: "Tingkatkan Kualitas Pelayanan",
-    description: "Nilai keramahan dan profesionalisme staf untuk memastikan semua orang menerima pelayanan yang sopan dan efektif.",
+    description:
+      "Nilai keramahan dan profesionalisme staf untuk memastikan semua orang menerima pelayanan yang sopan dan efektif.",
   },
   {
     icon: Users,
     title: "Pastikan Ketersediaan Obat",
-    description: "Umpan balik Anda membantu kami mengelola stok obat agar selalu tersedia saat dibutuhkan.",
+    description:
+      "Umpan balik Anda membantu kami mengelola stok obat agar selalu tersedia saat dibutuhkan.",
   },
   {
     icon: Clock,
     title: "Kurangi Waktu Tunggu",
-    description: "Bantu kami mengidentifikasi hambatan dan merampingkan proses kami untuk melayani Anda lebih cepat.",
+    description:
+      "Bantu kami mengidentifikasi hambatan dan merampingkan proses kami untuk melayani Anda lebih cepat.",
   },
 ];
 
 export default function Home() {
   return (
-    <div className="flex flex-col min-h-screen bg-background">
-      <header className="container mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+    <div className="flex min-h-screen flex-col bg-background">
+      <header className="container mx-auto flex h-20 items-center justify-between px-4 sm:px-6 lg:px-8">
         <div className="flex items-center gap-2">
-          <TestTube className="h-8 w-8 text-primary" />
+          <img
+            src="/logo-polos.ico"
+            alt="Logo"
+            className="h-8 w-8 text-primary"
+          />
           <h1 className="text-2xl font-bold text-foreground">PharmaFeedback</h1>
         </div>
         <nav className="flex items-center gap-4">
@@ -43,14 +49,15 @@ export default function Home() {
       </header>
 
       <main className="flex-grow">
-        <section className="container mx-auto px-4 sm:px-6 lg:px-8 py-20 text-center">
-          <h2 className="text-4xl md:text-5xl font-extrabold tracking-tight text-foreground">
+        <section className="container mx-auto px-4 py-20 text-center sm:px-6 lg:px-8">
+          <h2 className="text-4xl font-extrabold tracking-tight text-foreground md:text-5xl">
             Tingkatkan Kualitas Layanan Farmasi, Bersama.
           </h2>
-          <p className="mt-4 max-w-2xl mx-auto text-lg text-muted-foreground">
-            Umpan balik Anda sangat penting. Bantu kami meningkatkan layanan dengan membagikan pengalaman Anda. Cepat, mudah, dan berdampak.
+          <p className="mx-auto mt-4 max-w-2xl text-lg text-muted-foreground">
+            Umpan balik Anda sangat penting. Bantu kami meningkatkan layanan
+            dengan membagikan pengalaman Anda. Cepat, mudah, dan berdampak.
           </p>
-           <div className="mt-8 flex justify-center gap-4">
+          <div className="mt-8 flex justify-center gap-4">
             <Button size="lg" asChild>
               <Link href="/login">Login Pegawai (Kios)</Link>
             </Button>
@@ -63,16 +70,19 @@ export default function Home() {
         <section id="features" className="bg-card py-20">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center">
-              <h3 className="text-3xl font-bold text-foreground">Mengapa Umpan Balik Anda Penting</h3>
+              <h3 className="text-3xl font-bold text-foreground">
+                Mengapa Umpan Balik Anda Penting
+              </h3>
               <p className="mt-2 text-muted-foreground">
-                Ulasan Anda memberikan wawasan langsung yang mengarah pada pelayanan yang lebih baik.
+                Ulasan Anda memberikan wawasan langsung yang mengarah pada
+                pelayanan yang lebih baik.
               </p>
             </div>
             <div className="mt-12 grid gap-8 md:grid-cols-3">
               {features.map((feature, i) => (
                 <Card key={i}>
                   <CardHeader className="flex flex-row items-center gap-4">
-                    <div className="bg-primary/10 p-3 rounded-full">
+                    <div className="rounded-full bg-primary/10 p-3">
                       <feature.icon className="h-6 w-6 text-primary" />
                     </div>
                     <CardTitle>{feature.title}</CardTitle>
@@ -83,16 +93,22 @@ export default function Home() {
             </div>
           </div>
         </section>
-        
-        <section className="container mx-auto px-4 sm:px-6 lg:px-8 py-20">
-            <div className="max-w-2xl mx-auto">
-                <LoginFAQ title="Panduan Umum & Pertanyaan" items={generalFaqItems} />
-            </div>
+
+        <section className="container mx-auto px-4 py-20 sm:px-6 lg:px-8">
+          <div className="mx-auto max-w-2xl">
+            <LoginFAQ
+              title="Panduan Umum & Pertanyaan"
+              items={generalFaqItems}
+            />
+          </div>
         </section>
       </main>
 
-      <footer className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 text-center text-muted-foreground">
-        <p>&copy; {new Date().getFullYear()} PharmaFeedback. Semua hak dilindungi undang-undang.</p>
+      <footer className="container mx-auto px-4 py-6 text-center text-muted-foreground sm:px-6 lg:px-8">
+        <p>
+          &copy; {new Date().getFullYear()} PharmaFeedback. Semua hak dilindungi
+          undang-undang.
+        </p>
       </footer>
     </div>
   );

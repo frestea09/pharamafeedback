@@ -1,4 +1,3 @@
-
 "use client";
 
 import Link from "next/link";
@@ -21,7 +20,14 @@ import {
 } from "@/components/ui/sidebar";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { LogOut, TestTube, Eye, EyeOff, Loader2, PanelLeft } from "lucide-react";
+import {
+  LogOut,
+  TestTube,
+  Eye,
+  EyeOff,
+  Loader2,
+  PanelLeft,
+} from "lucide-react";
 import { userMenuItems } from "@/lib/constants";
 import { getPageTitle } from "@/lib/utils";
 import { getUserById } from "@/lib/actions";
@@ -32,32 +38,41 @@ function DashboardHeaderContent() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const pageTitle = getPageTitle(pathname);
-  const isAnonymous = !searchParams.get('userId');
+  const isAnonymous = !searchParams.get("userId");
 
   const [isPatientMode, setIsPatientMode] = useState(false);
-  
-   if (isPatientMode) {
-      return (
-         <div className="flex flex-col min-h-screen">
-             <header className="flex h-20 items-center justify-between border-b bg-card px-6 sticky top-0 z-10">
-                <div className="flex items-center gap-3">
-                    <TestTube className="size-8 text-primary" />
-                    <span className="text-2xl font-semibold">PharmaFeedback</span>
-                </div>
-                <Button variant="outline" onClick={() => setIsPatientMode(false)}>
-                    <EyeOff className="mr-2"/>
-                    Tutup Mode Pasien
-                </Button>
-            </header>
-         </div>
-      )
+
+  if (isPatientMode) {
+    return (
+      <div className="flex min-h-screen flex-col">
+        <header className="sticky top-0 z-10 flex h-20 items-center justify-between border-b bg-card px-6">
+          <div className="flex items-center gap-3">
+            <img
+              src="/logo-polos.ico"
+              alt="Logo"
+              className="h-8 w-8 text-primary"
+            />
+            <span className="text-2xl font-semibold">PharmaFeedback</span>
+          </div>
+          <Button variant="outline" onClick={() => setIsPatientMode(false)}>
+            <EyeOff className="mr-2" />
+            Tutup Mode Pasien
+          </Button>
+        </header>
+      </div>
+    );
   }
 
   return (
     <header className="flex h-16 items-center gap-4 border-b bg-card px-6">
       <SidebarTrigger className="md:hidden" />
-      <Button variant="ghost" size="icon" className="hidden md:inline-flex" onClick={() => toggleSidebar()}>
-          <PanelLeft />
+      <Button
+        variant="ghost"
+        size="icon"
+        className="hidden md:inline-flex"
+        onClick={() => toggleSidebar()}
+      >
+        <PanelLeft />
       </Button>
       <div className="flex-1">
         <h1 className="text-xl font-semibold">{pageTitle}</h1>
@@ -69,9 +84,8 @@ function DashboardHeaderContent() {
         </Button>
       )}
     </header>
-  )
+  );
 }
-
 
 export default function DashboardLayout({
   children,
@@ -80,8 +94,8 @@ export default function DashboardLayout({
 }) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const userId = searchParams.get('userId');
-  
+  const userId = searchParams.get("userId");
+
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isPatientMode, setIsPatientMode] = useState(false);
@@ -90,22 +104,21 @@ export default function DashboardLayout({
   const name = isAnonymous ? "Pasien Anonim" : currentUser?.name || "Pengguna";
 
   useEffect(() => {
-      if(userId) {
-        setIsLoading(true);
-        getUserById(userId)
-        .then(user => {
-            if (user) setCurrentUser(user);
+    if (userId) {
+      setIsLoading(true);
+      getUserById(userId)
+        .then((user) => {
+          if (user) setCurrentUser(user);
         })
         .finally(() => setIsLoading(false));
-      } else {
-        setIsLoading(false);
-      }
+    } else {
+      setIsLoading(false);
+    }
   }, [userId]);
 
-
   const pageTitle = getPageTitle(pathname);
-  
-   if (isLoading) {
+
+  if (isLoading) {
     return (
       <div className="flex h-screen items-center justify-center">
         <Loader2 className="h-10 w-10 animate-spin text-primary" />
@@ -114,90 +127,110 @@ export default function DashboardLayout({
   }
 
   if (isPatientMode) {
-      return (
-         <div className="flex flex-col min-h-screen">
-             <header className="flex h-20 items-center justify-between border-b bg-card px-6 sticky top-0 z-10">
-                <div className="flex items-center gap-3">
-                    <TestTube className="size-8 text-primary" />
-                    <span className="text-2xl font-semibold">PharmaFeedback</span>
-                </div>
-                <Button variant="outline" onClick={() => setIsPatientMode(false)}>
-                    <EyeOff className="mr-2"/>
-                    Tutup Mode Pasien
-                </Button>
-            </header>
-            <main className="flex-1 bg-background/50">
-                <div className="container mx-auto max-w-4xl py-8 md:py-12">
-                    {children}
-                </div>
-            </main>
-         </div>
-      )
+    return (
+      <div className="flex min-h-screen flex-col">
+        <header className="sticky top-0 z-10 flex h-20 items-center justify-between border-b bg-card px-6">
+          <div className="flex items-center gap-3">
+            <img
+              src="/logo-polos.ico"
+              alt="Logo"
+              className="h-8 w-8 text-primary"
+            />
+            <span className="text-2xl font-semibold">PharmaFeedback</span>
+          </div>
+          <Button variant="outline" onClick={() => setIsPatientMode(false)}>
+            <EyeOff className="mr-2" />
+            Tutup Mode Pasien
+          </Button>
+        </header>
+        <main className="flex-1 bg-background/50">
+          <div className="container mx-auto max-w-4xl py-8 md:py-12">
+            {children}
+          </div>
+        </main>
+      </div>
+    );
   }
 
   const getSidebarParams = () => {
     return new URLSearchParams(searchParams.toString());
-  }
+  };
 
   return (
     <SidebarProvider>
-    <Sidebar>
+      <Sidebar>
         <SidebarHeader>
-        <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2">
             <TestTube className="size-8 text-primary" />
             <span className="text-xl font-semibold">PharmaFeedback</span>
-        </div>
+          </div>
         </SidebarHeader>
         <SidebarContent>
-            <SidebarGroup>
-                 <SidebarGroupLabel>MENU PENGGUNA</SidebarGroupLabel>
-                <SidebarMenu>
-                    {userMenuItems.map((item) => (
-                        <SidebarMenuItem key={item.href}>
-                            <SidebarMenuButton 
-                                href={`${item.href}?${getSidebarParams()}`}
-                                isActive={pathname === item.href}
-                                className="text-base font-medium h-12" 
-                                asChild>
-                                <Link href={`${item.href}?${getSidebarParams()}`}>
-                                    <item.icon className="size-5" />
-                                    <span>{item.label}</span>
-                                </Link>
-                            </SidebarMenuButton>
-                        </SidebarMenuItem>
-                    ))}
-                </SidebarMenu>
-            </SidebarGroup>
+          <SidebarGroup>
+            <SidebarGroupLabel>MENU PENGGUNA</SidebarGroupLabel>
+            <SidebarMenu>
+              {userMenuItems.map((item) => (
+                <SidebarMenuItem key={item.href}>
+                  <SidebarMenuButton
+                    href={`${item.href}?${getSidebarParams()}`}
+                    isActive={pathname === item.href}
+                    className="h-12 text-base font-medium"
+                    asChild
+                  >
+                    <Link href={`${item.href}?${getSidebarParams()}`}>
+                      <item.icon className="size-5" />
+                      <span>{item.label}</span>
+                    </Link>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ))}
+            </SidebarMenu>
+          </SidebarGroup>
         </SidebarContent>
         <SidebarFooter>
-        <SidebarMenu>
+          <SidebarMenu>
             <SidebarMenuItem>
-                <SidebarMenuButton href="/login/user" asChild className="text-base font-medium h-12">
-                    <Link href="/login/user">
-                        <LogOut className="size-5" />
-                        <span>Keluar</span>
-                    </Link>
-                </SidebarMenuButton>
+              <SidebarMenuButton
+                href="/login/user"
+                asChild
+                className="h-12 text-base font-medium"
+              >
+                <Link href="/login/user">
+                  <LogOut className="size-5" />
+                  <span>Keluar</span>
+                </Link>
+              </SidebarMenuButton>
             </SidebarMenuItem>
-        </SidebarMenu>
-        <div className="flex items-center gap-3 p-2 rounded-md bg-sidebar-accent">
-             <Avatar className="h-10 w-10">
-                <AvatarImage src={currentUser?.avatar || undefined} alt={name} data-ai-hint="person" />
-                <AvatarFallback>{name.split(" ").map(n => n[0]).join("")}</AvatarFallback>
+          </SidebarMenu>
+          <div className="flex items-center gap-3 rounded-md bg-sidebar-accent p-2">
+            <Avatar className="h-10 w-10">
+              <AvatarImage
+                src={currentUser?.avatar || undefined}
+                alt={name}
+                data-ai-hint="person"
+              />
+              <AvatarFallback>
+                {name
+                  .split(" ")
+                  .map((n) => n[0])
+                  .join("")}
+              </AvatarFallback>
             </Avatar>
             <div className="flex flex-col">
-                <span className="font-semibold text-sm">{name}</span>
-                <span className="text-xs text-muted-foreground">{currentUser?.email || "Pengguna Kios"}</span>
+              <span className="text-sm font-semibold">{name}</span>
+              <span className="text-xs text-muted-foreground">
+                {currentUser?.email || "Pengguna Kios"}
+              </span>
             </div>
-        </div>
+          </div>
         </SidebarFooter>
-    </Sidebar>
-    <SidebarInset>
+      </Sidebar>
+      <SidebarInset>
         <DashboardHeaderContent />
-        <main className="flex-1 overflow-y-auto p-4 md:p-6 bg-background/50">
-        {children}
+        <main className="flex-1 overflow-y-auto bg-background/50 p-4 md:p-6">
+          {children}
         </main>
-    </SidebarInset>
+      </SidebarInset>
     </SidebarProvider>
   );
 }
