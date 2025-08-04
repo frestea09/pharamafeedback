@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, Suspense, useCallback } from "react";
 import { DataTable } from "@/components/organisms/admin/DataTable";
 import { getColumns } from "./columns";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -11,7 +11,7 @@ import { getReviews } from "@/lib/actions";
 import { UnitReview } from "@/lib/definitions";
 import { Loader2 } from "lucide-react";
 
-export default function HistoryPage() {
+function HistoryContent() {
   const [reviews, setReviews] = useState<UnitReview[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [selectedReview, setSelectedReview] = useState<UnitReview | null>(null);
@@ -31,12 +31,12 @@ export default function HistoryPage() {
     }
   }, [userId]);
 
-  const handleViewDetail = (review: UnitReview) => {
+  const handleViewDetail = useCallback((review: UnitReview) => {
     setSelectedReview(review);
     setIsDetailOpen(true);
-  };
+  }, []);
   
-  const columns = useMemo(() => getColumns(handleViewDetail), []);
+  const columns = useMemo(() => getColumns(handleViewDetail), [handleViewDetail]);
 
   return (
     <>
@@ -52,4 +52,8 @@ export default function HistoryPage() {
       <ReviewDetailDialog review={selectedReview} isOpen={isDetailOpen} onOpenChange={setIsDetailOpen} />
     </>
   );
+}
+
+export default function HistoryPage() {
+    return <HistoryContent />;
 }

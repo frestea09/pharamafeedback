@@ -5,7 +5,7 @@ import ReviewForm from "@/components/organisms/dashboard/ReviewForm";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { useSearchParams } from "next/navigation";
 
-export default function DashboardPage() {
+function DashboardContent() {
   const searchParams = useSearchParams();
   const unit = searchParams.get('unit') || "Layanan";
 
@@ -24,4 +24,8 @@ export default function DashboardPage() {
       </Card>
     </div>
   );
+}
+
+export default function DashboardPage() {
+    return <DashboardContent />;
 }

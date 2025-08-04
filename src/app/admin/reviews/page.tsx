@@ -70,15 +70,15 @@ export default function AllReviewsPage() {
     fetchReviews();
   }, [fetchReviews]);
   
-  const handleViewDetail = (review: UnitReview) => {
+  const handleViewDetail = useCallback((review: UnitReview) => {
     setSelectedReview(review);
     setIsDetailOpen(true);
-  };
+  }, []);
 
-  const handleDelete = (review: UnitReview) => {
+  const handleDelete = useCallback((review: UnitReview) => {
     setSelectedReview(review);
     setIsDeleteDialogOpen(true);
-  };
+  }, []);
   
   const confirmDelete = async () => {
     if (selectedReview) {
@@ -112,13 +112,13 @@ export default function AllReviewsPage() {
 
   const columns = useMemo(() => getColumns(handleViewDetail, handleDelete), [handleViewDetail, handleDelete]);
 
-  const setTableFilters = (table: Table<UnitReview>) => {
+  const setTableFilters = useCallback((table: Table<UnitReview>) => {
     const userColFilter = table.getColumn("user.name")?.getFilterValue() as string ?? "";
     const unitColFilter = table.getColumn("unit")?.getFilterValue() as string ?? undefined;
     
     setUserFilter(userColFilter);
     setUnitFilter(unitColFilter);
-  };
+  }, []);
 
   return (
     <AdminLayout>
