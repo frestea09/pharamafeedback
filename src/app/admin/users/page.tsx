@@ -21,6 +21,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { UserFilters } from "@/components/organisms/admin/UserFilters";
 import { getUsers, deleteUser as deleteUserAction } from "@/lib/actions";
 import { User } from "@prisma/client";
+import AdminLayout from "../admin-layout";
 
 export default function AllUsersPage() {
   const [users, setUsers] = useState<User[]>([]);
@@ -89,34 +90,36 @@ export default function AllUsersPage() {
   }
 
   return (
-    <div className="container mx-auto py-2">
-      <DataTable
-        columns={columns}
-        data={users}
-        isLoading={isLoading}
-        filterComponent={<UserFilters />}
-      >
-        <Button onClick={handleAddUser}>
-          <UserPlus className="mr-2 h-4 w-4" />
-          Tambah Pengguna
-        </Button>
-      </DataTable>
+    <AdminLayout>
+      <div className="container mx-auto py-2">
+        <DataTable
+          columns={columns}
+          data={users}
+          isLoading={isLoading}
+          filterComponent={<UserFilters />}
+        >
+          <Button onClick={handleAddUser}>
+            <UserPlus className="mr-2 h-4 w-4" />
+            Tambah Pengguna
+          </Button>
+        </DataTable>
 
-      <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Apakah Anda yakin?</AlertDialogTitle>
-            <AlertDialogDescription>
-              Tindakan ini tidak dapat dibatalkan. Ini akan menghapus pengguna
-              secara permanen dari server kami.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>Batal</AlertDialogCancel>
-            <AlertDialogAction onClick={confirmDelete} className="bg-destructive hover:bg-destructive/90">Hapus</AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
-    </div>
+        <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Apakah Anda yakin?</AlertDialogTitle>
+              <AlertDialogDescription>
+                Tindakan ini tidak dapat dibatalkan. Ini akan menghapus pengguna
+                secara permanen dari server kami.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Batal</AlertDialogCancel>
+              <AlertDialogAction onClick={confirmDelete} className="bg-destructive hover:bg-destructive/90">Hapus</AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+      </div>
+    </AdminLayout>
   );
 }

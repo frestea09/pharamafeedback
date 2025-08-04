@@ -1,3 +1,4 @@
+
 "use client";
 
 import Link from "next/link";
@@ -17,44 +18,9 @@ import {
   SidebarGroupLabel,
 } from "@/components/ui/sidebar";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
-import {
-  LayoutDashboard,
-  Users,
-  MessageSquare,
-  LogOut,
-  FileText,
-  UserPlus,
-  TestTube,
-  HelpCircle,
-} from "lucide-react";
+import { getPageTitle } from "@/lib/utils";
 import { adminMenuItems } from "@/lib/constants";
-
-const getPageTitle = (pathname: string, unit: string | null): string => {
-  const baseTitles: { [key: string]: string } = {
-    "/admin/dashboard": "Dasbor Admin",
-    "/admin/reviews": "Semua Ulasan",
-    "/admin/users": "Kelola Pengguna",
-    "/admin/faq": "Bantuan & Panduan",
-  };
-
-  if (pathname.startsWith("/admin/users/")) {
-    const id = pathname.split("/").pop();
-    return id === "new" ? "Tambah Pengguna Baru" : "Ubah Detail Pengguna";
-  }
-
-  if (pathname.startsWith("/admin/reviews/export")) {
-    return "Laporan Ulasan untuk Dicetak";
-  }
-
-  let baseTitle = baseTitles[pathname] || "Admin";
-
-  if (unit) {
-    baseTitle = `${baseTitle} - Unit ${unit}`;
-  }
-
-  return baseTitle;
-};
+import { LogOut, Hospital } from "lucide-react";
 
 export default function AdminLayout({
   children,
@@ -65,7 +31,7 @@ export default function AdminLayout({
   const searchParams = useSearchParams();
   const unit = searchParams.get("unit");
 
-  // Do not render layout for the main admin login page or export page
+  // Do not render layout for login or export pages
   if (pathname === "/admin" || pathname.startsWith("/admin/reviews/export")) {
     return <>{children}</>;
   }
@@ -81,12 +47,8 @@ export default function AdminLayout({
       <Sidebar>
         <SidebarHeader>
           <div className="flex items-center gap-2">
-            <img
-              src="/logo-polos.ico"
-              alt="Logo"
-              className="h-8 w-8 text-primary"
-            />
-            <span className="text-xl font-semibold">PharmaFeedback</span>
+            <Hospital className="h-8 w-8 text-primary" />
+            <span className="text-xl font-semibold">LayananReview RSUD</span>
           </div>
         </SidebarHeader>
         <SidebarContent>

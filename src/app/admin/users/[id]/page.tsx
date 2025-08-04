@@ -39,6 +39,7 @@ import { serviceUnits } from "@/lib/constants";
 import { Combobox } from "@/components/ui/combobox";
 import { getUserById, createUser, updateUser } from "@/lib/actions";
 import { User } from "@prisma/client";
+import AdminLayout from "../../admin-layout";
 
 const formSchema = z
   .object({
@@ -181,166 +182,170 @@ export default function UserFormPage() {
     }
   };
 
-  if (isLoading) {
+  if (isLoading && isEditing) {
     return (
-      <div className="flex items-center justify-center h-full">
-        <Loader2 className="h-8 w-8 animate-spin" />
-      </div>
+      <AdminLayout>
+        <div className="flex items-center justify-center h-full">
+            <Loader2 className="h-8 w-8 animate-spin" />
+        </div>
+      </AdminLayout>
     );
   }
 
   const queryParams = loggedInAdminUnit ? { unit: loggedInAdminUnit } : {};
 
   return (
-    <div className="max-w-2xl mx-auto space-y-6">
-      <div className="flex items-center">
-        <Button variant="ghost" asChild>
-          <Link href={{ pathname: "/admin/users", query: queryParams }}>
-            <ArrowLeft className="mr-2 h-4 w-4" />
-            Kembali ke Daftar Pengguna
-          </Link>
-        </Button>
-      </div>
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-          <Card>
-            <CardHeader>
-              <CardTitle>
-                {isEditing ? "Ubah Pengguna" : "Tambah Pengguna Baru"}
-              </CardTitle>
-              <CardDescription>
-                {isEditing
-                  ? `Ubah detail untuk ${user?.name}.`
-                  : "Isi formulir di bawah ini untuk menambahkan pengguna baru."}
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                 <FormField
-                    control={form.control}
-                    name="name"
-                    render={({ field }) => (
-                    <FormItem>
-                        <FormLabel>Nama Lengkap</FormLabel>
-                        <FormControl>
-                        <Input placeholder="cth. Budi Santoso" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                    </FormItem>
-                    )}
-                 />
-                <FormField
-                    control={form.control}
-                    name="email"
-                    render={({ field }) => (
-                    <FormItem>
-                        <FormLabel>Alamat Email</FormLabel>
-                        <FormControl>
-                        <Input
-                            type="email"
-                            placeholder="cth. budi@example.com"
-                            {...field}
-                        />
-                        </FormControl>
-                        <FormMessage />
-                    </FormItem>
-                    )}
-                />
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <FormField
-                    control={form.control}
-                    name="role"
-                    render={({ field }) => (
-                    <FormItem>
-                        <FormLabel>Peran</FormLabel>
-                        <Select onValueChange={field.onChange} value={field.value}>
-                        <FormControl>
-                            <SelectTrigger>
-                            <SelectValue placeholder="Pilih peran pengguna" />
-                            </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                            <SelectItem value="User">User</SelectItem>
-                            <SelectItem value="Admin">Admin</SelectItem>
-                        </SelectContent>
-                        </Select>
-                        <FormMessage />
-                    </FormItem>
-                    )}
-                />
-                <FormField
-                    control={form.control}
-                    name="unit"
-                    render={({ field }) => (
-                        <FormItem className="flex flex-col">
-                          <FormLabel>Unit (Opsional)</FormLabel>
-                          <Combobox
-                            options={unitOptions}
-                            value={field.value || 'none'}
-                            onChange={field.onChange}
-                            placeholder="Pilih unit..."
-                            searchPlaceholder="Cari unit..."
-                            emptyPlaceholder="Unit tidak ditemukan."
-                            disabled={!!loggedInAdminUnit}
-                          />
-                          <FormMessage />
-                        </FormItem>
-                    )}
-                    />
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <CardTitle>Kelola Kata Sandi</CardTitle>
-              <CardDescription>
-                {isEditing
-                  ? "Kosongkan jika Anda tidak ingin mengubah kata sandi."
-                  : "Buat kata sandi untuk pengguna baru."}
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              <FormField
-                control={form.control}
-                name="password"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Kata Sandi Baru</FormLabel>
-                    <FormControl>
-                      <Input type="password" {...field} value={field.value ?? ''} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="confirmPassword"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Konfirmasi Kata Sandi Baru</FormLabel>
-                    <FormControl>
-                      <Input type="password" {...field} value={field.value ?? ''} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </CardContent>
-          </Card>
-          
-          <div className="flex justify-end">
-            <Button type="submit" disabled={form.formState.isSubmitting}>
-              {form.formState.isSubmitting && (
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              )}
-              {isEditing ? "Simpan Perubahan" : "Tambah Pengguna"}
+    <AdminLayout>
+      <div className="max-w-2xl mx-auto space-y-6">
+        <div className="flex items-center">
+            <Button variant="ghost" asChild>
+            <Link href={{ pathname: "/admin/users", query: queryParams }}>
+                <ArrowLeft className="mr-2 h-4 w-4" />
+                Kembali ke Daftar Pengguna
+            </Link>
             </Button>
-          </div>
-        </form>
-      </Form>
-    </div>
+        </div>
+        <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+            <Card>
+                <CardHeader>
+                <CardTitle>
+                    {isEditing ? "Ubah Pengguna" : "Tambah Pengguna Baru"}
+                </CardTitle>
+                <CardDescription>
+                    {isEditing
+                    ? `Ubah detail untuk ${user?.name}.`
+                    : "Isi formulir di bawah ini untuk menambahkan pengguna baru."}
+                </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <FormField
+                        control={form.control}
+                        name="name"
+                        render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>Nama Lengkap</FormLabel>
+                            <FormControl>
+                            <Input placeholder="cth. Budi Santoso" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                        </FormItem>
+                        )}
+                    />
+                    <FormField
+                        control={form.control}
+                        name="email"
+                        render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>Alamat Email</FormLabel>
+                            <FormControl>
+                            <Input
+                                type="email"
+                                placeholder="cth. budi@example.com"
+                                {...field}
+                            />
+                            </FormControl>
+                            <FormMessage />
+                        </FormItem>
+                        )}
+                    />
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <FormField
+                        control={form.control}
+                        name="role"
+                        render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>Peran</FormLabel>
+                            <Select onValueChange={field.onChange} value={field.value}>
+                            <FormControl>
+                                <SelectTrigger>
+                                <SelectValue placeholder="Pilih peran pengguna" />
+                                </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                                <SelectItem value="User">User</SelectItem>
+                                <SelectItem value="Admin">Admin</SelectItem>
+                            </SelectContent>
+                            </Select>
+                            <FormMessage />
+                        </FormItem>
+                        )}
+                    />
+                    <FormField
+                        control={form.control}
+                        name="unit"
+                        render={({ field }) => (
+                            <FormItem className="flex flex-col">
+                            <FormLabel>Unit (Opsional)</FormLabel>
+                            <Combobox
+                                options={unitOptions}
+                                value={field.value || 'none'}
+                                onChange={field.onChange}
+                                placeholder="Pilih unit..."
+                                searchPlaceholder="Cari unit..."
+                                emptyPlaceholder="Unit tidak ditemukan."
+                                disabled={!!loggedInAdminUnit}
+                            />
+                            <FormMessage />
+                            </FormItem>
+                        )}
+                        />
+                </div>
+                </CardContent>
+            </Card>
+
+            <Card>
+                <CardHeader>
+                <CardTitle>Kelola Kata Sandi</CardTitle>
+                <CardDescription>
+                    {isEditing
+                    ? "Kosongkan jika Anda tidak ingin mengubah kata sandi."
+                    : "Buat kata sandi untuk pengguna baru."}
+                </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-6">
+                <FormField
+                    control={form.control}
+                    name="password"
+                    render={({ field }) => (
+                    <FormItem>
+                        <FormLabel>Kata Sandi Baru</FormLabel>
+                        <FormControl>
+                        <Input type="password" {...field} value={field.value ?? ''} />
+                        </FormControl>
+                        <FormMessage />
+                    </FormItem>
+                    )}
+                />
+                <FormField
+                    control={form.control}
+                    name="confirmPassword"
+                    render={({ field }) => (
+                    <FormItem>
+                        <FormLabel>Konfirmasi Kata Sandi Baru</FormLabel>
+                        <FormControl>
+                        <Input type="password" {...field} value={field.value ?? ''} />
+                        </FormControl>
+                        <FormMessage />
+                    </FormItem>
+                    )}
+                />
+                </CardContent>
+            </Card>
+            
+            <div className="flex justify-end">
+                <Button type="submit" disabled={form.formState.isSubmitting}>
+                {form.formState.isSubmitting && (
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                )}
+                {isEditing ? "Simpan Perubahan" : "Tambah Pengguna"}
+                </Button>
+            </div>
+            </form>
+        </Form>
+      </div>
+    </AdminLayout>
   );
 }

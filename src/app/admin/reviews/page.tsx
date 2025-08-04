@@ -23,7 +23,7 @@ import { ReviewFilters } from "@/components/organisms/admin/ReviewFilters";
 import type { Table } from "@tanstack/react-table";
 import { getReviews, deleteReview as deleteReviewAction } from "@/lib/actions";
 import { UnitReview } from "@/lib/definitions";
-import { Loader2 } from "lucide-react";
+import AdminLayout from "../admin-layout";
 
 export default function AllReviewsPage() {
   const { toast } = useToast();
@@ -110,7 +110,7 @@ export default function AllReviewsPage() {
       window.open(`/admin/reviews/export?${params.toString()}`, '_blank');
   }, [unitFilter, userFilter, date]);
 
-  const columns = useMemo(() => getColumns(handleViewDetail, handleDelete), []);
+  const columns = useMemo(() => getColumns(handleViewDetail, handleDelete), [handleViewDetail, handleDelete]);
 
   const setTableFilters = (table: Table<UnitReview>) => {
     const userColFilter = table.getColumn("user.name")?.getFilterValue() as string ?? "";
@@ -121,30 +121,32 @@ export default function AllReviewsPage() {
   };
 
   return (
-    <div className="container mx-auto py-2">
-      <DataTable 
-        columns={columns} 
-        data={reviews} 
-        isLoading={isLoading}
-        onFilterChange={setTableFilters}
-        filterComponent={<ReviewFilters date={date} setDate={setDate} onExport={handleExport} />}
-      />
-      <ReviewDetailDialog review={selectedReview} isOpen={isDetailOpen} onOpenChange={setIsDetailOpen} />
-      <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Apakah Anda yakin?</AlertDialogTitle>
-            <AlertDialogDescription>
-              Tindakan ini tidak dapat dibatalkan. Ini akan menghapus ulasan pengguna
-              secara permanen.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>Batal</AlertDialogCancel>
-            <AlertDialogAction onClick={confirmDelete} className="bg-destructive hover:bg-destructive/90">Hapus</AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
-    </div>
+    <AdminLayout>
+      <div className="container mx-auto py-2">
+        <DataTable 
+          columns={columns} 
+          data={reviews} 
+          isLoading={isLoading}
+          onFilterChange={setTableFilters}
+          filterComponent={<ReviewFilters date={date} setDate={setDate} onExport={handleExport} />}
+        />
+        <ReviewDetailDialog review={selectedReview} isOpen={isDetailOpen} onOpenChange={setIsDetailOpen} />
+        <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Apakah Anda yakin?</AlertDialogTitle>
+              <AlertDialogDescription>
+                Tindakan ini tidak dapat dibatalkan. Ini akan menghapus ulasan pengguna
+                secara permanen.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Batal</AlertDialogCancel>
+              <AlertDialogAction onClick={confirmDelete} className="bg-destructive hover:bg-destructive/90">Hapus</AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+      </div>
+    </AdminLayout>
   )
 }
