@@ -4,7 +4,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
@@ -52,10 +52,20 @@ const defaultValues: ReviewFormValues = {
 export default function ReviewForm() {
   const { toast } = useToast();
   const router = useRouter();
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const searchParams = useSearchParams();
-  const unit = searchParams.get('unit') || "Tidak Diketahui";
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  
+  const unitParam = searchParams.get('unit');
   const userId = searchParams.get('userId');
+  
+  // Use a state to hold the unit to prevent it from being lost
+  const [unit, setUnit] = useState(unitParam || "Tidak Diketahui");
+
+  useEffect(() => {
+    if (unitParam) {
+      setUnit(unitParam);
+    }
+  }, [unitParam]);
 
   const form = useForm<ReviewFormValues>({
     resolver: zodResolver(reviewFormSchema),
@@ -80,11 +90,11 @@ export default function ReviewForm() {
         
       form.reset(defaultValues);
       
-      // If user is logged in, redirect to history
+      // If user is logged in, redirect back to the same page with params
       if (userId) {
-        const params = new URLSearchParams();
-        params.set('userId', userId);
-        router.push(`/dashboard/history?${params.toString()}`);
+        const params = new URLSearchParams(searchParams.toString());
+        // No need to push, just refresh the state.
+        // We stay on the same page.
       }
 
     } catch (error) {

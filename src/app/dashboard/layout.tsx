@@ -16,15 +16,62 @@ import {
   SidebarTrigger,
   SidebarInset,
   SidebarGroup,
-  SidebarGroupLabel
+  SidebarGroupLabel,
+  useSidebar,
 } from "@/components/ui/sidebar";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { LogOut, TestTube, Eye, EyeOff, Loader2 } from "lucide-react";
+import { LogOut, TestTube, Eye, EyeOff, Loader2, PanelLeft } from "lucide-react";
 import { userMenuItems } from "@/lib/constants";
 import { getPageTitle } from "@/lib/utils";
 import { getUserById } from "@/lib/actions";
 import { User } from "@prisma/client";
+
+function DashboardHeaderContent() {
+  const { toggleSidebar } = useSidebar();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const pageTitle = getPageTitle(pathname);
+  const isAnonymous = !searchParams.get('userId');
+
+  const [isPatientMode, setIsPatientMode] = useState(false);
+  
+   if (isPatientMode) {
+      return (
+         <div className="flex flex-col min-h-screen">
+             <header className="flex h-20 items-center justify-between border-b bg-card px-6 sticky top-0 z-10">
+                <div className="flex items-center gap-3">
+                    <TestTube className="size-8 text-primary" />
+                    <span className="text-2xl font-semibold">PharmaFeedback</span>
+                </div>
+                <Button variant="outline" onClick={() => setIsPatientMode(false)}>
+                    <EyeOff className="mr-2"/>
+                    Tutup Mode Pasien
+                </Button>
+            </header>
+         </div>
+      )
+  }
+
+  return (
+    <header className="flex h-16 items-center gap-4 border-b bg-card px-6">
+      <SidebarTrigger className="md:hidden" />
+      <Button variant="ghost" size="icon" className="hidden md:inline-flex" onClick={() => toggleSidebar()}>
+          <PanelLeft />
+      </Button>
+      <div className="flex-1">
+        <h1 className="text-xl font-semibold">{pageTitle}</h1>
+      </div>
+      {isAnonymous && (
+        <Button onClick={() => setIsPatientMode(true)}>
+          <Eye className="mr-2" />
+          Beralih ke Mode Pasien
+        </Button>
+      )}
+    </header>
+  )
+}
+
 
 export default function DashboardLayout({
   children,
@@ -37,6 +84,7 @@ export default function DashboardLayout({
   
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isPatientMode, setIsPatientMode] = useState(false);
 
   const isAnonymous = !userId;
   const name = isAnonymous ? "Pasien Anonim" : currentUser?.name || "Pengguna";
@@ -55,7 +103,6 @@ export default function DashboardLayout({
   }, [userId]);
 
 
-  const [isPatientMode, setIsPatientMode] = useState(false);
   const pageTitle = getPageTitle(pathname);
   
    if (isLoading) {
@@ -146,18 +193,7 @@ export default function DashboardLayout({
         </SidebarFooter>
     </Sidebar>
     <SidebarInset>
-        <header className="flex h-16 items-center gap-4 border-b bg-card px-6">
-            <SidebarTrigger className="md:hidden" />
-            <div className="flex-1">
-                <h1 className="text-xl font-semibold">{pageTitle}</h1>
-            </div>
-            {isAnonymous && (
-                <Button onClick={() => setIsPatientMode(true)}>
-                    <Eye className="mr-2" />
-                    Beralih ke Mode Pasien
-                </Button>
-            )}
-        </header>
+        <DashboardHeaderContent />
         <main className="flex-1 overflow-y-auto p-4 md:p-6 bg-background/50">
         {children}
         </main>
