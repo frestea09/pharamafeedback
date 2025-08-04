@@ -1,8 +1,7 @@
 
 "use client";
 
-import { useState } from "react";
-import { User } from "@/lib/users";
+import { useState, useEffect, useCallback } from "react";
 import { DataTable } from "@/components/organisms/admin/DataTable";
 import { getColumns } from "./columns";
 import { Button } from "@/components/ui/button";
@@ -19,17 +18,38 @@ import {
 } from "@/components/ui/alert-dialog";
 import { useToast } from "@/hooks/use-toast";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useUserStore } from "@/store/userStore";
 import { UserFilters } from "@/components/organisms/admin/UserFilters";
+import { getUsers, deleteUser as deleteUserAction } from "@/lib/actions";
+import { User } from "@prisma/client";
 
 export default function AllUsersPage() {
-  const { users, deleteUser } = useUserStore();
+  const [users, setUsers] = useState<User[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const { toast } = useToast();
   const router = useRouter();
   const searchParams = useSearchParams();
   const unit = searchParams.get('unit');
+
+  const fetchUsers = useCallback(async () => {
+    setIsLoading(true);
+    try {
+      const fetchedUsers = await getUsers({ unit: unit || undefined });
+      setUsers(fetchedUsers);
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        title: "Gagal memuat pengguna",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  }, [unit, toast]);
+
+  useEffect(() => {
+    fetchUsers();
+  }, [fetchUsers]);
 
   const handleEditUser = (user: User) => {
     const queryParams = unit ? `?unit=${unit}` : '';
@@ -41,21 +61,27 @@ export default function AllUsersPage() {
     setIsDeleteDialogOpen(true);
   };
 
-  const confirmDelete = () => {
+  const confirmDelete = async () => {
     if (selectedUser) {
-      deleteUser(selectedUser.id);
-      toast({
-        title: "Pengguna Dihapus",
-        description: `Pengguna ${selectedUser.name} telah berhasil dihapus.`,
-      });
+      try {
+        await deleteUserAction(selectedUser.id);
+        toast({
+          title: "Pengguna Dihapus",
+          description: `Pengguna ${selectedUser.name} telah berhasil dihapus.`,
+        });
+        fetchUsers(); // Refresh
+      } catch (error) {
+        toast({
+          variant: "destructive",
+          title: "Gagal menghapus pengguna",
+        });
+      }
     }
     setIsDeleteDialogOpen(false);
     setSelectedUser(null);
   };
 
   const columns = getColumns({ onEdit: handleEditUser, onDelete: handleDeleteUser });
-  
-  const filteredUsers = unit ? users.filter(user => user.unit === unit || user.role !== 'Admin') : users;
 
   const handleAddUser = () => {
     const queryParams = unit ? `?unit=${unit}` : '';
@@ -66,7 +92,8 @@ export default function AllUsersPage() {
     <div className="container mx-auto py-2">
       <DataTable
         columns={columns}
-        data={filteredUsers}
+        data={users}
+        isLoading={isLoading}
         filterComponent={<UserFilters />}
       >
         <Button onClick={handleAddUser}>

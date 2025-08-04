@@ -1,8 +1,7 @@
 
 "use client";
 
-import { useState, useMemo, useCallback } from "react";
-import { UnitReview } from "@/store/reviewStore";
+import { useState, useMemo, useCallback, useEffect } from "react";
 import { DataTable } from "@/components/organisms/admin/DataTable";
 import { getColumns } from "./columns";
 import { ReviewDetailDialog } from "@/components/organisms/ReviewDetailDialog";
@@ -19,17 +18,20 @@ import {
 import { useToast } from "@/hooks/use-toast";
 import { useSearchParams } from "next/navigation";
 import { DateRange } from "react-day-picker";
-import { subDays, startOfDay, endOfDay } from "date-fns";
-import { useReviewStore } from "@/store/reviewStore";
+import { subDays } from "date-fns";
 import { ReviewFilters } from "@/components/organisms/admin/ReviewFilters";
 import type { Table } from "@tanstack/react-table";
+import { getReviews, deleteReview as deleteReviewAction } from "@/lib/actions";
+import { UnitReview } from "@/lib/definitions";
+import { Loader2 } from "lucide-react";
 
 export default function AllReviewsPage() {
-  const { reviews, deleteReview } = useReviewStore();
   const { toast } = useToast();
   const searchParams = useSearchParams();
-  const unit = searchParams.get('unit');
+  const adminUnit = searchParams.get('unit');
 
+  const [reviews, setReviews] = useState<UnitReview[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [date, setDate] = useState<DateRange | undefined>({
     from: subDays(new Date(), 30),
     to: new Date(),
@@ -39,22 +41,34 @@ export default function AllReviewsPage() {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   
   const [userFilter, setUserFilter] = useState('');
-  const [unitFilter, setUnitFilter] = useState<string | undefined>(unit || undefined);
+  const [unitFilter, setUnitFilter] = useState<string | undefined>(adminUnit || undefined);
 
-  const filteredReviews = useMemo(() => {
-    return reviews.filter(review => {
-      const reviewDate = new Date(review.date);
-      const unitMatch = unit ? review.unit === unit : true;
-      let dateMatch = true;
-      if (date?.from) {
-          dateMatch = reviewDate >= startOfDay(date.from);
-      }
-      if (date?.to) {
-          dateMatch = dateMatch && reviewDate <= endOfDay(date.to);
-      }
-      return unitMatch && dateMatch;
-    })
-  }, [reviews, unit, date]);
+  const fetchReviews = useCallback(async () => {
+    setIsLoading(true);
+    try {
+        const finalUnitFilter = adminUnit || (unitFilter && unitFilter !== 'Semua Unit' ? unitFilter : undefined);
+        const fetchedReviews = await getReviews({
+            unit: finalUnitFilter,
+            userName: userFilter || undefined,
+            from: date?.from,
+            to: date?.to,
+        });
+        setReviews(fetchedReviews);
+    } catch (error) {
+        toast({
+            variant: "destructive",
+            title: "Gagal memuat ulasan",
+            description: "Terjadi kesalahan saat mengambil data ulasan.",
+        });
+        console.error(error);
+    } finally {
+        setIsLoading(false);
+    }
+  }, [adminUnit, unitFilter, userFilter, date, toast]);
+
+  useEffect(() => {
+    fetchReviews();
+  }, [fetchReviews]);
   
   const handleViewDetail = (review: UnitReview) => {
     setSelectedReview(review);
@@ -66,13 +80,22 @@ export default function AllReviewsPage() {
     setIsDeleteDialogOpen(true);
   };
   
-  const confirmDelete = () => {
+  const confirmDelete = async () => {
     if (selectedReview) {
-      deleteReview(selectedReview.id);
-      toast({
-        title: "Ulasan Dihapus",
-        description: `Ulasan dari ${selectedReview.user} telah berhasil dihapus.`,
-      });
+      try {
+        await deleteReviewAction(selectedReview.id);
+        toast({
+          title: "Ulasan Dihapus",
+          description: `Ulasan dari ${selectedReview.user.name} telah berhasil dihapus.`,
+        });
+        fetchReviews(); // Re-fetch reviews to update the list
+      } catch (error) {
+         toast({
+          variant: "destructive",
+          title: "Gagal menghapus ulasan",
+          description: "Terjadi kesalahan saat menghapus data.",
+        });
+      }
     }
     setIsDeleteDialogOpen(false);
     setSelectedReview(null);
@@ -90,17 +113,19 @@ export default function AllReviewsPage() {
   const columns = useMemo(() => getColumns(handleViewDetail, handleDelete), []);
 
   const setTableFilters = (table: Table<UnitReview>) => {
-    const userColFilter = table.getColumn("user")?.getFilterValue() as string ?? "";
+    const userColFilter = table.getColumn("user.name")?.getFilterValue() as string ?? "";
     const unitColFilter = table.getColumn("unit")?.getFilterValue() as string ?? undefined;
-    if (userColFilter !== userFilter) setUserFilter(userColFilter);
-    if(unitColFilter !== unitFilter) setUnitFilter(unitColFilter);
+    
+    setUserFilter(userColFilter);
+    setUnitFilter(unitColFilter);
   };
 
   return (
     <div className="container mx-auto py-2">
       <DataTable 
         columns={columns} 
-        data={filteredReviews} 
+        data={reviews} 
+        isLoading={isLoading}
         onFilterChange={setTableFilters}
         filterComponent={<ReviewFilters date={date} setDate={setDate} onExport={handleExport} />}
       />

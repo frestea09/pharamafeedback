@@ -24,10 +24,12 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import { Button } from "@/components/ui/button"
+import { Loader2 } from "lucide-react"
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[]
+  isLoading: boolean
   children?: React.ReactNode
   filterComponent?: React.ReactElement<{ table: ReturnType<typeof useReactTable<TData>> }>;
   onFilterChange?: (table: ReturnType<typeof useReactTable<TData>>) => void;
@@ -36,6 +38,7 @@ interface DataTableProps<TData, TValue> {
 export function DataTable<TData, TValue>({
   columns,
   data,
+  isLoading,
   children,
   filterComponent,
   onFilterChange
@@ -60,7 +63,7 @@ export function DataTable<TData, TValue>({
     },
     initialState: {
         pagination: {
-            pageSize: 5,
+            pageSize: 10,
         }
     }
   })
@@ -74,8 +77,10 @@ export function DataTable<TData, TValue>({
 
   return (
     <div>
-        <div className="flex items-center justify-between py-4">
-            {filterComponent && React.cloneElement(filterComponent, { table })}
+        <div className="flex items-center justify-between py-4 gap-2">
+            <div className="flex-grow">
+                {filterComponent && React.cloneElement(filterComponent, { table })}
+            </div>
             {children}
         </div>
         <div className="rounded-md border">
@@ -99,7 +104,13 @@ export function DataTable<TData, TValue>({
             ))}
             </TableHeader>
             <TableBody>
-            {table.getRowModel().rows?.length ? (
+            {isLoading ? (
+              <TableRow>
+                <TableCell colSpan={columns.length} className="h-24 text-center">
+                  <Loader2 className="mx-auto h-6 w-6 animate-spin" />
+                </TableCell>
+              </TableRow>
+            ) : table.getRowModel().rows?.length ? (
                 table.getRowModel().rows.map((row) => (
                 <TableRow
                     key={row.id}

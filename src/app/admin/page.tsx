@@ -18,7 +18,7 @@ import { Label } from "@/components/ui/label";
 import { TestTube } from "lucide-react";
 import { Eye, EyeOff, Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { useUserStore } from "@/store/userStore";
+import { validateUser } from "@/lib/actions";
 
 export default function AdminLoginPage() {
   const [showPassword, setShowPassword] = useState(false);
@@ -27,27 +27,29 @@ export default function AdminLoginPage() {
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
   const { toast } = useToast();
-  const { getUserByEmail } = useUserStore();
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
 
-    setTimeout(() => {
-      const user = getUserByEmail(email);
+    try {
+      const user = await validateUser(email, password);
       
-      if (user && user.role === 'Admin' && user.password === password) {
+      if (user && user.role === 'Admin') {
         const queryParams = user.unit ? `?unit=${encodeURIComponent(user.unit)}` : '';
         router.push(`/admin/dashboard${queryParams}`);
       } else {
-        toast({
+        throw new Error("Invalid credentials or not an admin.");
+      }
+    } catch (error) {
+       toast({
           variant: "destructive",
           title: "Login Gagal",
-          description: "Email atau kata sandi yang Anda masukkan salah.",
+          description: "Email atau kata sandi salah, atau Anda bukan Admin.",
         });
-      }
+    } finally {
       setIsLoading(false);
-    }, 1000);
+    }
   };
 
   return (

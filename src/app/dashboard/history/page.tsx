@@ -1,21 +1,35 @@
 
 "use client";
 
-import { useState, useMemo } from "react";
-import { useReviewStore, UnitReview } from "@/store/reviewStore";
+import { useState, useMemo, useEffect } from "react";
 import { DataTable } from "@/components/organisms/admin/DataTable";
 import { getColumns } from "./columns";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { ReviewDetailDialog } from "@/components/organisms/ReviewDetailDialog";
 import { useSearchParams } from "next/navigation";
+import { getReviews } from "@/lib/actions";
+import { UnitReview } from "@/lib/definitions";
+import { Loader2 } from "lucide-react";
 
 export default function HistoryPage() {
-  const { reviews } = useReviewStore();
+  const [reviews, setReviews] = useState<UnitReview[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [selectedReview, setSelectedReview] = useState<UnitReview | null>(null);
   const [isDetailOpen, setIsDetailOpen] = useState(false);
   const searchParams = useSearchParams();
-  const name = searchParams.get('name') || "Pengguna";
+  const userId = searchParams.get('userId');
 
+  useEffect(() => {
+    if (userId) {
+      setIsLoading(true);
+      getReviews({ userId })
+        .then(data => setReviews(data))
+        .catch(err => console.error("Failed to fetch history:", err))
+        .finally(() => setIsLoading(false));
+    } else {
+        setIsLoading(false);
+    }
+  }, [userId]);
 
   const handleViewDetail = (review: UnitReview) => {
     setSelectedReview(review);
@@ -23,10 +37,6 @@ export default function HistoryPage() {
   };
   
   const columns = useMemo(() => getColumns(handleViewDetail), []);
-
-  const userReviews = reviews
-    .filter(review => review.user === name)
-    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
   return (
     <>
@@ -36,7 +46,7 @@ export default function HistoryPage() {
               <CardDescription>Berikut adalah semua umpan balik yang telah Anda berikan.</CardDescription>
           </CardHeader>
           <CardContent>
-              <DataTable columns={columns} data={userReviews} />
+              <DataTable columns={columns} data={reviews} isLoading={isLoading} />
           </CardContent>
       </Card>
       <ReviewDetailDialog review={selectedReview} isOpen={isDetailOpen} onOpenChange={setIsDetailOpen} />

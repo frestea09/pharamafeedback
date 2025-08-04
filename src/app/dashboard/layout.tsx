@@ -3,7 +3,7 @@
 
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   SidebarProvider,
   Sidebar,
@@ -20,10 +20,11 @@ import {
 } from "@/components/ui/sidebar";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { LogOut, TestTube, Eye, EyeOff } from "lucide-react";
-import { useUserStore } from "@/store/userStore";
+import { LogOut, TestTube, Eye, EyeOff, Loader2 } from "lucide-react";
 import { userMenuItems } from "@/lib/constants";
 import { getPageTitle } from "@/lib/utils";
+import { getUserById } from "@/lib/actions";
+import { User } from "@prisma/client";
 
 export default function DashboardLayout({
   children,
@@ -32,16 +33,39 @@ export default function DashboardLayout({
 }) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const name = searchParams.get('name') || "Pengguna";
-  const emailParam = searchParams.get('email');
+  const userId = searchParams.get('userId');
   
-  const { getUserByEmail } = useUserStore();
-  const currentUser = emailParam ? getUserByEmail(emailParam) : null;
-  const isAnonymous = name === "Pasien Anonim";
+  const [currentUser, setCurrentUser] = useState<User | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  const isAnonymous = !userId;
+  const name = isAnonymous ? "Pasien Anonim" : currentUser?.name || "Pengguna";
+
+  useEffect(() => {
+      if(userId) {
+        setIsLoading(true);
+        getUserById(userId)
+        .then(user => {
+            if (user) setCurrentUser(user);
+        })
+        .finally(() => setIsLoading(false));
+      } else {
+        setIsLoading(false);
+      }
+  }, [userId]);
+
 
   const [isPatientMode, setIsPatientMode] = useState(false);
   const pageTitle = getPageTitle(pathname);
   
+   if (isLoading) {
+    return (
+      <div className="flex h-screen items-center justify-center">
+        <Loader2 className="h-10 w-10 animate-spin text-primary" />
+      </div>
+    );
+  }
+
   if (isPatientMode) {
       return (
          <div className="flex flex-col min-h-screen">
@@ -65,12 +89,7 @@ export default function DashboardLayout({
   }
 
   const getSidebarParams = () => {
-    const params = new URLSearchParams();
-    params.set('name', name);
-    if(currentUser) {
-      params.set('email', currentUser.email);
-    }
-    return params.toString();
+    return new URLSearchParams(searchParams.toString());
   }
 
   return (
@@ -116,7 +135,7 @@ export default function DashboardLayout({
         </SidebarMenu>
         <div className="flex items-center gap-3 p-2 rounded-md bg-sidebar-accent">
              <Avatar className="h-10 w-10">
-                <AvatarImage src={currentUser?.avatar} alt={name} data-ai-hint="person" />
+                <AvatarImage src={currentUser?.avatar || undefined} alt={name} data-ai-hint="person" />
                 <AvatarFallback>{name.split(" ").map(n => n[0]).join("")}</AvatarFallback>
             </Avatar>
             <div className="flex flex-col">

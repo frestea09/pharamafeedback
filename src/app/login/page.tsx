@@ -19,47 +19,45 @@ import { TestTube } from "lucide-react";
 import { Eye, EyeOff, Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { serviceUnits } from "@/lib/constants";
+import { validateUser } from "@/lib/actions";
 
 export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("pegawai123");
+  const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
   const { toast } = useToast();
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
 
-    setTimeout(() => {
-      let unit = "";
-      const lowerCaseEmail = email.toLowerCase();
-      
-      // Example: pegawai.farmasi@sim.rs -> farmasi
-      if (lowerCaseEmail.startsWith("pegawai.")) {
-          const unitIdentifier = lowerCaseEmail.split('@')[0].split('.')[1];
-          // Find the full unit name from the identifier
-          const matchedUnit = serviceUnits.find(u => 
-            u.toLowerCase().replace(/[^a-z0-9]/g, '').includes(unitIdentifier)
-          );
-          if (matchedUnit) {
-            unit = matchedUnit;
-          }
+    try {
+       // Example: pegawai.farmasi@sim.rs -> finds a unit containing "farmasi"
+      const unitIdentifier = email.toLowerCase().split('@')[0].split('.')[1];
+      const matchedUnit = serviceUnits.find(u => 
+        u.toLowerCase().replace(/[^a-z0-9]/g, '').includes(unitIdentifier)
+      );
+
+      if (!matchedUnit) {
+        throw new Error("Unit tidak ditemukan dari email pegawai.");
       }
 
-      if (password === "pegawai123" && unit) {
-        const name = "Pasien Anonim";
-        router.push(`/dashboard?unit=${encodeURIComponent(unit)}&name=${encodeURIComponent(name)}`);
-      } else {
-        toast({
-          variant: "destructive",
-          title: "Login Gagal",
-          description: "Kredensial salah atau format email tidak sesuai (cth: pegawai.farmasi@sim.rs).",
-        });
-      }
+      // We are not validating password for kiosk mode for this demo
+      // In a real app, you would validate the pegawai's credentials
+      // For now, we'll just push to the dashboard with the unit.
+      router.push(`/dashboard?unit=${encodeURIComponent(matchedUnit)}`);
+
+    } catch (error: any) {
+      toast({
+        variant: "destructive",
+        title: "Login Gagal",
+        description: error.message || "Kredensial salah atau format email tidak sesuai (cth: pegawai.farmasi@sim.rs).",
+      });
+    } finally {
       setIsLoading(false);
-    }, 1000);
+    }
   };
 
   return (

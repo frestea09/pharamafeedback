@@ -33,12 +33,12 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
-import { useUserStore } from "@/store/userStore";
 import { Loader2, ArrowLeft } from "lucide-react";
 import Link from "next/link";
-import { User } from "@/lib/users";
 import { serviceUnits } from "@/lib/constants";
 import { Combobox } from "@/components/ui/combobox";
+import { getUserById, createUser, updateUser } from "@/lib/actions";
+import { User } from "@prisma/client";
 
 const formSchema = z
   .object({
@@ -75,7 +75,6 @@ export default function UserFormPage() {
   const params = useParams();
   const searchParams = useSearchParams();
   const { toast } = useToast();
-  const { getUserById, addUser, updateUser } = useUserStore();
 
   const [isLoading, setIsLoading] = useState(true);
   const [user, setUser] = useState<User | null>(null);
@@ -99,70 +98,87 @@ export default function UserFormPage() {
   });
 
   useEffect(() => {
-    if (isEditing) {
-      const existingUser = getUserById(id);
-      if (existingUser) {
-        setUser(existingUser);
-        form.reset({
-          name: existingUser.name,
-          email: existingUser.email,
-          role: existingUser.role,
-          unit: existingUser.unit || "none",
-          password: "",
-          confirmPassword: "",
-        });
-      } else {
-        toast({
-          variant: "destructive",
-          title: "Pengguna Tidak Ditemukan",
-          description: "Pengguna yang Anda coba edit tidak ada.",
-        });
-        router.push("/admin/users");
-      }
-    }
-    setIsLoading(false);
-  }, [id, isEditing, router, form, toast, getUserById]);
-
-  const onSubmit = (values: UserFormValues) => {
-    const unitValue = values.unit !== "none" ? values.unit : undefined;
-    
-    const finalUnit = loggedInAdminUnit || unitValue;
-
-    const userData: Partial<User> = {
-      name: values.name,
-      email: values.email,
-      role: values.role,
-      unit: finalUnit,
-    };
-    
-    const passwordChanged = values.password && values.password.length > 0;
-    if (passwordChanged) {
-        userData.password = values.password;
-    }
-
-    const queryParams = loggedInAdminUnit ? `?unit=${loggedInAdminUnit}` : '';
-
-    if (isEditing && user) {
-      updateUser({
-        ...user,
-        ...userData,
-      });
-      toast({
-        title: "Pengguna Diperbarui",
-        description: `Data untuk ${values.name} telah berhasil diperbarui. ${passwordChanged ? 'Kata sandi juga telah diubah.' : ''}`,
-      });
-    } else {
-        if (!values.password) {
-            form.setError("password", { message: "Kata sandi wajib diisi untuk pengguna baru." });
-            return;
+    async function fetchUser() {
+      if (isEditing) {
+        try {
+          const existingUser = await getUserById(id);
+          if (existingUser) {
+            setUser(existingUser);
+            form.reset({
+              name: existingUser.name,
+              email: existingUser.email,
+              role: existingUser.role,
+              unit: existingUser.unit || "none",
+              password: "",
+              confirmPassword: "",
+            });
+          } else {
+             toast({
+              variant: "destructive",
+              title: "Pengguna Tidak Ditemukan",
+            });
+            router.push("/admin/users");
+          }
+        } catch (error) {
+           toast({
+              variant: "destructive",
+              title: "Gagal Memuat Pengguna",
+            });
+            router.push("/admin/users");
         }
-      addUser(userData as Omit<User, 'id' | 'lastLogin' | 'avatar'>);
-      toast({
-        title: "Pengguna Ditambahkan",
-        description: `${values.name} telah berhasil ditambahkan sebagai pengguna baru.`,
-      });
+      }
+      setIsLoading(false);
     }
-    router.push(`/admin/users${queryParams}`);
+    fetchUser();
+  }, [id, isEditing, router, form, toast]);
+
+  const onSubmit = async (values: UserFormValues) => {
+    try {
+        const unitValue = values.unit !== "none" ? values.unit : undefined;
+        const finalUnit = loggedInAdminUnit || unitValue;
+
+        const userData = {
+            name: values.name,
+            email: values.email,
+            role: values.role,
+            unit: finalUnit,
+            password: values.password,
+        };
+        
+        const queryParams = loggedInAdminUnit ? `?unit=${loggedInAdminUnit}` : '';
+
+        if (isEditing && user) {
+            await updateUser(user.id, {
+              name: values.name,
+              email: values.email,
+              role: values.role,
+              unit: finalUnit,
+              password: values.password || undefined
+            });
+            toast({
+                title: "Pengguna Diperbarui",
+                description: `Data untuk ${values.name} telah berhasil diperbarui.`,
+            });
+        } else {
+            if (!values.password) {
+                form.setError("password", { message: "Kata sandi wajib diisi untuk pengguna baru." });
+                return;
+            }
+            await createUser(userData);
+            toast({
+                title: "Pengguna Ditambahkan",
+                description: `${values.name} telah berhasil ditambahkan sebagai pengguna baru.`,
+            });
+        }
+        router.push(`/admin/users${queryParams}`);
+        router.refresh();
+    } catch (error) {
+       toast({
+          variant: "destructive",
+          title: "Terjadi Kesalahan",
+          description: "Gagal menyimpan data pengguna.",
+        });
+    }
   };
 
   if (isLoading) {

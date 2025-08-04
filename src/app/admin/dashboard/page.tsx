@@ -1,28 +1,51 @@
 
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import AnalyticsDashboard from "@/components/organisms/admin/AnalyticsDashboard";
 import { useSearchParams } from "next/navigation";
 import { Label } from "@/components/ui/label";
 import { DateRange } from "react-day-picker";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
-import { Calendar as CalendarIcon } from "lucide-react";
+import { Calendar as CalendarIcon, Loader2 } from "lucide-react";
 import { format } from "date-fns";
 import { id } from "date-fns/locale";
 import { Calendar } from "@/components/ui/calendar";
 import { cn } from "@/lib/utils";
 import { subDays } from "date-fns";
-
+import { getReviews } from "@/lib/actions";
+import { UnitReview } from "@/lib/definitions";
 
 export default function AdminDashboardPage() {
   const searchParams = useSearchParams();
   const unit = searchParams.get('unit');
+  const [reviews, setReviews] = useState<UnitReview[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [date, setDate] = useState<DateRange | undefined>({
     from: subDays(new Date(), 30),
     to: new Date(),
   });
+
+  useEffect(() => {
+    const fetchReviews = async () => {
+      setIsLoading(true);
+      try {
+        const fetchedReviews = await getReviews({
+          unit: unit || undefined,
+          from: date?.from,
+          to: date?.to,
+        });
+        setReviews(fetchedReviews);
+      } catch (error) {
+        console.error("Failed to fetch reviews:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchReviews();
+  }, [unit, date]);
 
   return (
     <div className="space-y-6">
@@ -66,7 +89,13 @@ export default function AdminDashboardPage() {
             </PopoverContent>
           </Popover>
        </div>
-      <AnalyticsDashboard unit={unit} period={date} />
+       {isLoading ? (
+          <div className="flex justify-center items-center h-96">
+            <Loader2 className="h-8 w-8 animate-spin text-primary" />
+          </div>
+        ) : (
+         <AnalyticsDashboard reviews={reviews} />
+       )}
     </div>
   );
 }

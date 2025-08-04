@@ -2,7 +2,7 @@
 "use client"
 
 import { ColumnDef } from "@tanstack/react-table"
-import { UnitReview } from "@/store/reviewStore"
+import { UnitReview } from "@/lib/definitions"
 import { Badge } from "@/components/ui/badge"
 import { format } from "date-fns"
 import { id } from "date-fns/locale"
@@ -59,32 +59,32 @@ export const getColumns = (
     header: "Unit",
   },
   {
-    accessorKey: "ratings.serviceSpeed",
+    accessorKey: "serviceSpeed",
     header: "Kecepatan",
-     cell: ({ row }) => getSpeedBadge(row.original.ratings.serviceSpeed),
+     cell: ({ row }) => getSpeedBadge(row.original.serviceSpeed as 'slow' | 'medium' | 'fast'),
   },
   {
     accessorKey: "rawCompleteness",
     header: "Kelengkapan",
-    cell: ({ row }) => getCompletenessBadge(row.original.rawCompleteness),
+    cell: ({ row }) => getCompletenessBadge(row.original.rawCompleteness as 'complete' | 'incomplete' | 'not_applicable'),
   },
   {
-    accessorKey: "ratings.serviceQuality",
+    accessorKey: "serviceQuality",
     header: "Kualitas",
      cell: ({ row }) => (
         <div className="flex items-center gap-1">
-            <StarRating value={row.original.ratings.serviceQuality} onChange={() => {}} size={16} />
-            <span className="text-muted-foreground">({row.original.ratings.serviceQuality}/5)</span>
+            <StarRating value={row.original.serviceQuality} onChange={() => {}} size={16} />
+            <span className="text-muted-foreground">({row.original.serviceQuality}/5)</span>
         </div>
      )
   },
   {
-    accessorKey: "ratings.staffFriendliness",
+    accessorKey: "staffFriendliness",
     header: "Keramahan",
      cell: ({ row }) => (
          <div className="flex items-center gap-1">
-            <StarRating value={row.original.ratings.staffFriendliness} onChange={() => {}} size={16} />
-            <span className="text-muted-foreground">({row.original.ratings.staffFriendliness}/5)</span>
+            <StarRating value={row.original.staffFriendliness} onChange={() => {}} size={16} />
+            <span className="text-muted-foreground">({row.original.staffFriendliness}/5)</span>
         </div>
      )
   },

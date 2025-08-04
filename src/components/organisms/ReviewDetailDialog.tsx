@@ -10,12 +10,12 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { UnitReview } from "@/store/reviewStore";
 import { Badge } from "../ui/badge";
 import { StarRating } from "../atoms/StarRating";
 import { format } from "date-fns";
 import { id } from "date-fns/locale";
 import { ThumbsUp, ThumbsDown, HelpCircle, Rocket, Turtle, Smile, Clock } from "lucide-react";
+import { UnitReview } from "@/lib/definitions";
 
 interface ReviewDetailDialogProps {
   review: UnitReview | null;
@@ -23,7 +23,7 @@ interface ReviewDetailDialogProps {
   onOpenChange: (isOpen: boolean) => void;
 }
 
-const getSpeedBadge = (speed: 'slow' | 'medium' | 'fast', showIcon = false) => {
+const getSpeedBadge = (speed: string, showIcon = false) => {
     switch (speed) {
       case 'slow':
         return <Badge variant="destructive" className="gap-1.5"><Turtle className="h-4 w-4" />Lambat</Badge>;
@@ -36,7 +36,7 @@ const getSpeedBadge = (speed: 'slow' | 'medium' | 'fast', showIcon = false) => {
     }
 };
 
-const getCompletenessBadge = (status: 'complete' | 'incomplete' | 'not_applicable') => {
+const getCompletenessBadge = (status: string) => {
     switch(status) {
         case 'complete':
             return <Badge className="bg-green-500 gap-1.5"><ThumbsUp className="h-4 w-4" /> Lengkap</Badge>;
@@ -56,7 +56,7 @@ export function ReviewDetailDialog({ review, isOpen, onOpenChange }: ReviewDetai
         <DialogHeader>
           <DialogTitle>Detail Ulasan</DialogTitle>
           <DialogDescription>
-            Ulasan dari <strong>{review.user}</strong> untuk unit <strong>{review.unit}</strong> pada tanggal {format(new Date(review.date), "d MMMM yyyy", { locale: id })}.
+            Ulasan dari <strong>{review.user.name}</strong> untuk unit <strong>{review.unit}</strong> pada tanggal {format(new Date(review.date), "d MMMM yyyy", { locale: id })}.
           </DialogDescription>
         </DialogHeader>
         <div className="grid gap-6 py-4">
@@ -64,22 +64,22 @@ export function ReviewDetailDialog({ review, isOpen, onOpenChange }: ReviewDetai
             <div className="flex flex-col gap-2">
                 <span className="font-semibold text-sm">Kualitas Pelayanan</span>
                 <div className="flex items-center gap-2">
-                    <StarRating value={review.ratings.serviceQuality} onChange={() => {}} size={20} />
-                    <span className="text-muted-foreground">({review.ratings.serviceQuality}/5)</span>
+                    <StarRating value={review.serviceQuality} onChange={() => {}} size={20} />
+                    <span className="text-muted-foreground">({review.serviceQuality}/5)</span>
                 </div>
             </div>
             <div className="flex flex-col gap-2">
                 <span className="font-semibold text-sm">Keramahan Staf</span>
                 <div className="flex items-center gap-2">
-                    <StarRating value={review.ratings.staffFriendliness} onChange={() => {}} size={20} />
-                    <span className="text-muted-foreground">({review.ratings.staffFriendliness}/5)</span>
+                    <StarRating value={review.staffFriendliness} onChange={() => {}} size={20} />
+                    <span className="text-muted-foreground">({review.staffFriendliness}/5)</span>
                 </div>
             </div>
           </div>
            <div className="grid grid-cols-2 gap-4">
             <div className="flex flex-col gap-2">
                 <span className="font-semibold text-sm">Kecepatan Pelayanan</span>
-                {getSpeedBadge(review.ratings.serviceSpeed)}
+                {getSpeedBadge(review.serviceSpeed)}
             </div>
              <div className="flex flex-col gap-2">
                 <span className="font-semibold text-sm">Kelengkapan</span>

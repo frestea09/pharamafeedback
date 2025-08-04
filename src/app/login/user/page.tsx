@@ -18,7 +18,7 @@ import { Label } from "@/components/ui/label";
 import { TestTube } from "lucide-react";
 import { Eye, EyeOff, Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { useUserStore } from "@/store/userStore";
+import { validateUser } from "@/lib/actions";
 
 export default function UserLoginPage() {
   const [showPassword, setShowPassword] = useState(false);
@@ -27,28 +27,33 @@ export default function UserLoginPage() {
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
   const { toast } = useToast();
-  const { getUserByEmail } = useUserStore();
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
 
-    setTimeout(() => {
-      const user = getUserByEmail(email);
+    try {
+      const user = await validateUser(email, password);
 
-      if (user && user.password === password) { 
-        const unit = user.unit || "Layanan";
-        const name = user.name;
-        router.push(`/dashboard?unit=${encodeURIComponent(unit)}&name=${encodeURIComponent(name)}&email=${encodeURIComponent(user.email)}`);
+      if (user) { 
+        const params = new URLSearchParams();
+        params.set('userId', user.id);
+        if (user.unit) {
+          params.set('unit', user.unit);
+        }
+        router.push(`/dashboard?${params.toString()}`);
       } else {
-        toast({
+        throw new Error("Invalid credentials");
+      }
+    } catch (error) {
+       toast({
           variant: "destructive",
           title: "Login Gagal",
           description: "Email atau kata sandi salah.",
         });
+    } finally {
         setIsLoading(false);
-      }
-    }, 1000);
+    }
   };
 
   return (

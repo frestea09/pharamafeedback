@@ -8,7 +8,6 @@ import { useSearchParams } from "next/navigation";
 export default function DashboardPage() {
   const searchParams = useSearchParams();
   const unit = searchParams.get('unit') || "Layanan";
-  const name = searchParams.get('name');
 
   return (
     <div className="grid grid-cols-1 gap-8">

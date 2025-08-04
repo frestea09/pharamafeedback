@@ -2,7 +2,6 @@
 "use client"
 
 import { ColumnDef } from "@tanstack/react-table"
-import { User } from "@/lib/users"
 import { Badge } from "@/components/ui/badge"
 import { formatDistanceToNow } from "date-fns"
 import { id } from "date-fns/locale"
@@ -10,6 +9,7 @@ import { Button } from "@/components/ui/button"
 import { ArrowUpDown, MoreHorizontal, Pencil, Trash2 } from "lucide-react"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { User } from "@prisma/client"
 
 type UserActionsProps = {
   onEdit: (user: User) => void;
@@ -35,7 +35,7 @@ export const getColumns = ({ onEdit, onDelete }: UserActionsProps): ColumnDef<Us
         return (
             <div className="flex items-center gap-2">
                 <Avatar className="h-8 w-8">
-                    <AvatarImage src={user.avatar} alt={user.name} data-ai-hint="person" />
+                    <AvatarImage src={user.avatar || undefined} alt={user.name} data-ai-hint="person" />
                     <AvatarFallback>{user.name.split(" ").map(n => n[0]).join("")}</AvatarFallback>
                 </Avatar>
                 <span className="font-medium">{user.name}</span>
@@ -77,9 +77,9 @@ export const getColumns = ({ onEdit, onDelete }: UserActionsProps): ColumnDef<Us
     },
   },
   {
-    accessorKey: "lastLogin",
-    header: "Login Terakhir",
-    cell: ({ row }) => formatDistanceToNow(new Date(row.getValue("lastLogin")), { addSuffix: true, locale: id }),
+    accessorKey: "updatedAt",
+    header: "Terakhir Diperbarui",
+    cell: ({ row }) => formatDistanceToNow(new Date(row.getValue("updatedAt")), { addSuffix: true, locale: id }),
   },
   {
     id: "actions",

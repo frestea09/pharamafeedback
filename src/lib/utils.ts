@@ -1,7 +1,7 @@
 
 import { type ClassValue, clsx } from "clsx"
 import { twMerge } from "tailwind-merge"
-import { UnitReview } from "@/store/reviewStore";
+import { UnitReview } from "@/lib/definitions";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -44,8 +44,8 @@ export const getRatingColor = (rating: number): "destructive" | "secondary" | "d
 
 export const calculateAverages = (reviews: UnitReview[]) => {
   if (!reviews.length) return { quality: 0, friendliness: 0 };
-  const totalQuality = reviews.reduce((sum, r) => sum + r.ratings.serviceQuality, 0);
-  const totalFriendliness = reviews.reduce((sum, r) => sum + r.ratings.staffFriendliness, 0);
+  const totalQuality = reviews.reduce((sum, r) => sum + r.serviceQuality, 0);
+  const totalFriendliness = reviews.reduce((sum, r) => sum + r.staffFriendliness, 0);
   return {
       quality: totalQuality / reviews.length,
       friendliness: totalFriendliness / reviews.length,

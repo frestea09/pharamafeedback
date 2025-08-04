@@ -17,14 +17,12 @@ import {
   ChartLegend,
   ChartLegendContent,
 } from "@/components/ui/chart";
-import { useReviewStore, UnitReview } from "@/store/reviewStore";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { formatDistanceToNow, startOfDay, endOfDay } from "date-fns";
+import { formatDistanceToNow } from "date-fns";
 import { id } from "date-fns/locale";
 import { ThumbsUp, ThumbsDown, HelpCircle, FileX } from "lucide-react";
-import { DateRange } from "react-day-picker";
-
+import { UnitReview } from "@/lib/definitions";
 
 const speedMapping: { [key: string]: number } = { slow: 1, medium: 3, fast: 5 };
 
@@ -39,33 +37,13 @@ const chartConfig = {
 const COLORS = ["#FF8042", "#FFBB28", "#00C49F", "#0088FE", "#8884d8" ];
 
 interface AnalyticsDashboardProps {
-  unit: string | null;
-  period: DateRange | undefined;
+  reviews: UnitReview[];
 }
 
-export default function AnalyticsDashboard({ unit, period }: AnalyticsDashboardProps) {
-  const { reviews } = useReviewStore();
-  
-  const filteredReviews = useMemo(() => {
-    return reviews.filter(review => {
-        const reviewDate = new Date(review.date);
-        const unitMatch = unit ? review.unit === unit : true;
-        
-        let dateMatch = true;
-        if (period?.from) {
-            dateMatch = reviewDate >= startOfDay(period.from);
-        }
-        if (period?.to) {
-            dateMatch = dateMatch && reviewDate <= endOfDay(period.to);
-        }
-        
-        return unitMatch && dateMatch;
-    });
-
-  }, [reviews, unit, period]);
+export default function AnalyticsDashboard({ reviews }: AnalyticsDashboardProps) {
 
   const averageRatings = useMemo(() => {
-    if (!filteredReviews.length) {
+    if (!reviews.length) {
       return [
         { name: "Kualitas", average: 0, fill: "var(--color-quality)" },
         { name: "Keramahan", average: 0, fill: "var(--color-friendliness)" },
@@ -77,12 +55,12 @@ export default function AnalyticsDashboard({ unit, period }: AnalyticsDashboardP
       serviceQuality: 0,
       staffFriendliness: 0,
     };
-    const count = filteredReviews.length;
+    const count = reviews.length;
 
-    for (const review of filteredReviews) {
-      totals.serviceSpeed += speedMapping[review.ratings.serviceSpeed];
-      totals.serviceQuality += review.ratings.serviceQuality;
-      totals.staffFriendliness += review.ratings.staffFriendliness;
+    for (const review of reviews) {
+      totals.serviceSpeed += speedMapping[review.serviceSpeed];
+      totals.serviceQuality += review.serviceQuality;
+      totals.staffFriendliness += review.staffFriendliness;
     }
 
     return [
@@ -93,7 +71,7 @@ export default function AnalyticsDashboard({ unit, period }: AnalyticsDashboardP
         const order = ["Kualitas", "Keramahan", "Kecepatan"];
         return order.indexOf(a.name) - order.indexOf(b.name);
     });
-  }, [filteredReviews]);
+  }, [reviews]);
 
   const serviceQualityDistribution = useMemo(() => {
     const distribution = [
@@ -103,14 +81,14 @@ export default function AnalyticsDashboard({ unit, period }: AnalyticsDashboardP
         { name: '4 Bintang', count: 0 },
         { name: '5 Bintang', count: 0 },
     ];
-    filteredReviews.forEach(review => {
-        const rating = review.ratings.serviceQuality;
+    reviews.forEach(review => {
+        const rating = review.serviceQuality;
         if (rating >= 1 && rating <= 5) {
             distribution[rating-1].count++;
         }
     });
     return distribution.filter(item => item.count > 0);
-  }, [filteredReviews]);
+  }, [reviews]);
 
 
   const getRatingColor = (rating: number) => {
@@ -119,7 +97,7 @@ export default function AnalyticsDashboard({ unit, period }: AnalyticsDashboardP
     return "default";
   };
   
-  const getSpeedBadge = (speed: 'slow' | 'medium' | 'fast') => {
+  const getSpeedBadge = (speed: string) => {
     switch (speed) {
       case 'slow':
         return <Badge variant="destructive">Lambat</Badge>;
@@ -132,7 +110,7 @@ export default function AnalyticsDashboard({ unit, period }: AnalyticsDashboardP
     }
   };
 
-   const getCompletenessBadge = (status: 'complete' | 'incomplete' | 'not_applicable') => {
+   const getCompletenessBadge = (status: string) => {
     switch(status) {
         case 'complete':
             return <Badge className="bg-green-500 gap-1.5"><ThumbsUp className="h-3 w-3" /> Lengkap</Badge>;
@@ -143,7 +121,7 @@ export default function AnalyticsDashboard({ unit, period }: AnalyticsDashboardP
     }
   };
 
-  if (filteredReviews.length === 0) {
+  if (reviews.length === 0) {
     return (
         <Card className="col-span-full flex flex-col items-center justify-center h-96">
             <CardHeader className="text-center">
@@ -237,19 +215,19 @@ export default function AnalyticsDashboard({ unit, period }: AnalyticsDashboardP
               </TableRow>
             </TableHeader>
             <TableBody>
-              {filteredReviews.slice(0, 5).map((review) => (
+              {reviews.slice(0, 5).map((review) => (
                 <TableRow key={review.id}>
-                  <TableCell className="font-medium">{review.user}</TableCell>
+                  <TableCell className="font-medium">{review.user.name}</TableCell>
                   <TableCell>{review.unit}</TableCell>
                   <TableCell className="text-muted-foreground">{formatDistanceToNow(new Date(review.date), { addSuffix: true, locale: id })}</TableCell>
                   <TableCell className="text-center">
-                     <Badge variant={getRatingColor(review.ratings.serviceQuality)}>{review.ratings.serviceQuality}/5</Badge>
+                     <Badge variant={getRatingColor(review.serviceQuality)}>{review.serviceQuality}/5</Badge>
                   </TableCell>
                   <TableCell className="text-center">
-                     <Badge variant={getRatingColor(review.ratings.staffFriendliness)}>{review.ratings.staffFriendliness}/5</Badge>
+                     <Badge variant={getRatingColor(review.staffFriendliness)}>{review.staffFriendliness}/5</Badge>
                   </TableCell>
                   <TableCell className="text-center">
-                    {getSpeedBadge(review.ratings.serviceSpeed)}
+                    {getSpeedBadge(review.serviceSpeed)}
                   </TableCell>
                   <TableCell className="text-center">
                     {getCompletenessBadge(review.rawCompleteness)}

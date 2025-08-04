@@ -2,7 +2,7 @@
 "use client"
 
 import { ColumnDef } from "@tanstack/react-table"
-import { UnitReview } from "@/store/reviewStore"
+import { UnitReview } from "@/lib/definitions"
 import { format } from "date-fns"
 import { id } from "date-fns/locale"
 import { Button } from "@/components/ui/button"
@@ -40,7 +40,7 @@ export const getColumns = (
   onDelete: (review: UnitReview) => void
 ): ColumnDef<UnitReview>[] => [
   {
-    accessorKey: "user",
+    accessorKey: "user.name",
     header: ({ column }) => (
       <Button
         variant="ghost"
@@ -61,32 +61,32 @@ export const getColumns = (
     header: "Unit Layanan",
   },
   {
-    accessorKey: "ratings.serviceSpeed",
+    accessorKey: "serviceSpeed",
     header: "Kecepatan",
-    cell: ({ row }) => getSpeedBadge(row.original.ratings.serviceSpeed),
+    cell: ({ row }) => getSpeedBadge(row.original.serviceSpeed as 'slow' | 'medium' | 'fast'),
   },
   {
     accessorKey: "rawCompleteness",
     header: "Kelengkapan",
-    cell: ({ row }) => getCompletenessBadge(row.original.rawCompleteness),
+    cell: ({ row }) => getCompletenessBadge(row.original.rawCompleteness as 'complete' | 'incomplete' | 'not_applicable'),
   },
   {
-    accessorKey: "ratings.serviceQuality",
+    accessorKey: "serviceQuality",
     header: "Kualitas",
     cell: ({ row }) => (
       <div className="flex items-center gap-2">
-        <StarRating value={row.original.ratings.serviceQuality} onChange={() => {}} size={16} />
-        <span>({row.original.ratings.serviceQuality}/5)</span>
+        <StarRating value={row.original.serviceQuality} onChange={() => {}} size={16} />
+        <span>({row.original.serviceQuality}/5)</span>
       </div>
     )
   },
   {
-    accessorKey: "ratings.staffFriendliness",
+    accessorKey: "staffFriendliness",
     header: "Keramahan",
     cell: ({ row }) => (
       <div className="flex items-center gap-2">
-        <StarRating value={row.original.ratings.staffFriendliness} onChange={() => {}} size={16} />
-        <span>({row.original.ratings.staffFriendliness}/5)</span>
+        <StarRating value={row.original.staffFriendliness} onChange={() => {}} size={16} />
+        <span>({row.original.staffFriendliness}/5)</span>
       </div>
     )
   },

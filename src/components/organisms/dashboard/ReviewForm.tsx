@@ -5,7 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { useState } from "react";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -24,8 +24,7 @@ import { StarRating } from "@/components/atoms/StarRating";
 import { Separator } from "@/components/ui/separator";
 import { Loader2, Smile, ThumbsUp, ThumbsDown, Clock, Rocket, Turtle, HelpCircle } from "lucide-react";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
-import { useReviewStore } from "@/store/reviewStore";
-import { RawUnitReview } from "@/lib/data";
+import { addReview } from "@/lib/actions";
 
 
 const reviewFormSchema = z.object({
@@ -33,7 +32,7 @@ const reviewFormSchema = z.object({
     required_error: "Silakan pilih kecepatan layanan.",
   }),
   serviceQuality: z.number().min(1, { message: "Silakan pilih peringkat." }).max(5),
-  serviceCompleteness: z.enum(["complete", "incomplete", "not_applicable"], {
+  rawCompleteness: z.enum(["complete", "incomplete", "not_applicable"], {
     required_error: "Anda harus memilih status kelengkapan layanan.",
   }),
   staffFriendliness: z.number().min(1, { message: "Silakan pilih peringkat." }).max(5),
@@ -44,7 +43,7 @@ type ReviewFormValues = z.infer<typeof reviewFormSchema>;
 
 const defaultValues: ReviewFormValues = {
   serviceSpeed: "fast",
-  serviceCompleteness: "complete",
+  rawCompleteness: "complete",
   serviceQuality: 0,
   staffFriendliness: 0,
   comments: "",
@@ -52,11 +51,11 @@ const defaultValues: ReviewFormValues = {
 
 export default function ReviewForm() {
   const { toast } = useToast();
+  const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const { addReview } = useReviewStore();
   const searchParams = useSearchParams();
   const unit = searchParams.get('unit') || "Tidak Diketahui";
-  const user = searchParams.get('name') || "Anonim";
+  const userId = searchParams.get('userId');
 
   const form = useForm<ReviewFormValues>({
     resolver: zodResolver(reviewFormSchema),
@@ -64,32 +63,39 @@ export default function ReviewForm() {
     mode: "onChange",
   });
 
-  function onSubmit(data: ReviewFormValues) {
+  async function onSubmit(data: ReviewFormValues) {
     setIsSubmitting(true);
     
-    setTimeout(() => {
-        const newReview: RawUnitReview = {
-            id: `rev-${Date.now()}`,
-            user: user,
-            date: new Date().toISOString(),
-            unit: unit,
-            rawCompleteness: data.serviceCompleteness,
-            comments: data.comments || "",
-            serviceSpeed: data.serviceSpeed,
-            serviceQuality: data.serviceQuality,
-            staffFriendliness: data.staffFriendliness,
-        };
-        addReview(newReview);
+    try {
+      await addReview({
+        ...data,
+        unit,
+        userId: userId // Can be null for anonymous kiosk users
+      });
         
-        toast({
-            title: "Ulasan Terkirim!",
-            description: "Terima kasih atas umpan balik Anda.",
-        });
+      toast({
+          title: "Ulasan Terkirim!",
+          description: "Terima kasih atas umpan balik Anda.",
+      });
         
-        form.reset(defaultValues);
-        setIsSubmitting(false);
+      form.reset(defaultValues);
+      
+      // If user is logged in, redirect to history
+      if (userId) {
+        const params = new URLSearchParams();
+        params.set('userId', userId);
+        router.push(`/dashboard/history?${params.toString()}`);
+      }
 
-    }, 1500);
+    } catch (error) {
+       toast({
+          variant: "destructive",
+          title: "Gagal Mengirim Ulasan",
+          description: "Terjadi kesalahan saat menyimpan ulasan Anda.",
+      });
+    } finally {
+        setIsSubmitting(false);
+    }
   }
 
   return (
@@ -164,7 +170,7 @@ export default function ReviewForm() {
 
                 <FormField
                     control={form.control}
-                    name="serviceCompleteness"
+                    name="rawCompleteness"
                     render={({ field }) => (
                       <FormItem className="space-y-3">
                         <div className="flex items-center gap-2">
