@@ -1,8 +1,10 @@
-
 {
   "name": "nextn",
   "version": "0.1.0",
   "private": true,
+  "prisma": {
+    "seed": "ts-node prisma/seed.ts"
+  },
   "scripts": {
     "dev": "next dev -p 9002",
     "genkit:dev": "genkit start -- tsx src/ai/dev.ts",
@@ -14,7 +16,7 @@
     "postinstall": "prisma generate",
     "prisma:migrate": "prisma migrate dev",
     "prisma:generate": "prisma generate",
-    "prisma:seed": "ts-node --compiler-options '{\\\"module\\\":\\\"CommonJS\\\"}' prisma/seed.ts",
+    "prisma:seed": "ts-node prisma/seed.ts",
     "format": "prettier --write .",
     "format:check": "prettier --check ."
   },
@@ -69,7 +71,7 @@
     "zustand": "^4.5.4"
   },
   "devDependencies": {
-    "@types/node": "^20",
+    "@types/node": "^20.19.9",
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "genkit-cli": "^1.14.1",
@@ -78,6 +80,7 @@
     "prettier-plugin-tailwindcss": "^0.6.5",
     "prisma": "^5.17.0",
     "tailwindcss": "^3.4.1",
-    "typescript": "^5"
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.2"
   }
 }
