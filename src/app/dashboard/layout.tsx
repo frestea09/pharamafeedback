@@ -33,8 +33,11 @@ export default function DashboardLayout({
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const name = searchParams.get('name') || "Pengguna";
+  const emailParam = searchParams.get('email');
+  
   const { getUserByEmail } = useUserStore();
-  const currentUser = getUserByEmail(`${name.toLowerCase().replace(" ", ".")}@example.com`);
+  const currentUser = emailParam ? getUserByEmail(emailParam) : null;
+  const isAnonymous = name === "Pasien Anonim";
 
   const [isPatientMode, setIsPatientMode] = useState(false);
   const pageTitle = getPageTitle(pathname);
@@ -61,6 +64,15 @@ export default function DashboardLayout({
       )
   }
 
+  const getSidebarParams = () => {
+    const params = new URLSearchParams();
+    params.set('name', name);
+    if(currentUser) {
+      params.set('email', currentUser.email);
+    }
+    return params.toString();
+  }
+
   return (
     <SidebarProvider>
     <Sidebar>
@@ -77,11 +89,11 @@ export default function DashboardLayout({
                     {userMenuItems.map((item) => (
                         <SidebarMenuItem key={item.href}>
                             <SidebarMenuButton 
-                                href={`${item.href}?name=${name}`}
+                                href={`${item.href}?${getSidebarParams()}`}
                                 isActive={pathname === item.href}
                                 className="text-base font-medium h-12" 
                                 asChild>
-                                <Link href={`${item.href}?name=${name}`}>
+                                <Link href={`${item.href}?${getSidebarParams()}`}>
                                     <item.icon className="size-5" />
                                     <span>{item.label}</span>
                                 </Link>
@@ -109,7 +121,7 @@ export default function DashboardLayout({
             </Avatar>
             <div className="flex flex-col">
                 <span className="font-semibold text-sm">{name}</span>
-                <span className="text-xs text-muted-foreground">{currentUser?.email}</span>
+                <span className="text-xs text-muted-foreground">{currentUser?.email || "Pengguna Kios"}</span>
             </div>
         </div>
         </SidebarFooter>
@@ -120,7 +132,7 @@ export default function DashboardLayout({
             <div className="flex-1">
                 <h1 className="text-xl font-semibold">{pageTitle}</h1>
             </div>
-            {pathname === '/dashboard' && (
+            {isAnonymous && (
                 <Button onClick={() => setIsPatientMode(true)}>
                     <Eye className="mr-2" />
                     Beralih ke Mode Pasien

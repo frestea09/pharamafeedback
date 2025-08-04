@@ -1,3 +1,4 @@
+
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
@@ -6,39 +7,37 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "mysql"
   url      = env("DATABASE_URL")
 }
 
 model User {
-  id        String    @id @default(cuid())
+  id        String   @id @default(cuid())
   name      String
-  email     String    @unique
-  password  String?
-  role      String    @default("User") // "User" atau "Admin"
-  lastLogin DateTime  @default(now())
-  avatar    String
+  email     String   @unique
+  password  String
+  role      String   @default("User") // "User" or "Admin"
   unit      String?
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+  lastLogin DateTime @default(now())
+  avatar    String
   reviews   Review[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Review {
-  id                String    @id @default(cuid())
-  date              DateTime  @default(now())
+  id                String   @id @default(cuid())
+  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId            String
+  date              DateTime
   unit              String
   serviceSpeed      String // "slow", "medium", "fast"
   serviceQuality    Int
   staffFriendliness Int
-  comments          String?
+  comments          String?  @db.Text
   rawCompleteness   String // "complete", "incomplete", "not_applicable"
-  
-  userId            String
-  user              User      @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  createdAt         DateTime  @default(now())
-  updatedAt         DateTime  @updatedAt
-
-  @@index([userId])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

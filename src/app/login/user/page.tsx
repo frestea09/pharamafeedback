@@ -39,7 +39,7 @@ export default function UserLoginPage() {
       if (user && user.password === password) { 
         const unit = user.unit || "Layanan";
         const name = user.name;
-        router.push(`/dashboard?unit=${encodeURIComponent(unit)}&name=${encodeURIComponent(name)}`);
+        router.push(`/dashboard?unit=${encodeURIComponent(unit)}&name=${encodeURIComponent(name)}&email=${encodeURIComponent(user.email)}`);
       } else {
         toast({
           variant: "destructive",

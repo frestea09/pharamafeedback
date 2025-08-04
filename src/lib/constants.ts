@@ -107,4 +107,3 @@ export const generalFaqItems = [
           content: "Tentu. Semua ulasan yang pernah Anda kirimkan tersimpan dan dapat dilihat di menu <strong>Riwayat Ulasan</strong>."
       }
   ];
-

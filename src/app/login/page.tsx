@@ -36,9 +36,13 @@ export default function LoginPage() {
       let unit = "";
       const lowerCaseEmail = email.toLowerCase();
       
+      // Example: pegawai.farmasi@sim.rs -> farmasi
       if (lowerCaseEmail.startsWith("pegawai.")) {
           const unitIdentifier = lowerCaseEmail.split('@')[0].split('.')[1];
-          const matchedUnit = serviceUnits.find(u => u.toLowerCase().replace(/[^a-z0-9]/g, '').includes(unitIdentifier));
+          // Find the full unit name from the identifier
+          const matchedUnit = serviceUnits.find(u => 
+            u.toLowerCase().replace(/[^a-z0-9]/g, '').includes(unitIdentifier)
+          );
           if (matchedUnit) {
             unit = matchedUnit;
           }
@@ -46,7 +50,7 @@ export default function LoginPage() {
 
       if (password === "pegawai123" && unit) {
         const name = "Pasien Anonim";
-        router.push(`/dashboard?unit=${unit}&name=${name.replace(/ /g, "+")}`);
+        router.push(`/dashboard?unit=${encodeURIComponent(unit)}&name=${encodeURIComponent(name)}`);
       } else {
         toast({
           variant: "destructive",

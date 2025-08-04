@@ -44,8 +44,8 @@ export const serviceUnits = [
   "GF - Ruang IGD PONEK",
   "GF - Ruang CSSD",
   // Gedung BTC - Lantai GF (Ground Floor)
-  "GF - Instalasi Farmasi",
-  "GF - Bank Darah",
+  "GF - Instalasi Farmasi (Gedung BTC)",
+  "GF - Bank Darah (Gedung BTC)",
   // Gedung A - Lantai LG (Lower Ground)
   "LG - IPSRS",
   "LG - Ruang Pemulasaran Jenazah"
