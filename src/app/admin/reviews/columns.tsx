@@ -60,6 +60,7 @@ export const getColumns = (
   {
     accessorKey: "unit",
     header: "Unit Layanan",
+    cell: ({ row }) => <div className="min-w-[200px]">{row.getValue("unit")}</div>,
   },
   {
     accessorKey: "serviceSpeed",

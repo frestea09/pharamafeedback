@@ -16,37 +16,37 @@ const getSpeedBadgeText = (speed: string) => {
 export function ExportTable({ reviews }: { reviews: UnitReview[] }) {
     return (
         <>
-            <h2 className="text-xl font-bold mb-4">Detail Ulasan</h2>
+            <h2 className="text-xl font-bold mb-4 print:text-lg">Detail Ulasan</h2>
             <div className="border rounded-lg border-gray-300">
-                <Table>
+                <Table className="print:text-[10px]">
                     <TableHeader>
                         <TableRow className="bg-gray-50">
-                            <TableHead className="w-[120px]">Tanggal</TableHead>
-                            <TableHead>Pengguna</TableHead>
-                            <TableHead>Unit</TableHead>
-                            <TableHead className="text-center">Kualitas</TableHead>
-                            <TableHead className="text-center">Keramahan</TableHead>
-                            <TableHead className="text-center">Kecepatan</TableHead>
-                            <TableHead>Komentar</TableHead>
+                            <TableHead className="w-[100px] print:p-2">Tanggal</TableHead>
+                            <TableHead className="print:p-2">Pengguna</TableHead>
+                            <TableHead className="print:p-2">Unit</TableHead>
+                            <TableHead className="text-center print:p-2">Kualitas</TableHead>
+                            <TableHead className="text-center print:p-2">Keramahan</TableHead>
+                            <TableHead className="text-center print:p-2">Kecepatan</TableHead>
+                            <TableHead className="print:p-2">Komentar</TableHead>
                         </TableRow>
                     </TableHeader>
                     <TableBody>
                         {reviews.length > 0 ? (
                             reviews.map((review) => (
-                                <TableRow key={review.id}>
-                                    <TableCell>{format(new Date(review.date), "d MMM yy", { locale: id })}</TableCell>
-                                    <TableCell className="font-medium">{review.user.name}</TableCell>
-                                    <TableCell>{review.unit}</TableCell>
-                                    <TableCell className="text-center">
+                                <TableRow key={review.id} className="print:break-inside-avoid">
+                                    <TableCell className="print:p-2">{format(new Date(review.date), "d MMM yy", { locale: id })}</TableCell>
+                                    <TableCell className="font-medium print:p-2">{review.user.name}</TableCell>
+                                    <TableCell className="print:p-2">{review.unit}</TableCell>
+                                    <TableCell className="text-center print:p-2">
                                         <Badge variant={getRatingColor(review.serviceQuality)}>{review.serviceQuality}/5</Badge>
                                     </TableCell>
-                                    <TableCell className="text-center">
+                                    <TableCell className="text-center print:p-2">
                                         <Badge variant={getRatingColor(review.staffFriendliness)}>{review.staffFriendliness}/5</Badge>
                                     </TableCell>
-                                    <TableCell className="text-center">
+                                    <TableCell className="text-center print:p-2">
                                         <Badge variant="outline">{getSpeedBadgeText(review.serviceSpeed)}</Badge>
                                     </TableCell>
-                                    <TableCell className="text-sm text-gray-700">{review.comments || '-'}</TableCell>
+                                    <TableCell className="text-gray-700 print:p-2 print:max-w-md">{review.comments || '-'}</TableCell>
                                 </TableRow>
                             ))
                         ) : (

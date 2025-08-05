@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useSearchParams } from "next/navigation";
@@ -71,8 +72,8 @@ export default function ExportPage() {
             display: none;
           }
           @page {
-            size: A4;
-            margin: 20mm;
+            size: A4 landscape;
+            margin: 15mm;
           }
         }
       `}</style>
@@ -88,7 +89,7 @@ export default function ExportPage() {
         <ExportTable reviews={reviews} />
       </main>
       <footer className="border-t border-gray-200 pt-4 text-center text-xs text-gray-400">
-        <p>&copy; {new Date().getFullYear()} PharmaFeedback | SIMRS</p>
+        <p>&copy; ${new Date().getFullYear()} LayananReview RSUD | SIMRS</p>
       </footer>
     </div>
   );
