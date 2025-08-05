@@ -1,6 +1,15 @@
 # LayananReview - Aplikasi Ulasan Layanan RSUD Oto Iskandar Dinata
 
-Aplikasi web modern yang dibangun dengan Next.js dan TypeScript untuk mengumpulkan dan menganalisis umpan balik pasien di berbagai unit layanan RSUD Oto Iskandar Dinata. Aplikasi ini menyediakan portal terpisah untuk admin, pengguna, dan mode kios untuk pegawai.
+## Tujuan & Sasaran Sistem
+
+**LayananReview RSUD** adalah sebuah aplikasi web modern yang dirancang khusus untuk menjadi jembatan komunikasi antara pasien dan manajemen RSUD Oto Iskandar Dinata.
+
+**Tujuan utamanya** adalah untuk meningkatkan kualitas layanan rumah sakit secara keseluruhan dengan menyediakan platform terpusat untuk mengumpulkan, menganalisis, dan menindaklanjuti umpan balik dari pasien. Sistem ini membantu manajemen dalam membuat keputusan berbasis data untuk perbaikan di berbagai unit layanan, mulai dari kecepatan pelayanan, ketersediaan obat, hingga keramahan staf.
+
+**Cara kerjanya** adalah dengan menyediakan tiga portal akses yang berbeda:
+1.  **Portal Admin**: Untuk manajemen melihat data analitik, mengelola ulasan, dan mengelola akun pengguna.
+2.  **Portal Pengguna**: Untuk pasien terdaftar memberikan ulasan dan melihat riwayat umpan balik mereka.
+3.  **Mode Kios (Pegawai)**: Untuk staf rumah sakit memfasilitasi ulasan anonim dari pasien langsung di unit layanan.
 
 ## Fitur Utama
 
@@ -17,7 +26,7 @@ Aplikasi web modern yang dibangun dengan Next.js dan TypeScript untuk mengumpulk
 -   **Framework**: Next.js (dengan App Router)
 -   **Bahasa**: TypeScript
 -   **Styling**: Tailwind CSS & ShadCN/UI
--   **ORM**: Prisma (siap untuk diintegrasikan)
+-   **ORM**: Prisma (terintegrasi dengan MySQL)
 -   **Validasi Formulir**: React Hook Form & Zod
 -   **Visualisasi Data**: Recharts
 
