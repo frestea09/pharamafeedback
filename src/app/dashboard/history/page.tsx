@@ -9,7 +9,6 @@ import { ReviewDetailDialog } from "@/components/organisms/ReviewDetailDialog";
 import { useSearchParams } from "next/navigation";
 import { getReviews } from "@/lib/actions";
 import { UnitReview } from "@/lib/definitions";
-import { Loader2 } from "lucide-react";
 
 function HistoryContent() {
   const [reviews, setReviews] = useState<UnitReview[]>([]);
@@ -55,5 +54,9 @@ function HistoryContent() {
 }
 
 export default function HistoryPage() {
-    return <HistoryContent />;
+    return (
+        <Suspense fallback={<div>Loading...</div>}>
+            <HistoryContent />
+        </Suspense>
+    );
 }
