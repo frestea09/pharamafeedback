@@ -3,7 +3,10 @@
 
 import { z } from 'zod';
 import { revalidatePath } from 'next/cache';
-import prisma from './prisma';
+// import prisma from './prisma';
+import { initialReviews, RawUnitReview } from './data';
+import { users, User } from './users';
+import { UnitReview } from './definitions';
 
 // --- User Actions ---
 const UserSchema = z.object({
@@ -18,51 +21,65 @@ const UserUpdateSchema = UserSchema.extend({
     password: z.string().min(6).optional().or(z.literal('')),
 });
 
-export async function validateUser(email: string, password: string) {
-    const user = await prisma.user.findUnique({ where: { email } });
-    // In a real app, you'd use a secure password hashing library like bcrypt
-    if (user && user.password === password) {
-        return user;
-    }
-    return null;
+export async function validateUser(email: string, password: string): Promise<User | null> {
+    // const user = await prisma.user.findUnique({ where: { email } });
+    // // In a real app, you'd use a secure password hashing library like bcrypt
+    // if (user && user.password === password) {
+    //     return user;
+    // }
+    // return null;
+    const user = users.find(u => u.email === email && u.password === password);
+    return user || null;
 }
 
-export async function getUsers(filters: { unit?: string }) {
-    const whereClause: any = {};
+export async function getUsers(filters: { unit?: string }): Promise<User[]> {
+    // const whereClause: any = {};
+    // if (filters.unit) {
+    //     whereClause.unit = filters.unit;
+    // }
+    // return await prisma.user.findMany({ where: whereClause, orderBy: { name: 'asc' } });
+
     if (filters.unit) {
-        whereClause.unit = filters.unit;
+        return users.filter(user => user.unit === filters.unit);
     }
-    return await prisma.user.findMany({ where: whereClause, orderBy: { name: 'asc' } });
+    return users;
 }
 
-export async function getUserById(id: string) {
-    return await prisma.user.findUnique({ where: { id } });
+export async function getUserById(id: string): Promise<User | null> {
+    // return await prisma.user.findUnique({ where: { id } });
+    return users.find(u => u.id === id) || null;
 }
 
-export async function createUser(data: z.infer<typeof UserSchema>) {
+export async function createUser(data: z.infer<typeof UserSchema>): Promise<User> {
     const validatedData = UserSchema.parse(data);
-    const newUser = await prisma.user.create({
-        data: {
-            ...validatedData,
-            avatar: `https://placehold.co/100x100.png?text=${validatedData.name.split(" ").map(n => n[0]).join("")}`
-        }
-    });
+    const newUser: User = {
+        id: `user-${Date.now()}`,
+        ...validatedData,
+        lastLogin: new Date().toISOString(),
+        avatar: `https://placehold.co/100x100.png?text=${validatedData.name.split(" ").map(n => n[0]).join("")}`
+    };
+    users.push(newUser);
     revalidatePath('/admin/users');
     return newUser;
 }
 
-export async function updateUser(id: string, data: z.infer<typeof UserUpdateSchema>) {
+export async function updateUser(id: string, data: z.infer<typeof UserUpdateSchema>): Promise<User> {
     const validatedData = UserUpdateSchema.parse(data);
-    const updateData: any = { ...validatedData };
-    
-    if (!validatedData.password || validatedData.password.trim() === '') {
-        delete updateData.password;
+    const userIndex = users.findIndex(u => u.id === id);
+
+    if (userIndex === -1) {
+        throw new Error("User not found");
     }
 
-    const updatedUser = await prisma.user.update({
-        where: { id },
-        data: updateData
-    });
+    const updatedUser = { ...users[userIndex], ...validatedData };
+    
+    if (!validatedData.password || validatedData.password.trim() === '') {
+        delete updatedUser.password;
+    } else {
+        updatedUser.password = validatedData.password;
+    }
+
+    users[userIndex] = updatedUser;
     
     revalidatePath(`/admin/users`);
     revalidatePath(`/admin/users/${id}`);
@@ -70,7 +87,11 @@ export async function updateUser(id: string, data: z.infer<typeof UserUpdateSche
 }
 
 export async function deleteUser(id: string) {
-    await prisma.user.delete({ where: { id } });
+    // await prisma.user.delete({ where: { id } });
+    const userIndex = users.findIndex(u => u.id === id);
+    if (userIndex > -1) {
+        users.splice(userIndex, 1);
+    }
     revalidatePath('/admin/users');
 }
 
@@ -94,34 +115,38 @@ export async function addReview(data: z.infer<typeof ReviewSchema>) {
 
     // Handle anonymous kiosk users
     if (!finalUserId) {
-        const anonymousUser = await prisma.user.upsert({
-            where: { email: 'anonymous@sim.rs' },
-            update: {},
-            create: {
+        let anonymousUser = users.find(u => u.email === 'anonymous@sim.rs');
+        if (!anonymousUser) {
+            anonymousUser = {
+                id: `user-${Date.now()}`,
                 name: 'Pasien Anonim',
                 email: 'anonymous@sim.rs',
                 password: 'N/A', // Not used for login
                 role: 'User',
+                lastLogin: new Date().toISOString(),
                 avatar: 'https://placehold.co/100x100.png?text=PA'
-            }
-        });
+            };
+            users.push(anonymousUser);
+        }
         finalUserId = anonymousUser.id;
     }
     
-    const newReview = await prisma.review.create({
-        data: {
-            userId: finalUserId,
-            unit: validatedData.unit,
-            serviceSpeed: validatedData.serviceSpeed,
-            rawCompleteness: validatedData.rawCompleteness,
-            comments: validatedData.comments,
-            serviceQualityNew: validatedData.serviceQualityNew,
-            staffFriendlinessNew: validatedData.staffFriendlinessNew,
-            // Set legacy fields to a default value (e.g., 0 or 3) for type consistency
-            serviceQuality: 0,
-            staffFriendliness: 0,
-        }
-    });
+    const newReview = {
+        id: `review-${Date.now()}`,
+        date: new Date().toISOString(),
+        userId: finalUserId,
+        unit: validatedData.unit,
+        serviceSpeed: validatedData.serviceSpeed,
+        rawCompleteness: validatedData.rawCompleteness,
+        comments: validatedData.comments || '',
+        serviceQualityNew: validatedData.serviceQualityNew,
+        staffFriendlinessNew: validatedData.staffFriendlinessNew,
+        // Set legacy fields to a default value (e.g., 0 or 3) for type consistency
+        serviceQuality: 0,
+        staffFriendliness: 0,
+    };
+    
+    initialReviews.unshift(newReview);
 
     revalidatePath('/admin/dashboard');
     revalidatePath('/admin/reviews');
@@ -137,35 +162,46 @@ export async function getReviews(filters: {
   userId?: string;
   from?: Date;
   to?: Date;
-}) {
+}): Promise<UnitReview[]> {
   const { unit, userName, userId, from, to } = filters;
   
-  const whereClause: any = {};
-  if (unit) whereClause.unit = unit;
-  if (userId) whereClause.userId = userId;
-  if (userName) whereClause.user = { name: { contains: userName, mode: 'insensitive' } };
-  if (from) whereClause.date = { ...whereClause.date, gte: from };
-  if (to) whereClause.date = { ...whereClause.date, lte: to };
+  let filteredReviews = [...initialReviews];
 
-  const reviews = await prisma.review.findMany({
-      where: whereClause,
-      include: {
+  if (unit) filteredReviews = filteredReviews.filter(r => r.unit === unit);
+  if (userId) filteredReviews = filteredReviews.filter(r => r.userId === userId);
+  
+  if (from) filteredReviews = filteredReviews.filter(r => new Date(r.date) >= from);
+  if (to) filteredReviews = filteredReviews.filter(r => new Date(r.date) <= to);
+
+  const populatedReviews = filteredReviews.map(review => {
+      const user = users.find(u => u.id === review.userId);
+      return {
+          ...review,
+          id: review.id.toString(),
+          createdAt: new Date(review.date),
+          updatedAt: new Date(review.date),
+          date: new Date(review.date),
+          serviceQuality: review.serviceQuality || 0,
+          staffFriendliness: review.staffFriendliness || 0,
           user: {
-              select: {
-                  name: true,
-                  avatar: true,
-              }
+              name: user?.name || 'Pengguna Anonim',
+              avatar: user?.avatar || 'https://placehold.co/100x100.png?text=PA',
           }
-      },
-      orderBy: {
-          date: 'desc'
-      }
+      };
   });
-  return reviews;
+
+  if (userName) {
+    return populatedReviews.filter(r => r.user.name.toLowerCase().includes(userName.toLowerCase()));
+  }
+
+  return populatedReviews.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 }
 
 export async function deleteReview(id: string) {
-    await prisma.review.delete({ where: { id } });
+    const reviewIndex = initialReviews.findIndex(r => r.id === id);
+    if (reviewIndex > -1) {
+        initialReviews.splice(reviewIndex, 1);
+    }
     revalidatePath('/admin/reviews');
     revalidatePath('/admin/dashboard');
 }
