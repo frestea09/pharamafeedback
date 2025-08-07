@@ -19,7 +19,7 @@ import {
 } from "@/components/ui/sidebar";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { getPageTitle } from "@/lib/utils";
-import { baseAdminMenuItems, systemAdminMenuItems, commonAdminMenuItems } from "@/lib/constants";
+import * as menuConstants from "@/lib/constants";
 import { LogOut, Hospital } from "lucide-react";
 
 export default function AdminLayout({
@@ -45,8 +45,8 @@ export default function AdminLayout({
   const isSystemAdmin = !unit;
 
   const menuItems = isSystemAdmin 
-    ? [...baseAdminMenuItems, ...systemAdminMenuItems, ...commonAdminMenuItems] 
-    : [...baseAdminMenuItems, ...commonAdminMenuItems];
+    ? [...menuConstants.baseAdminMenuItems, ...menuConstants.systemAdminMenuItems, ...menuConstants.commonAdminMenuItems] 
+    : [...menuConstants.baseAdminMenuItems, ...menuConstants.commonAdminMenuItems];
 
 
   return (
