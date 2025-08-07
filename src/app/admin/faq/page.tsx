@@ -25,31 +25,30 @@ export default function FAQPage() {
             <AccordionItem value="item-1">
                 <AccordionTrigger>Apa saja peran yang ada di aplikasi ini?</AccordionTrigger>
                 <AccordionContent>
-                Aplikasi ini memiliki tiga peran utama: <strong>Admin</strong> (mengelola sistem dan data), <strong>Pengguna Individu</strong> (memberikan ulasan pribadi dan melihat riwayat), dan <strong>Pegawai</strong> (mengoperasikan mode kios untuk ulasan pasien di tempat).
+                Aplikasi ini memiliki empat peran utama: <strong>Admin Sistem</strong> (akses penuh), <strong>Kepala Unit</strong> (manajer unit spesifik), <strong>Pengguna Individu</strong> (pasien yang memberi ulasan), dan <strong>Pegawai</strong> (mengoperasikan mode kios).
                 </AccordionContent>
             </AccordionItem>
             <AccordionItem value="item-2">
-                <AccordionTrigger>Apa perbedaan antara Admin Sistem dan Admin Unit?</AccordionTrigger>
+                <AccordionTrigger>Apa perbedaan antara Admin Sistem, Admin Unit, dan Kepala Unit?</AccordionTrigger>
                 <AccordionContent>
-                <strong>Admin Sistem</strong> memiliki akses penuh ke seluruh data di semua unit, termasuk mengelola semua akun pengguna dan admin. <strong>Admin Unit</strong> (misalnya, Admin Farmasi) hanya dapat melihat data analitik dan mengelola pengguna untuk unit spesifik mereka.
+                Peran admin dibagi menjadi beberapa tingkatan untuk kontrol akses yang lebih baik:
+                <ul className="list-disc pl-5 mt-2 space-y-2">
+                    <li><strong>Admin Sistem:</strong> Memiliki akses tertinggi. Dapat melihat semua data dari seluruh unit, mengelola semua akun (termasuk admin lain), dan satu-satunya yang bisa mengakses Log Aktivitas Sistem.</li>
+                    <li><strong>Admin Unit:</strong> Fokus pada operasional satu unit. Dapat melihat analitik dan mengelola pengguna hanya untuk unit spesifik mereka (contoh: Admin Farmasi).</li>
+                    <li><strong>Kepala Unit:</strong> Mirip dengan Admin Unit, peran ini ditujukan untuk manajer atau kepala departemen. Mereka dapat melihat dasbor analitik dan ulasan yang masuk untuk unit yang mereka pimpin, memungkinkan mereka memantau kinerja secara langsung.</li>
+                </ul>
                 </AccordionContent>
             </AccordionItem>
             <AccordionItem value="item-3">
-                <AccordionTrigger>Apa fungsi dari Login Pegawai (Mode Kios)?</AccordionTrigger>
+                <AccordionTrigger>Apa itu Log Sistem dan siapa yang bisa mengaksesnya?</AccordionTrigger>
                 <AccordionContent>
-                Login Pegawai digunakan oleh staf di setiap unit layanan untuk membuka sesi ulasan anonim. Ini memungkinkan pasien yang tidak memiliki akun untuk memberikan umpan balik secara langsung di lokasi setelah menerima layanan, menggunakan perangkat yang disediakan.
+                <strong>Log Sistem</strong> adalah catatan dari semua aktivitas penting yang terjadi di dalam aplikasi, seperti login pengguna, penambahan ulasan baru, atau penghapusan data. Fitur ini berfungsi sebagai alat audit dan keamanan. Hanya pengguna dengan peran <strong>Admin Sistem</strong> yang dapat mengakses halaman Log Sistem.
                 </AccordionContent>
             </AccordionItem>
             <AccordionItem value="item-4">
-                <AccordionTrigger>Apa saja unit layanan yang ada?</AccordionTrigger>
+                <AccordionTrigger>Apa fungsi dari Login Pegawai (Mode Kios)?</AccordionTrigger>
                 <AccordionContent>
-                Saat ini, aplikasi mencakup semua unit layanan yang terdaftar di RSUD Oto Iskandar Dinata, termasuk:
-                <ul className="list-disc pl-5 mt-2 space-y-1">
-                    <li>Unit Perawatan (Rawat Inap, Rawat Jalan, ICU)</li>
-                    <li>Unit Penunjang Medis (Farmasi, Laboratorium, Radiologi)</li>
-                    <li>Unit Gawat Darurat (IGD)</li>
-                    <li>dan unit administrasi serta layanan lainnya.</li>
-                </ul>
+                Login Pegawai digunakan oleh staf di setiap unit layanan untuk membuka sesi ulasan anonim. Ini memungkinkan pasien yang tidak memiliki akun untuk memberikan umpan balik secara langsung di lokasi setelah menerima layanan, menggunakan perangkat yang disediakan.
                 </AccordionContent>
             </AccordionItem>
             <AccordionItem value="item-5">

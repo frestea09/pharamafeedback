@@ -76,7 +76,7 @@ export const generalFaqItems = [
     {
       value: "item-1",
       trigger: "Apa saja peran yang ada di aplikasi ini?",
-      content: "Aplikasi ini memiliki tiga peran utama: <strong>Admin</strong> (mengelola sistem dan data), <strong>Pengguna Individu</strong> (memberikan ulasan pribadi dan melihat riwayat), dan <strong>Pegawai</strong> (mengoperasikan mode kios untuk ulasan pasien di tempat)."
+      content: "Aplikasi ini memiliki beberapa peran utama: <strong>Admin</strong> (mengelola sistem), <strong>Kepala Unit</strong> (memantau unitnya), <strong>Pengguna Individu</strong> (memberikan ulasan pribadi), dan <strong>Pegawai</strong> (mengoperasikan mode kios untuk ulasan pasien di tempat)."
     },
     {
       value: "item-2",
@@ -93,11 +93,16 @@ export const generalFaqItems = [
   export const adminFaqItems = [
       {
           value: "item-1",
-          trigger: "Apa perbedaan antara Admin Sistem dan Admin Unit?",
-          content: "<strong>Admin Sistem</strong> memiliki akses penuh ke seluruh data di semua unit, termasuk mengelola semua akun pengguna dan admin. <strong>Admin Unit</strong> (misalnya, Admin Farmasi) hanya dapat melihat data analitik dan mengelola pengguna untuk unit spesifik mereka."
+          trigger: "Apa perbedaan antara Admin Sistem dan Kepala Unit?",
+          content: "<strong>Admin Sistem</strong> memiliki akses penuh ke seluruh data di semua unit dan mengelola semua akun. <strong>Kepala Unit</strong> hanya dapat melihat data analitik dan ulasan untuk unit spesifik yang mereka pimpin."
+      },
+       {
+          value: "item-2",
+          trigger: "Apa itu Log Sistem?",
+          content: "Log Sistem adalah catatan aktivitas penting di aplikasi, seperti login atau penambahan data. Fitur ini hanya dapat diakses oleh <strong>Admin Sistem</strong> untuk tujuan pemantauan dan audit."
       },
       {
-          value: "item-2",
+          value: "item-3",
           trigger: "Bagaimana cara mengelola pengguna?",
           content: "Masuk ke menu <strong>Kelola Pengguna</strong>. Di sana Anda dapat menambah, mengubah, atau menghapus akun pengguna dan admin. Anda juga bisa menyaring pengguna berdasarkan peran atau email."
       }
@@ -107,7 +112,7 @@ export const generalFaqItems = [
       {
           value: "item-1",
           trigger: "Bagaimana cara memberikan ulasan?",
-          content: "Setelah login, Anda akan langsung diarahkan ke halaman <strong>Beri Ulasan Baru</strong>. Pilih unit layanan yang ingin Anda ulas, berikan peringkat bintang, dan isi komentar jika perlu, lalu kirim."
+          content: "Setelah login, Anda akan langsung diarahkan ke halaman <strong>Beri Ulasan Baru</strong>. Pilih unit layanan yang ingin Anda ulas, berikan penilaian, dan isi komentar jika perlu, lalu kirim."
       },
       {
           value: "item-2",
