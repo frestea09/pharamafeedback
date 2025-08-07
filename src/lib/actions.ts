@@ -4,7 +4,7 @@
 import { z } from 'zod';
 import { revalidatePath } from 'next/cache';
 // import prisma from './prisma';
-import { initialReviews, RawUnitReview } from './data';
+import { initialReviews } from './data';
 import { users, User } from './users';
 import { UnitReview } from './definitions';
 
@@ -100,8 +100,8 @@ export async function deleteUser(id: string) {
 const ReviewSchema = z.object({
   userId: z.string().nullable().optional(),
   unit: z.string(),
-  serviceSpeed: z.enum(["fast", "medium", "slow"]),
-  rawCompleteness: z.enum(["complete", "incomplete", "not_applicable"]),
+  serviceSpeed: z.enum(["fast", "medium", "slow"]).optional(),
+  rawCompleteness: z.enum(["complete", "incomplete", "not_applicable"]).optional(),
   comments: z.string().optional(),
   // New fields for thumbs up/down
   serviceQualityNew: z.enum(["positive", "negative"]),
@@ -205,3 +205,5 @@ export async function deleteReview(id: string) {
     revalidatePath('/admin/reviews');
     revalidatePath('/admin/dashboard');
 }
+
+    
