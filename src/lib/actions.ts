@@ -1,9 +1,19 @@
 
 'use server';
 
-import prisma from './prisma';
 import { z } from 'zod';
 import { revalidatePath } from 'next/cache';
+import { initialReviews } from './data';
+import { users } from './users';
+import type { User } from './users';
+import type { UnitReview } from './definitions';
+
+// --- Temporary In-Memory Data Store ---
+let tempUsers: User[] = [...users];
+let tempReviews: any[] = [...initialReviews];
+let nextReviewId = tempReviews.length + 1;
+let nextUserId = tempUsers.length + 1;
+
 
 // User Actions
 const UserSchema = z.object({
@@ -19,61 +29,57 @@ const UserUpdateSchema = UserSchema.extend({
 });
 
 export async function validateUser(email: string, password: string) {
-    const user = await prisma.user.findUnique({ where: { email } });
-    if (!user || user.password !== password) {
-        return null;
-    }
-    return user;
+    const user = tempUsers.find(u => u.email === email && u.password === password);
+    return user ? { ...user } : null;
 }
 
 export async function getUsers(filters: { unit?: string }) {
-    return await prisma.user.findMany({
-        where: {
-            // If a unit is provided, filter by it. Admins without a unit can see all users.
-            unit: filters.unit,
-        },
-        orderBy: {
-            name: 'asc'
-        }
-    });
+    if (filters.unit) {
+        return tempUsers.filter(u => u.unit === filters.unit).sort((a, b) => a.name.localeCompare(b.name));
+    }
+    return tempUsers.sort((a, b) => a.name.localeCompare(b.name));
 }
 
 export async function getUserById(id: string) {
-    return await prisma.user.findUnique({ where: { id } });
+    const user = tempUsers.find(u => u.id === id);
+    return user ? { ...user } : null;
 }
 
 export async function createUser(data: z.infer<typeof UserSchema>) {
     const validatedData = UserSchema.parse(data);
-    const newUser = await prisma.user.create({
-        data: {
-            ...validatedData,
-            avatar: `https://placehold.co/100x100.png?text=${validatedData.name.split(" ").map(n => n[0]).join("")}`
-        }
-    });
+    const newUser: User = {
+        id: `user-${nextUserId++}`,
+        ...validatedData,
+        lastLogin: new Date().toISOString(),
+        avatar: `https://placehold.co/100x100.png?text=${validatedData.name.split(" ").map(n => n[0]).join("")}`
+    };
+    tempUsers.push(newUser);
     revalidatePath('/admin/users');
     return newUser;
 }
 
 export async function updateUser(id: string, data: z.infer<typeof UserUpdateSchema>) {
     const validatedData = UserUpdateSchema.parse(data);
-    
-    // Prepare data, excluding password if it's not provided or empty
-    const updateData: any = { ...validatedData };
-    if (!validatedData.password || validatedData.password.trim() === '') {
-        delete updateData.password;
+    const userIndex = tempUsers.findIndex(u => u.id === id);
+
+    if (userIndex === -1) {
+        throw new Error("User not found");
     }
+
+    const updatedUser = { ...tempUsers[userIndex], ...validatedData };
+    if (!validatedData.password || validatedData.password.trim() === '') {
+        delete updatedUser.password;
+    }
+
+    tempUsers[userIndex] = updatedUser;
     
-    const updatedUser = await prisma.user.update({
-        where: { id },
-        data: updateData,
-    });
     revalidatePath(`/admin/users`);
     revalidatePath(`/admin/users/${id}`);
     return updatedUser;
 }
 
 export async function deleteUser(id: string) {
-    await prisma.user.delete({ where: { id } });
+    tempUsers = tempUsers.filter(u => u.id !== id);
     revalidatePath('/admin/users');
 }
 
@@ -91,45 +97,40 @@ const ReviewSchema = z.object({
 
 export async function addReview(data: z.infer<typeof ReviewSchema>) {
     const validatedData = ReviewSchema.parse(data);
-    let anonymousUser;
+    let finalUserId = validatedData.userId;
 
-    // Handle anonymous submissions from kiosk mode
-    if (!validatedData.userId) {
-        anonymousUser = await prisma.user.findFirst({
-            where: { name: 'Pasien Anonim' },
-        });
-
+    if (!finalUserId) {
+        let anonymousUser = tempUsers.find(u => u.name === 'Pasien Anonim');
         if (!anonymousUser) {
-            anonymousUser = await prisma.user.create({
-                data: {
-                    name: 'Pasien Anonim',
-                    email: `anon-${Date.now()}@sim.rs`,
-                    password: 'N/A',
-                    role: 'User',
-                    unit: validatedData.unit,
-                }
-            });
+            anonymousUser = {
+                id: 'anon-user',
+                name: 'Pasien Anonim',
+                email: `anon-${Date.now()}@sim.rs`,
+                password: 'N/A',
+                role: 'User',
+                unit: validatedData.unit,
+                lastLogin: new Date().toISOString(),
+                avatar: 'https://placehold.co/100x100.png?text=PA'
+            };
+            tempUsers.push(anonymousUser);
         }
-        validatedData.userId = anonymousUser.id;
+        finalUserId = anonymousUser.id;
     }
     
-    const review = await prisma.review.create({
-      data: {
-        userId: validatedData.userId,
-        unit: validatedData.unit,
-        serviceSpeed: validatedData.serviceSpeed,
-        serviceQuality: validatedData.serviceQuality,
-        staffFriendliness: validatedData.staffFriendliness,
-        rawCompleteness: validatedData.rawCompleteness,
-        comments: validatedData.comments,
-      },
-    });
+    const newReview = {
+      id: `review-${nextReviewId++}`,
+      date: new Date().toISOString(),
+      userId: finalUserId,
+      ...validatedData,
+    };
+    tempReviews.unshift(newReview);
+
     revalidatePath('/admin/dashboard');
     revalidatePath('/admin/reviews');
     if (validatedData.userId) {
         revalidatePath(`/dashboard/history?userId=${validatedData.userId}`);
     }
-    return review;
+    return newReview;
 }
 
 export async function getReviews(filters: {
@@ -140,29 +141,29 @@ export async function getReviews(filters: {
   to?: Date;
 }) {
   const { unit, userName, userId, from, to } = filters;
-  const where: any = {};
-
-  if (unit) where.unit = unit;
-  if (userId) where.userId = userId;
-  if (userName) where.user = { name: { contains: userName } };
-  if (from) where.date = { ...where.date, gte: from };
-  if (to) where.date = { ...where.date, lte: to };
-
-  return await prisma.review.findMany({
-    where,
-    include: {
+  
+  let filteredReviews = tempReviews.map(r => {
+    const user = tempUsers.find(u => u.id === r.userId);
+    return {
+      ...r,
       user: {
-        select: { name: true, avatar: true },
-      },
-    },
-    orderBy: {
-      date: 'desc',
-    },
+        name: user?.name || 'Unknown',
+        avatar: user?.avatar || null
+      }
+    }
   });
+
+  if (unit) filteredReviews = filteredReviews.filter(r => r.unit === unit);
+  if (userId) filteredReviews = filteredReviews.filter(r => r.userId === userId);
+  if (userName) filteredReviews = filteredReviews.filter(r => r.user.name.toLowerCase().includes(userName.toLowerCase()));
+  if (from) filteredReviews = filteredReviews.filter(r => new Date(r.date) >= from);
+  if (to) filteredReviews = filteredReviews.filter(r => new Date(r.date) <= to);
+
+  return filteredReviews.sort((a,b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 }
 
 export async function deleteReview(id: string) {
-    await prisma.review.delete({ where: { id } });
+    tempReviews = tempReviews.filter(r => r.id !== id);
     revalidatePath('/admin/reviews');
     revalidatePath('/admin/dashboard');
 }
