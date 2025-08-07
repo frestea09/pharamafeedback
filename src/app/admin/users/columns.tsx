@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button"
 import { ArrowUpDown, MoreHorizontal, Pencil, Trash2 } from "lucide-react"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { User } from "@prisma/client"
+import { User } from "@/lib/users"
 
 type UserActionsProps = {
   onEdit: (user: User) => void;
@@ -77,9 +77,9 @@ export const getColumns = ({ onEdit, onDelete }: UserActionsProps): ColumnDef<Us
     },
   },
   {
-    accessorKey: "updatedAt",
+    accessorKey: "lastLogin",
     header: "Terakhir Diperbarui",
-    cell: ({ row }) => formatDistanceToNow(new Date(row.getValue("updatedAt")), { addSuffix: true, locale: id }),
+    cell: ({ row }) => formatDistanceToNow(new Date(row.getValue("lastLogin")), { addSuffix: true, locale: id }),
   },
   {
     id: "actions",
