@@ -6,12 +6,12 @@ import { UnitReview } from "@/lib/definitions"
 import { format } from "date-fns"
 import { id } from "date-fns/locale"
 import { Button } from "@/components/ui/button"
-import { ArrowUpDown, MoreHorizontal, Trash2, ThumbsUp, ThumbsDown, HelpCircle } from "lucide-react"
+import { ArrowUpDown, MoreHorizontal, Trash2, ThumbsUp, ThumbsDown, HelpCircle, Star } from "lucide-react"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { StarRating } from "@/components/atoms/StarRating"
 import { Badge } from "@/components/ui/badge"
 
-const getSpeedBadge = (speed: 'slow' | 'medium' | 'fast') => {
+const getSpeedBadge = (speed: string) => {
   switch (speed) {
     case 'slow':
       return <Badge variant="destructive">Lambat</Badge>;
@@ -24,7 +24,7 @@ const getSpeedBadge = (speed: 'slow' | 'medium' | 'fast') => {
   }
 };
 
-const getCompletenessBadge = (status: 'complete' | 'incomplete' | 'not_applicable') => {
+const getCompletenessBadge = (status: string) => {
   switch(status) {
       case 'complete':
           return <Badge className="bg-green-500 gap-1.5"><ThumbsUp className="h-3 w-3" /> Lengkap</Badge>;
@@ -34,6 +34,14 @@ const getCompletenessBadge = (status: 'complete' | 'incomplete' | 'not_applicabl
           return <Badge variant="secondary" className="gap-1.5"><HelpCircle className="h-3 w-3" /> Tdk Tahu</Badge>;
   }
 };
+
+const NewRatingBadge = ({ value }: { value: string }) => {
+    if (value === "positive") {
+        return <Badge className="bg-green-500 gap-1.5"><ThumbsUp className="h-3 w-3" /> Baik</Badge>;
+    }
+    return <Badge variant="destructive" className="gap-1.5"><ThumbsDown className="h-3 w-3" /> Buruk</Badge>;
+};
+
 
 export const getColumns = (
   onViewDetail: (review: UnitReview) => void,
@@ -55,7 +63,7 @@ export const getColumns = (
   {
     accessorKey: "date",
     header: "Tanggal",
-    cell: ({ row }) => format(new Date(row.getValue("date")), "d MMMM yyyy", { locale: id }),
+    cell: ({ row }) => format(new Date(row.getValue("date")), "d MMM yyyy", { locale: id }),
   },
   {
     accessorKey: "unit",
@@ -65,32 +73,42 @@ export const getColumns = (
   {
     accessorKey: "serviceSpeed",
     header: "Kecepatan",
-    cell: ({ row }) => getSpeedBadge(row.original.serviceSpeed as 'slow' | 'medium' | 'fast'),
+    cell: ({ row }) => getSpeedBadge(row.original.serviceSpeed as string),
   },
   {
     accessorKey: "rawCompleteness",
     header: "Kelengkapan",
-    cell: ({ row }) => getCompletenessBadge(row.original.rawCompleteness as 'complete' | 'incomplete' | 'not_applicable'),
+    cell: ({ row }) => getCompletenessBadge(row.original.rawCompleteness as string),
   },
   {
     accessorKey: "serviceQuality",
     header: "Kualitas",
-    cell: ({ row }) => (
-      <div className="flex items-center gap-2">
-        <StarRating value={row.original.serviceQuality} onChange={() => {}} size={16} />
-        <span>({row.original.serviceQuality}/5)</span>
-      </div>
-    )
+    cell: ({ row }) => {
+        if (row.original.serviceQualityNew) {
+            return <NewRatingBadge value={row.original.serviceQualityNew} />;
+        }
+        return (
+            <div className="flex items-center gap-1">
+                <Star className="h-4 w-4 text-accent" fill="currentColor"/>
+                <span>({row.original.serviceQuality}/5)</span>
+            </div>
+        )
+    }
   },
   {
     accessorKey: "staffFriendliness",
     header: "Keramahan",
-    cell: ({ row }) => (
-      <div className="flex items-center gap-2">
-        <StarRating value={row.original.staffFriendliness} onChange={() => {}} size={16} />
-        <span>({row.original.staffFriendliness}/5)</span>
-      </div>
-    )
+    cell: ({ row }) => {
+        if (row.original.staffFriendlinessNew) {
+            return <NewRatingBadge value={row.original.staffFriendlinessNew} />;
+        }
+        return (
+            <div className="flex items-center gap-1">
+                <Star className="h-4 w-4 text-accent" fill="currentColor"/>
+                <span>({row.original.staffFriendliness}/5)</span>
+            </div>
+        )
+    }
   },
   {
     accessorKey: "comments",

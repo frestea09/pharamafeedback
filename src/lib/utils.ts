@@ -43,9 +43,22 @@ export const getRatingColor = (rating: number): "destructive" | "secondary" | "d
 };
 
 export const calculateAverages = (reviews: UnitReview[]) => {
+  const legacyReviews = reviews.filter(r => !r.serviceQualityNew);
+  const newReviews = reviews.filter(r => r.serviceQualityNew);
+
   if (!reviews.length) return { quality: 0, friendliness: 0 };
-  const totalQuality = reviews.reduce((sum, r) => sum + r.serviceQuality, 0);
-  const totalFriendliness = reviews.reduce((sum, r) => sum + r.staffFriendliness, 0);
+  
+  // Calculate for legacy (star-based) reviews
+  const totalLegacyQuality = legacyReviews.reduce((sum, r) => sum + r.serviceQuality, 0);
+  const totalLegacyFriendliness = legacyReviews.reduce((sum, r) => sum + r.staffFriendliness, 0);
+  
+  // Calculate for new (positive/negative) reviews, mapping positive to 5 and negative to 1
+  const totalNewQuality = newReviews.reduce((sum, r) => sum + (r.serviceQualityNew === 'positive' ? 5 : 1), 0);
+  const totalNewFriendliness = newReviews.reduce((sum, r) => sum + (r.staffFriendlinessNew === 'positive' ? 5 : 1), 0);
+
+  const totalQuality = totalLegacyQuality + totalNewQuality;
+  const totalFriendliness = totalLegacyFriendliness + totalNewFriendliness;
+
   return {
       quality: totalQuality / reviews.length,
       friendliness: totalFriendliness / reviews.length,

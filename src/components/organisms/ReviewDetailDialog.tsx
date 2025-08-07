@@ -23,7 +23,7 @@ interface ReviewDetailDialogProps {
   onOpenChange: (isOpen: boolean) => void;
 }
 
-const getSpeedBadge = (speed: string, showIcon = false) => {
+const getSpeedBadge = (speed: string) => {
     switch (speed) {
       case 'slow':
         return <Badge variant="destructive" className="gap-1.5"><Turtle className="h-4 w-4" />Lambat</Badge>;
@@ -47,6 +47,13 @@ const getCompletenessBadge = (status: string) => {
     }
 };
 
+const NewRatingDisplay = ({ value, positiveText, negativeText }: { value: string, positiveText: string, negativeText: string }) => {
+    if (value === "positive") {
+        return <div className="flex items-center gap-2 text-green-600"><ThumbsUp className="h-5 w-5" /> <span>{positiveText}</span></div>;
+    }
+    return <div className="flex items-center gap-2 text-red-600"><ThumbsDown className="h-5 w-5" /> <span>{negativeText}</span></div>;
+};
+
 export function ReviewDetailDialog({ review, isOpen, onOpenChange }: ReviewDetailDialogProps) {
   if (!review) return null;
 
@@ -63,17 +70,25 @@ export function ReviewDetailDialog({ review, isOpen, onOpenChange }: ReviewDetai
           <div className="grid grid-cols-2 gap-4">
             <div className="flex flex-col gap-2">
                 <span className="font-semibold text-sm">Kualitas Pelayanan</span>
-                <div className="flex items-center gap-2">
-                    <StarRating value={review.serviceQuality} onChange={() => {}} size={20} />
-                    <span className="text-muted-foreground">({review.serviceQuality}/5)</span>
-                </div>
+                {review.serviceQualityNew ? (
+                    <NewRatingDisplay value={review.serviceQualityNew} positiveText="Baik" negativeText="Buruk" />
+                ) : (
+                    <div className="flex items-center gap-2">
+                        <StarRating value={review.serviceQuality} onChange={() => {}} size={20} />
+                        <span className="text-muted-foreground">({review.serviceQuality}/5)</span>
+                    </div>
+                )}
             </div>
             <div className="flex flex-col gap-2">
                 <span className="font-semibold text-sm">Keramahan Staf</span>
-                <div className="flex items-center gap-2">
-                    <StarRating value={review.staffFriendliness} onChange={() => {}} size={20} />
-                    <span className="text-muted-foreground">({review.staffFriendliness}/5)</span>
-                </div>
+                {review.staffFriendlinessNew ? (
+                    <NewRatingDisplay value={review.staffFriendlinessNew} positiveText="Ramah" negativeText="Tidak Ramah" />
+                ) : (
+                    <div className="flex items-center gap-2">
+                        <StarRating value={review.staffFriendliness} onChange={() => {}} size={20} />
+                        <span className="text-muted-foreground">({review.staffFriendliness}/5)</span>
+                    </div>
+                )}
             </div>
           </div>
            <div className="grid grid-cols-2 gap-4">

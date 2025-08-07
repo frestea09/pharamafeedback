@@ -3,19 +3,9 @@
 
 import { z } from 'zod';
 import { revalidatePath } from 'next/cache';
-import { initialReviews } from './data';
-import { users } from './users';
-import type { User } from './users';
-import type { UnitReview } from './definitions';
+import prisma from './prisma';
 
-// --- Temporary In-Memory Data Store ---
-let tempUsers: User[] = [...users];
-let tempReviews: any[] = [...initialReviews];
-let nextReviewId = tempReviews.length + 1;
-let nextUserId = tempUsers.length + 1;
-
-
-// User Actions
+// --- User Actions ---
 const UserSchema = z.object({
     name: z.string().min(2),
     email: z.string().email(),
@@ -25,53 +15,54 @@ const UserSchema = z.object({
 });
 
 const UserUpdateSchema = UserSchema.extend({
-    password: z.string().min(6).optional(),
+    password: z.string().min(6).optional().or(z.literal('')),
 });
 
 export async function validateUser(email: string, password: string) {
-    const user = tempUsers.find(u => u.email === email && u.password === password);
-    return user ? { ...user } : null;
+    const user = await prisma.user.findUnique({ where: { email } });
+    // In a real app, you'd use a secure password hashing library like bcrypt
+    if (user && user.password === password) {
+        return user;
+    }
+    return null;
 }
 
 export async function getUsers(filters: { unit?: string }) {
+    const whereClause: any = {};
     if (filters.unit) {
-        return tempUsers.filter(u => u.unit === filters.unit).sort((a, b) => a.name.localeCompare(b.name));
+        whereClause.unit = filters.unit;
     }
-    return tempUsers.sort((a, b) => a.name.localeCompare(b.name));
+    return await prisma.user.findMany({ where: whereClause, orderBy: { name: 'asc' } });
 }
 
 export async function getUserById(id: string) {
-    const user = tempUsers.find(u => u.id === id);
-    return user ? { ...user } : null;
+    return await prisma.user.findUnique({ where: { id } });
 }
 
 export async function createUser(data: z.infer<typeof UserSchema>) {
     const validatedData = UserSchema.parse(data);
-    const newUser: User = {
-        id: `user-${nextUserId++}`,
-        ...validatedData,
-        lastLogin: new Date().toISOString(),
-        avatar: `https://placehold.co/100x100.png?text=${validatedData.name.split(" ").map(n => n[0]).join("")}`
-    };
-    tempUsers.push(newUser);
+    const newUser = await prisma.user.create({
+        data: {
+            ...validatedData,
+            avatar: `https://placehold.co/100x100.png?text=${validatedData.name.split(" ").map(n => n[0]).join("")}`
+        }
+    });
     revalidatePath('/admin/users');
     return newUser;
 }
 
 export async function updateUser(id: string, data: z.infer<typeof UserUpdateSchema>) {
     const validatedData = UserUpdateSchema.parse(data);
-    const userIndex = tempUsers.findIndex(u => u.id === id);
-
-    if (userIndex === -1) {
-        throw new Error("User not found");
-    }
-
-    const updatedUser = { ...tempUsers[userIndex], ...validatedData };
+    const updateData: any = { ...validatedData };
+    
     if (!validatedData.password || validatedData.password.trim() === '') {
-        delete updatedUser.password;
+        delete updateData.password;
     }
 
-    tempUsers[userIndex] = updatedUser;
+    const updatedUser = await prisma.user.update({
+        where: { id },
+        data: updateData
+    });
     
     revalidatePath(`/admin/users`);
     revalidatePath(`/admin/users/${id}`);
@@ -79,19 +70,21 @@ export async function updateUser(id: string, data: z.infer<typeof UserUpdateSche
 }
 
 export async function deleteUser(id: string) {
-    tempUsers = tempUsers.filter(u => u.id !== id);
+    await prisma.user.delete({ where: { id } });
     revalidatePath('/admin/users');
 }
 
-// Review Actions
+
+// --- Review Actions ---
 const ReviewSchema = z.object({
   userId: z.string().nullable().optional(),
   unit: z.string(),
   serviceSpeed: z.enum(["fast", "medium", "slow"]),
-  serviceQuality: z.number().min(1).max(5),
   rawCompleteness: z.enum(["complete", "incomplete", "not_applicable"]),
-  staffFriendliness: z.number().min(1).max(5),
   comments: z.string().optional(),
+  // New fields for thumbs up/down
+  serviceQualityNew: z.enum(["positive", "negative"]),
+  staffFriendlinessNew: z.enum(["positive", "negative"]),
 });
 
 
@@ -99,31 +92,36 @@ export async function addReview(data: z.infer<typeof ReviewSchema>) {
     const validatedData = ReviewSchema.parse(data);
     let finalUserId = validatedData.userId;
 
+    // Handle anonymous kiosk users
     if (!finalUserId) {
-        let anonymousUser = tempUsers.find(u => u.name === 'Pasien Anonim');
-        if (!anonymousUser) {
-            anonymousUser = {
-                id: 'anon-user',
+        const anonymousUser = await prisma.user.upsert({
+            where: { email: 'anonymous@sim.rs' },
+            update: {},
+            create: {
                 name: 'Pasien Anonim',
-                email: `anon-${Date.now()}@sim.rs`,
-                password: 'N/A',
+                email: 'anonymous@sim.rs',
+                password: 'N/A', // Not used for login
                 role: 'User',
-                unit: validatedData.unit,
-                lastLogin: new Date().toISOString(),
                 avatar: 'https://placehold.co/100x100.png?text=PA'
-            };
-            tempUsers.push(anonymousUser);
-        }
+            }
+        });
         finalUserId = anonymousUser.id;
     }
     
-    const newReview = {
-      id: `review-${nextReviewId++}`,
-      date: new Date().toISOString(),
-      userId: finalUserId,
-      ...validatedData,
-    };
-    tempReviews.unshift(newReview);
+    const newReview = await prisma.review.create({
+        data: {
+            userId: finalUserId,
+            unit: validatedData.unit,
+            serviceSpeed: validatedData.serviceSpeed,
+            rawCompleteness: validatedData.rawCompleteness,
+            comments: validatedData.comments,
+            serviceQualityNew: validatedData.serviceQualityNew,
+            staffFriendlinessNew: validatedData.staffFriendlinessNew,
+            // Set legacy fields to a default value (e.g., 0 or 3) for type consistency
+            serviceQuality: 0,
+            staffFriendliness: 0,
+        }
+    });
 
     revalidatePath('/admin/dashboard');
     revalidatePath('/admin/reviews');
@@ -142,28 +140,32 @@ export async function getReviews(filters: {
 }) {
   const { unit, userName, userId, from, to } = filters;
   
-  let filteredReviews = tempReviews.map(r => {
-    const user = tempUsers.find(u => u.id === r.userId);
-    return {
-      ...r,
-      user: {
-        name: user?.name || 'Unknown',
-        avatar: user?.avatar || null
+  const whereClause: any = {};
+  if (unit) whereClause.unit = unit;
+  if (userId) whereClause.userId = userId;
+  if (userName) whereClause.user = { name: { contains: userName, mode: 'insensitive' } };
+  if (from) whereClause.date = { ...whereClause.date, gte: from };
+  if (to) whereClause.date = { ...whereClause.date, lte: to };
+
+  const reviews = await prisma.review.findMany({
+      where: whereClause,
+      include: {
+          user: {
+              select: {
+                  name: true,
+                  avatar: true,
+              }
+          }
+      },
+      orderBy: {
+          date: 'desc'
       }
-    }
   });
-
-  if (unit) filteredReviews = filteredReviews.filter(r => r.unit === unit);
-  if (userId) filteredReviews = filteredReviews.filter(r => r.userId === userId);
-  if (userName) filteredReviews = filteredReviews.filter(r => r.user.name.toLowerCase().includes(userName.toLowerCase()));
-  if (from) filteredReviews = filteredReviews.filter(r => new Date(r.date) >= from);
-  if (to) filteredReviews = filteredReviews.filter(r => new Date(r.date) <= to);
-
-  return filteredReviews.sort((a,b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+  return reviews;
 }
 
 export async function deleteReview(id: string) {
-    tempReviews = tempReviews.filter(r => r.id !== id);
+    await prisma.review.delete({ where: { id } });
     revalidatePath('/admin/reviews');
     revalidatePath('/admin/dashboard');
 }

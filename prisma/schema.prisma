@@ -1,39 +1,44 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-generator client {
-  provider = "prisma-client-js"
-}
 
 datasource db {
   provider = "mysql"
   url      = env("DATABASE_URL")
 }
 
+generator client {
+  provider = "prisma-client-js"
+}
+
 model User {
-  id         String   @id @default(cuid())
-  name       String
-  email      String   @unique
-  password   String
-  role       String   @default("User") // "Admin", "User"
-  unit       String?  // Unit for Admin roles
-  avatar     String?
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-  reviews    Review[]
+  id        String   @id @default(uuid())
+  name      String
+  email     String   @unique
+  password  String
+  role      String   // "Admin" or "User"
+  unit      String?
+  avatar    String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  reviews   Review[]
 }
 
 model Review {
-  id                String   @id @default(cuid())
-  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId            String
-  date              DateTime @default(now())
-  unit              String
-  serviceSpeed      String // 'slow', 'medium', 'fast'
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  date      DateTime @default(now())
+  unit      String
+
+  // Legacy rating fields
   serviceQuality    Int
   staffFriendliness Int
-  rawCompleteness   String // 'complete', 'incomplete', 'not_applicable'
-  comments          String?  @db.Text
-  createdAt         DateTime @default(now())
-  updatedAt         DateTime @updatedAt
+
+  // New rating fields
+  serviceQualityNew    String? // e.g., "positive", "negative"
+  staffFriendlinessNew String? // e.g., "positive", "negative"
+
+  serviceSpeed    String // "fast", "medium", "slow"
+  rawCompleteness String // "complete", "incomplete", "not_applicable"
+  comments        String?  @db.Text
+
+  @@index([userId])
 }

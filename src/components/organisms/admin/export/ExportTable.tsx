@@ -7,11 +7,18 @@ import { format } from 'date-fns';
 import { id } from 'date-fns/locale';
 import { getRatingColor } from '@/lib/utils';
 import { UnitReview } from '@/lib/definitions';
+import { ThumbsUp, ThumbsDown } from 'lucide-react';
 
 const getSpeedBadgeText = (speed: string) => {
     const map: Record<string, string> = { slow: 'Lambat', medium: 'Sedang', fast: 'Cepat' };
     return map[speed] || 'N/A';
 };
+
+const NewRatingCell = ({ value }: { value: string | null | undefined }) => {
+    if (value === 'positive') return <span className="flex items-center justify-center gap-1.5 text-green-600"><ThumbsUp className="h-3 w-3" /> Baik</span>
+    if (value === 'negative') return <span className="flex items-center justify-center gap-1.5 text-red-600"><ThumbsDown className="h-3 w-3" /> Buruk</span>
+    return null;
+}
 
 export function ExportTable({ reviews }: { reviews: UnitReview[] }) {
     return (
@@ -38,10 +45,16 @@ export function ExportTable({ reviews }: { reviews: UnitReview[] }) {
                                     <TableCell className="font-medium print:p-2">{review.user.name}</TableCell>
                                     <TableCell className="print:p-2">{review.unit}</TableCell>
                                     <TableCell className="text-center print:p-2">
-                                        <Badge variant={getRatingColor(review.serviceQuality)}>{review.serviceQuality}/5</Badge>
+                                        {review.serviceQualityNew ? 
+                                            <NewRatingCell value={review.serviceQualityNew} /> : 
+                                            <Badge variant={getRatingColor(review.serviceQuality)}>{review.serviceQuality}/5</Badge>
+                                        }
                                     </TableCell>
                                     <TableCell className="text-center print:p-2">
-                                        <Badge variant={getRatingColor(review.staffFriendliness)}>{review.staffFriendliness}/5</Badge>
+                                        {review.staffFriendlinessNew ? 
+                                            <NewRatingCell value={review.staffFriendlinessNew} /> : 
+                                            <Badge variant={getRatingColor(review.staffFriendliness)}>{review.staffFriendliness}/5</Badge>
+                                        }
                                     </TableCell>
                                     <TableCell className="text-center print:p-2">
                                         <Badge variant="outline">{getSpeedBadgeText(review.serviceSpeed)}</Badge>

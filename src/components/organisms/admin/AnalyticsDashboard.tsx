@@ -21,8 +21,9 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Badge } from "@/components/ui/badge";
 import { formatDistanceToNow } from "date-fns";
 import { id } from "date-fns/locale";
-import { ThumbsUp, ThumbsDown, HelpCircle, FileX } from "lucide-react";
+import { ThumbsUp, ThumbsDown, HelpCircle, FileX, Star } from "lucide-react";
 import { UnitReview } from "@/lib/definitions";
+import { calculateAverages } from "@/lib/utils";
 
 const speedMapping: { [key: string]: number } = { slow: 1, medium: 3, fast: 5 };
 
@@ -50,23 +51,14 @@ export default function AnalyticsDashboard({ reviews }: AnalyticsDashboardProps)
         { name: "Kecepatan", average: 0, fill: "var(--color-speed)" },
       ];
     }
-    const totals = {
-      serviceSpeed: 0,
-      serviceQuality: 0,
-      staffFriendliness: 0,
-    };
-    const count = reviews.length;
-
-    for (const review of reviews) {
-      totals.serviceSpeed += speedMapping[review.serviceSpeed];
-      totals.serviceQuality += review.serviceQuality;
-      totals.staffFriendliness += review.staffFriendliness;
-    }
+    
+    const averages = calculateAverages(reviews);
+    const speedTotal = reviews.reduce((sum, r) => sum + speedMapping[r.serviceSpeed], 0);
 
     return [
-      { name: "Kualitas", average: totals.serviceQuality / count, fill: "var(--color-quality)" },
-      { name: "Keramahan", average: totals.staffFriendliness / count, fill: "var(--color-friendliness)" },
-      { name: "Kecepatan", average: totals.serviceSpeed / count, fill: "var(--color-speed)" },
+      { name: "Kualitas", average: averages.quality, fill: "var(--color-quality)" },
+      { name: "Keramahan", average: averages.friendliness, fill: "var(--color-friendliness)" },
+      { name: "Kecepatan", average: speedTotal / reviews.length, fill: "var(--color-speed)" },
     ].sort((a, b) => {
         const order = ["Kualitas", "Keramahan", "Kecepatan"];
         return order.indexOf(a.name) - order.indexOf(b.name);
@@ -74,20 +66,23 @@ export default function AnalyticsDashboard({ reviews }: AnalyticsDashboardProps)
   }, [reviews]);
 
   const serviceQualityDistribution = useMemo(() => {
-    const distribution = [
-        { name: '1 Bintang', count: 0 },
-        { name: '2 Bintang', count: 0 },
-        { name: '3 Bintang', count: 0 },
-        { name: '4 Bintang', count: 0 },
-        { name: '5 Bintang', count: 0 },
-    ];
+    const distributionMap: { [key: string]: number } = { 'Baik': 0, 'Buruk': 0, '5 Bintang': 0, '4 Bintang': 0, '3 Bintang': 0, '2 Bintang': 0, '1 Bintang': 0 };
+
     reviews.forEach(review => {
-        const rating = review.serviceQuality;
-        if (rating >= 1 && rating <= 5) {
-            distribution[rating-1].count++;
+        if (review.serviceQualityNew) {
+            if (review.serviceQualityNew === 'positive') distributionMap['Baik']++;
+            else distributionMap['Buruk']++;
+        } else {
+            const rating = review.serviceQuality;
+            if (rating >= 1 && rating <= 5) {
+                distributionMap[`${rating} Bintang`]++;
+            }
         }
     });
-    return distribution.filter(item => item.count > 0);
+
+    return Object.entries(distributionMap)
+        .map(([name, count]) => ({ name, count }))
+        .filter(item => item.count > 0);
   }, [reviews]);
 
 
@@ -120,6 +115,12 @@ export default function AnalyticsDashboard({ reviews }: AnalyticsDashboardProps)
             return <Badge variant="secondary" className="gap-1.5"><HelpCircle className="h-3 w-3" /> Tdk Tahu</Badge>;
     }
   };
+
+  const NewRatingBadge = ({ value }: { value: string | null | undefined }) => {
+    if (value === 'positive') return <Badge className="bg-green-500 gap-1.5"><ThumbsUp className="h-3 w-3" /> Baik</Badge>
+    if (value === 'negative') return <Badge variant="destructive" className="gap-1.5"><ThumbsDown className="h-3 w-3" /> Buruk</Badge>
+    return null;
+}
 
   if (reviews.length === 0) {
     return (
@@ -175,7 +176,7 @@ export default function AnalyticsDashboard({ reviews }: AnalyticsDashboardProps)
         <Card>
           <CardHeader>
             <CardTitle>Distribusi Kualitas Layanan</CardTitle>
-             <CardDescription>Rincian peringkat bintang untuk kualitas layanan.</CardDescription>
+             <CardDescription>Rincian peringkat untuk kualitas layanan.</CardDescription>
           </CardHeader>
           <CardContent>
             <ChartContainer config={chartConfig} className="h-64 w-full">
@@ -221,10 +222,10 @@ export default function AnalyticsDashboard({ reviews }: AnalyticsDashboardProps)
                   <TableCell>{review.unit}</TableCell>
                   <TableCell className="text-muted-foreground">{formatDistanceToNow(new Date(review.date), { addSuffix: true, locale: id })}</TableCell>
                   <TableCell className="text-center">
-                     <Badge variant={getRatingColor(review.serviceQuality)}>{review.serviceQuality}/5</Badge>
+                     {review.serviceQualityNew ? <NewRatingBadge value={review.serviceQualityNew} /> : <Badge variant={getRatingColor(review.serviceQuality)}>{review.serviceQuality}/5</Badge>}
                   </TableCell>
                   <TableCell className="text-center">
-                     <Badge variant={getRatingColor(review.staffFriendliness)}>{review.staffFriendliness}/5</Badge>
+                    {review.staffFriendlinessNew ? <NewRatingBadge value={review.staffFriendlinessNew} /> : <Badge variant={getRatingColor(review.staffFriendliness)}>{review.staffFriendliness}/5</Badge>}
                   </TableCell>
                   <TableCell className="text-center">
                     {getSpeedBadge(review.serviceSpeed)}

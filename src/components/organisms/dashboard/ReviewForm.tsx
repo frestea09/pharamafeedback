@@ -20,32 +20,30 @@ import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
-import { StarRating } from "@/components/atoms/StarRating";
 import { Separator } from "@/components/ui/separator";
 import { Loader2, Smile, ThumbsUp, ThumbsDown, Clock, Rocket, Turtle, HelpCircle } from "lucide-react";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { addReview } from "@/lib/actions";
 
-
 const reviewFormSchema = z.object({
   serviceSpeed: z.enum(["fast", "medium", "slow"], {
     required_error: "Silakan pilih kecepatan layanan.",
   }),
-  serviceQuality: z.number().min(1, { message: "Silakan pilih peringkat." }).max(5),
   rawCompleteness: z.enum(["complete", "incomplete", "not_applicable"], {
     required_error: "Anda harus memilih status kelengkapan layanan.",
   }),
-  staffFriendliness: z.number().min(1, { message: "Silakan pilih peringkat." }).max(5),
   comments: z.string().max(500, "Komentar maksimal 500 karakter.").optional(),
+  serviceQualityNew: z.enum(["positive", "negative"], {
+    required_error: "Silakan berikan penilaian kualitas layanan.",
+  }),
+  staffFriendlinessNew: z.enum(["positive", "negative"], {
+    required_error: "Silakan berikan penilaian keramahan staf.",
+  }),
 });
 
 type ReviewFormValues = z.infer<typeof reviewFormSchema>;
 
-const defaultValues: ReviewFormValues = {
-  serviceSpeed: "fast",
-  rawCompleteness: "complete",
-  serviceQuality: 0,
-  staffFriendliness: 0,
+const defaultValues: Partial<ReviewFormValues> = {
   comments: "",
 };
 
@@ -58,7 +56,6 @@ export default function ReviewForm() {
   const unitParam = searchParams.get('unit');
   const userId = searchParams.get('userId');
   
-  // Use a state to hold the unit to prevent it from being lost
   const [unit, setUnit] = useState(unitParam || "Tidak Diketahui");
 
   useEffect(() => {
@@ -90,11 +87,9 @@ export default function ReviewForm() {
         
       form.reset(defaultValues);
       
-      // If user is logged in, redirect back to the same page with params
       if (userId) {
         const params = new URLSearchParams(searchParams.toString());
-        // No need to push, just refresh the state.
-        // We stay on the same page.
+        router.push(`/dashboard/history?${params.toString()}`);
       }
 
     } catch (error) {
@@ -114,26 +109,35 @@ export default function ReviewForm() {
         
         <div className="grid md:grid-cols-2 gap-x-8 gap-y-10">
             <div className="space-y-8">
-                 <FormField
+                <FormField
                     control={form.control}
-                    name="serviceQuality"
+                    name="serviceQualityNew"
                     render={({ field }) => (
                         <FormItem>
-                        <div className="flex items-center gap-2 mb-2">
-                            <Smile className="h-5 w-5 text-primary"/>
-                            <FormLabel className="text-base">Kualitas Pelayanan</FormLabel>
-                        </div>
-                        <FormControl>
-                           <StarRating value={field.value} onChange={field.onChange} />
-                        </FormControl>
-                        <FormMessage />
+                            <div className="flex items-center gap-2 mb-2">
+                                <Smile className="h-5 w-5 text-primary"/>
+                                <FormLabel className="text-base">Kualitas Pelayanan</FormLabel>
+                            </div>
+                            <FormControl>
+                                <ToggleGroup type="single" value={field.value} onValueChange={field.onChange} className="grid grid-cols-2 gap-2">
+                                    <ToggleGroupItem value="positive" aria-label="Baik" className="flex flex-col h-20 gap-1">
+                                        <ThumbsUp className="h-6 w-6 text-green-500"/>
+                                        <span>Baik</span>
+                                    </ToggleGroupItem>
+                                    <ToggleGroupItem value="negative" aria-label="Buruk" className="flex flex-col h-20 gap-1">
+                                         <ThumbsDown className="h-6 w-6 text-red-500"/>
+                                        <span>Buruk</span>
+                                    </ToggleGroupItem>
+                                </ToggleGroup>
+                            </FormControl>
+                            <FormMessage />
                         </FormItem>
                     )}
                  />
 
                  <FormField
                     control={form.control}
-                    name="staffFriendliness"
+                    name="staffFriendlinessNew"
                     render={({ field }) => (
                         <FormItem>
                          <div className="flex items-center gap-2 mb-2">
@@ -141,7 +145,16 @@ export default function ReviewForm() {
                             <FormLabel className="text-base">Keramahan Staf</FormLabel>
                          </div>
                         <FormControl>
-                            <StarRating value={field.value} onChange={field.onChange} />
+                             <ToggleGroup type="single" value={field.value} onValueChange={field.onChange} className="grid grid-cols-2 gap-2">
+                                <ToggleGroupItem value="positive" aria-label="Ramah" className="flex flex-col h-20 gap-1">
+                                    <ThumbsUp className="h-6 w-6 text-green-500"/>
+                                    <span>Ramah</span>
+                                </ToggleGroupItem>
+                                <ToggleGroupItem value="negative" aria-label="Tidak Ramah" className="flex flex-col h-20 gap-1">
+                                        <ThumbsDown className="h-6 w-6 text-red-500"/>
+                                    <span>Tidak Ramah</span>
+                                </ToggleGroupItem>
+                            </ToggleGroup>
                         </FormControl>
                         <FormMessage />
                         </FormItem>
@@ -177,8 +190,10 @@ export default function ReviewForm() {
                         </FormItem>
                     )}
                 />
+            </div>
 
-                <FormField
+            <div className="space-y-6">
+                 <FormField
                     control={form.control}
                     name="rawCompleteness"
                     render={({ field }) => (
@@ -220,9 +235,7 @@ export default function ReviewForm() {
                       </FormItem>
                     )}
                   />
-            </div>
 
-            <div className="space-y-6">
                 <FormField
                     control={form.control}
                     name="comments"
@@ -234,7 +247,7 @@ export default function ReviewForm() {
                         <FormControl>
                             <Textarea
                             placeholder="Ceritakan lebih banyak tentang pengalaman Anda..."
-                            className="resize-none min-h-[150px]"
+                            className="resize-none min-h-[220px]"
                             {...field}
                             />
                         </FormControl>
