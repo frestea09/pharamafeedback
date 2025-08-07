@@ -29,6 +29,17 @@ async function main() {
     },
   });
 
+  const kepalaFarmasi = await prisma.user.create({
+    data: {
+      name: 'Dr. Budi (Kepala Unit)',
+      email: 'kepala.farmasi@sim.rs',
+      password: '123456',
+      role: 'KepalaUnit',
+      unit: 'GF - Instalasi Farmasi (Gedung Utama)',
+      avatar: `https://placehold.co/100x100.png?text=DB`,
+    },
+  });
+
   const userBudi = await prisma.user.create({
       data: {
           name: 'Budi Santoso',
@@ -51,7 +62,7 @@ async function main() {
       }
   });
   
-  console.log(`Created users:`, { adminSistem, adminFarmasi, userBudi, userAni });
+  console.log(`Created users:`, { adminSistem, adminFarmasi, kepalaFarmasi, userBudi, userAni });
 
   // Create Reviews
   const review1 = await prisma.review.create({

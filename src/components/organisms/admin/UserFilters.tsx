@@ -36,6 +36,7 @@ export function UserFilters({ table }: { table: Table<User> }) {
                     <SelectItem value="all">Semua Peran</SelectItem>
                     <SelectItem value="Admin">Admin</SelectItem>
                     <SelectItem value="User">User</SelectItem>
+                    <SelectItem value="KepalaUnit">Kepala Unit</SelectItem>
                 </SelectContent>
             </Select>
         </div>

@@ -47,7 +47,7 @@ const formSchema = z
       .string()
       .min(2, { message: "Nama harus memiliki setidaknya 2 karakter." }),
     email: z.string().email({ message: "Format email tidak valid." }),
-    role: z.enum(["Admin", "User"]),
+    role: z.enum(["Admin", "User", "KepalaUnit"]),
     unit: z.string().optional(),
     password: z
       .string()
@@ -267,6 +267,7 @@ export default function UserFormPage() {
                             <SelectContent>
                                 <SelectItem value="User">User</SelectItem>
                                 <SelectItem value="Admin">Admin</SelectItem>
+                                <SelectItem value="KepalaUnit">Kepala Unit</SelectItem>
                             </SelectContent>
                             </Select>
                             <FormMessage />

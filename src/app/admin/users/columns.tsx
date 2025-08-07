@@ -62,7 +62,11 @@ export const getColumns = ({ onEdit, onDelete }: UserActionsProps): ColumnDef<Us
     header: "Peran",
     cell: ({ row }) => {
         const role = row.getValue("role") as string;
-        return <Badge variant={role === 'Admin' ? 'default' : 'secondary'}>{role}</Badge>
+        let variant: "default" | "secondary" | "destructive" = "secondary";
+        if (role === 'Admin') variant = 'default';
+        if (role === 'KepalaUnit') variant = 'destructive'; // Example color for Kepala Unit
+
+        return <Badge variant={variant}>{role === 'KepalaUnit' ? 'Kepala Unit' : role}</Badge>
     },
     filterFn: (row, id, value) => {
       return value.includes(row.getValue(id))

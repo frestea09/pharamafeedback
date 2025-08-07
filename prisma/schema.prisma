@@ -1,19 +1,22 @@
 
-datasource db {
-  provider = "mysql"
-  url      = env("DATABASE_URL")
-}
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
   provider = "prisma-client-js"
 }
 
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
 model User {
-  id        String   @id @default(uuid())
+  id        String   @id @default(cuid())
   name      String
   email     String   @unique
   password  String
-  role      String   // "Admin" or "User"
+  role      Role     @default(User)
   unit      String?
   avatar    String?
   createdAt DateTime @default(now())
@@ -22,23 +25,24 @@ model User {
 }
 
 model Review {
-  id        String   @id @default(uuid())
-  userId    String
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  date      DateTime @default(now())
-  unit      String
+  id                   String    @id @default(cuid())
+  user                 User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId               String
+  date                 DateTime  @default(now())
+  unit                 String
+  serviceSpeed         String?
+  serviceQuality       Int
+  staffFriendliness    Int
+  comments             String?   @db.Text
+  rawCompleteness      String?
+  serviceQualityNew    String?
+  staffFriendlinessNew String?
+  createdAt            DateTime  @default(now())
+  updatedAt            DateTime  @updatedAt
+}
 
-  // Legacy rating fields
-  serviceQuality    Int
-  staffFriendliness Int
-
-  // New rating fields
-  serviceQualityNew    String? // e.g., "positive", "negative"
-  staffFriendlinessNew String? // e.g., "positive", "negative"
-
-  serviceSpeed    String // "fast", "medium", "slow"
-  rawCompleteness String // "complete", "incomplete", "not_applicable"
-  comments        String?  @db.Text
-
-  @@index([userId])
+enum Role {
+  Admin
+  User
+  KepalaUnit
 }
