@@ -13,6 +13,7 @@ export const getPageTitle = (pathname: string, unit: string | null = null): stri
       "/admin/reviews": "Semua Ulasan",
       "/admin/users": "Kelola Pengguna",
       "/admin/faq": "Bantuan & Panduan",
+      "/admin/logs": "Log Aktivitas Sistem",
       "/dashboard": "Formulir Ulasan Pasien",
       "/dashboard/history": "Riwayat Ulasan",
       "/faq": "Bantuan & Panduan"
@@ -29,8 +30,8 @@ export const getPageTitle = (pathname: string, unit: string | null = null): stri
 
   let baseTitle = baseTitles[pathname] || "LayananReview RSUD";
 
-  if (unit && pathname.startsWith('/admin/')) {
-    baseTitle = `${baseTitle} - Unit ${unit}`;
+  if (unit && (pathname.startsWith('/admin/') && pathname !== '/admin/faq')) {
+    baseTitle = `${unit}`;
   }
   
   return baseTitle;

@@ -7,7 +7,7 @@ import prisma from './prisma';
 import { initialReviews } from './data';
 import { users, User } from './users';
 import { UnitReview } from './definitions';
-import { serviceUnits } from './constants';
+import { logActivity } from './logger';
 
 // --- User Actions ---
 const UserSchema = z.object({
@@ -33,6 +33,11 @@ export async function validateUser(email: string, password: string): Promise<Use
 
     // --- Array Implementation ---
     const user = users.find(u => u.email === email && u.password === password);
+    if (user) {
+        logActivity(`Pengguna ${user.name} (${user.role}) berhasil login.`);
+    } else {
+        logActivity(`Percobaan login gagal untuk email: ${email}.`);
+    }
     return user || null;
 }
 
@@ -80,6 +85,7 @@ export async function createUser(data: z.infer<typeof UserSchema>): Promise<User
         avatar: `https://placehold.co/100x100.png?text=${validatedData.name.split(" ").map(n => n[0]).join("")}`
     };
     users.push(newUser);
+    logActivity(`Pengguna baru "${newUser.name}" (${newUser.role}) telah dibuat.`);
     revalidatePath('/admin/users');
     return newUser;
 }
@@ -115,7 +121,7 @@ export async function updateUser(id: string, data: z.infer<typeof UserUpdateSche
     }
 
     users[userIndex] = updatedUser;
-    
+    logActivity(`Data pengguna "${updatedUser.name}" telah diperbarui.`);
     revalidatePath(`/admin/users`);
     revalidatePath(`/admin/users/${id}`);
     return updatedUser;
@@ -129,7 +135,9 @@ export async function deleteUser(id: string) {
     // --- Array Implementation ---
     const userIndex = users.findIndex(u => u.id === id);
     if (userIndex > -1) {
+        const deletedUser = users[userIndex];
         users.splice(userIndex, 1);
+        logActivity(`Pengguna "${deletedUser.name}" telah dihapus.`);
     }
     revalidatePath('/admin/users');
 }
@@ -182,6 +190,7 @@ export async function addReview(data: z.infer<typeof ReviewSchema>) {
 
     // --- Array Implementation ---
     let finalUserId = validatedData.userId;
+    let userName = "Pasien Anonim";
     if (!finalUserId) {
         let anonymousUser = users.find(u => u.email === 'anonymous@sim.rs');
         if (!anonymousUser) {
@@ -196,6 +205,11 @@ export async function addReview(data: z.infer<typeof ReviewSchema>) {
             users.push(anonymousUser);
         }
         finalUserId = anonymousUser.id;
+    } else {
+        const currentUser = users.find(u => u.id === finalUserId);
+        if (currentUser) {
+            userName = currentUser.name;
+        }
     }
     
     const newReview = {
@@ -203,8 +217,8 @@ export async function addReview(data: z.infer<typeof ReviewSchema>) {
         userId: finalUserId,
         date: new Date(),
         unit: validatedData.unit,
-        serviceSpeed: validatedData.serviceSpeed || 'medium',
-        rawCompleteness: validatedData.rawCompleteness || 'not_applicable',
+        serviceSpeed: validatedData.serviceSpeed ?? 'medium', 
+        rawCompleteness: validatedData.rawCompleteness ?? 'not_applicable',
         comments: validatedData.comments || '',
         serviceQualityNew: validatedData.serviceQualityNew,
         staffFriendlinessNew: validatedData.staffFriendlinessNew,
@@ -215,6 +229,7 @@ export async function addReview(data: z.infer<typeof ReviewSchema>) {
     };
     initialReviews.unshift(newReview as any); // Use unshift to add to the top
 
+    logActivity(`Ulasan baru diterima dari ${userName} untuk unit ${newReview.unit}.`);
     revalidatePath('/admin/dashboard');
     revalidatePath('/admin/reviews');
     if (validatedData.userId) {
@@ -260,7 +275,7 @@ export async function getReviews(filters: {
 
   // --- Array Implementation ---
   let filteredReviews = [...initialReviews];
-  if (unit) {
+  if (unit && unit !== 'Semua Unit') {
     filteredReviews = filteredReviews.filter(r => r.unit === unit);
   }
   if (userId) {
@@ -298,7 +313,10 @@ export async function deleteReview(id: string) {
     // --- Array Implementation ---
     const index = initialReviews.findIndex(r => r.id === id);
     if (index > -1) {
+        const deletedReview = initialReviews[index];
         initialReviews.splice(index, 1);
+        const user = users.find(u => u.id === deletedReview.userId);
+        logActivity(`Ulasan ID ${id} dari pengguna ${user?.name || 'anonim'} untuk unit ${deletedReview.unit} telah dihapus.`);
     }
     
     revalidatePath('/admin/reviews');

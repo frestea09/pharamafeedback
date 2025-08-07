@@ -35,17 +35,17 @@ export default function AdminLoginPage() {
     try {
       const user = await validateUser(email, password);
       
-      if (user && user.role === 'Admin') {
+      if (user && (user.role === 'Admin' || user.role === 'KepalaUnit')) {
         const queryParams = user.unit ? `?unit=${encodeURIComponent(user.unit)}` : '';
         router.push(`/admin/dashboard${queryParams}`);
       } else {
-        throw new Error("Invalid credentials or not an admin.");
+        throw new Error("Invalid credentials or not an admin/head of unit.");
       }
     } catch (error) {
        toast({
           variant: "destructive",
           title: "Login Gagal",
-          description: "Email atau kata sandi salah, atau Anda bukan Admin.",
+          description: "Email atau kata sandi salah, atau Anda bukan Admin/Kepala Unit.",
         });
     } finally {
       setIsLoading(false);

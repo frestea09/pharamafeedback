@@ -19,7 +19,7 @@ import {
 } from "@/components/ui/sidebar";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { getPageTitle } from "@/lib/utils";
-import { adminMenuItems } from "@/lib/constants";
+import { baseAdminMenuItems, systemAdminMenuItems, commonAdminMenuItems } from "@/lib/constants";
 import { LogOut, Hospital } from "lucide-react";
 
 export default function AdminLayout({
@@ -37,10 +37,17 @@ export default function AdminLayout({
   }
 
   const currentPageTitle = getPageTitle(pathname, unit);
-  const adminName = unit ? `Admin ${unit}` : "Admin Sistem";
+  const adminName = unit ? `${unit}` : "Admin Sistem";
   const adminEmail = unit
     ? `admin.${unit.toLowerCase().replace(/[^a-z0-9]/g, "")}@sim.rs`
     : "admin@sim.rs";
+  
+  const isSystemAdmin = !unit;
+
+  const menuItems = isSystemAdmin 
+    ? [...baseAdminMenuItems, ...systemAdminMenuItems, ...commonAdminMenuItems] 
+    : [...baseAdminMenuItems, ...commonAdminMenuItems];
+
 
   return (
     <SidebarProvider>
@@ -55,7 +62,7 @@ export default function AdminLayout({
           <SidebarGroup>
             <SidebarGroupLabel>MENU UTAMA</SidebarGroupLabel>
             <SidebarMenu>
-              {adminMenuItems.map((item) => (
+              {menuItems.map((item) => (
                 <SidebarMenuItem key={item.href}>
                   <SidebarMenuButton
                     href={{ pathname: item.href, query: unit ? { unit } : {} }}

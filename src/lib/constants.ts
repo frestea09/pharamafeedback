@@ -1,5 +1,5 @@
 
-import { LayoutDashboard, Users, MessageSquare, HelpCircle, Home, FileText } from "lucide-react";
+import { LayoutDashboard, Users, MessageSquare, HelpCircle, Home, FileText, FileClock } from "lucide-react";
 
 export const serviceUnits = [
   // Lantai 4 (L4)
@@ -51,12 +51,20 @@ export const serviceUnits = [
   "LG - Ruang Pemulasaran Jenazah"
 ];
 
-export const adminMenuItems = [
+export const baseAdminMenuItems = [
     { href: "/admin/dashboard", icon: LayoutDashboard, label: "Dasbor Utama", tooltip: "Dasbor" },
     { href: "/admin/reviews", icon: MessageSquare, label: "Semua Ulasan", tooltip: "Ulasan" },
     { href: "/admin/users", icon: Users, label: "Kelola Pengguna", tooltip: "Pengguna" },
+];
+
+export const systemAdminMenuItems = [
+    { href: "/admin/logs", icon: FileClock, label: "Log Sistem", tooltip: "Log" },
+];
+
+export const commonAdminMenuItems = [
     { href: "/admin/faq", icon: HelpCircle, label: "Bantuan & Panduan", tooltip: "Bantuan" },
 ];
+
 
 export const userMenuItems = [
     { href: "/dashboard", icon: Home, label: "Beri Ulasan Baru" },
